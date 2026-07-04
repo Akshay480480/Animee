@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KuroDeck</title>
     
+    <!-- PWA Real Standalone Mobile App Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22KuroDeck%22%2C%22short_name%22%3A%22KuroDeck%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23040610%22%2C%22theme_color%22%3A%22%2306b6d4%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fneon%2F512%2Fmovie-ticket.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image/png%22%7D%5D%7D">
 
+    <!-- Premium Mobile Display Icon Assets -->
     <link rel="icon" type="image/png" sizes="512x512" href="https://img.icons8.com/neon/512/movie-ticket.png">
     <link rel="apple-touch-icon" sizes="512x512" href="https://img.icons8.com/neon/512/movie-ticket.png">
     
@@ -29,8 +31,10 @@
 </head>
 <body class="pb-28 pt-16 px-4">
 
+    <!-- Ambient Dynamic Particle Visual Canvas -->
     <canvas id="particleCanvas"></canvas>
 
+    <!-- Top Fixed Premium Desktop/Mobile Navigation Module -->
     <nav class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-[#060812]/95 border-b border-white/5 flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md">
         <span class="text-xs font-black tracking-widest bg-gradient-to-r from-cyan-400 via-purple-400 to-amber-400 text-transparent bg-clip-text uppercase flex items-center gap-1">
             🎬 KURODECK
@@ -43,11 +47,15 @@
         </div>
     </nav>
 
+    <!-- System Live Dialogue Alert Banner -->
     <div id="toast" class="hidden fixed top-20 left-4 right-4 max-w-md mx-auto bg-[#0b0f24] border border-cyan-500/30 text-cyan-400 p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all"></div>
 
+    <!-- Main Content click container box -->
     <div class="main-app-content max-w-md mx-auto space-y-4">
 
+        <!-- ================= VIEW NODE 1: MAIN DECK HUB ================= -->
         <div id="view-hub" class="page-view space-y-4">
+            <!-- Dynamic Crossover Dialogue Board -->
             <section class="matrix-card p-4 rounded-3xl relative overflow-hidden bg-gradient-to-br from-cyan-950/15 via-transparent to-purple-950/10">
                 <div class="absolute -right-6 -top-6 text-7xl opacity-[0.03] font-serif select-none">“</div>
                 <span class="text-[8px] font-mono tracking-widest text-cyan-400 uppercase font-bold block mb-1">KuroDeck Terminal Feed</span>
@@ -55,33 +63,39 @@
                 <p id="display-author" class="text-[9px] font-bold text-amber-400 mt-2.5 text-right">— AI Terminal Controller</p>
             </section>
 
+            <!-- Interactive Character Profile Deck Container -->
             <section class="space-y-2">
                 <span class="text-[9px] font-mono tracking-widest text-slate-500 uppercase font-black block">Active Companion Guild</span>
                 <div id="guild-deck" class="flex gap-2 overflow-x-auto pb-1 hide-scroll"></div>
             </section>
 
+            <!-- Simple Metric Dashboard Displays -->
             <section class="grid grid-cols-3 gap-2 bg-[#080a14] p-2.5 rounded-2xl border border-white/5 shadow-inner">
                 <div class="text-center"><p class="text-[9px] uppercase text-slate-500 font-bold">Total Vault</p><p id="count-all" class="text-xl font-black text-slate-100">0</p></div>
                 <div class="text-center border-x border-white/5"><p class="text-[9px] uppercase text-cyan-400 font-bold">Streaming</p><p id="count-active" class="text-xl font-black text-cyan-400">0</p></div>
                 <div class="text-center"><p class="text-[9px] uppercase text-emerald-400 font-bold">Mastered</p><p id="count-done" class="text-xl font-black text-emerald-400">0</p></div>
             </section>
 
+            <!-- Active Rotation Stream Shelf -->
             <section class="space-y-2">
                 <h3 class="font-black text-xs uppercase text-cyan-400 tracking-wider flex items-center gap-1.5">🎬 Active Stream Shelf</h3>
                 <div id="shelf-watching" class="space-y-3"></div>
             </section>
         </div>
 
+        <!-- ================= VIEW NODE 2: DISCOVER SEARCH CATALOG ================= -->
         <div id="view-discover" class="page-view page-hidden space-y-4">
+            <!-- Simplified User Guide Legend Grid (Fixed Version) -->
             <section class="matrix-card p-3 rounded-2xl border-cyan-500/10 bg-gradient-to-r from-cyan-950/10 to-transparent">
-                <span class="text-[9px] font-mono tracking-widest text-cyan-400 uppercase font-bold block mb-1">🕹️ Interface Action Operator Guide</span>
-                <div class="grid grid-cols-3 gap-2 text-[9px] text-slate-400 font-medium">
-                    <div><span class="text-cyan-400 font-bold block">💎 + Active</span>Locks show directly onto your active Stream Shelf.</div>
-                    <div><span class="text-purple-400 font-bold block">🔮 + Queue</span>Saves title inside the Roulette watchlist space.</div>
-                    <div><span class="text-emerald-400 font-bold block">🌿 + Mastered</span>Archives logs and drops entry into Grade Tier rows.</div>
+                <span class="text-[9px] font-mono tracking-widest text-cyan-400 uppercase font-bold block mb-1.5">🎮 Button Quick Guide</span>
+                <div class="grid grid-cols-3 gap-2 text-[9px] text-slate-300 font-medium">
+                    <div><span class="text-cyan-400 font-bold block">💎 + Active</span>Watching right now!<br>(Adds to Hub home screen)</div>
+                    <div><span class="text-purple-400 font-bold block">🔮 + Queue</span>Watch later list.<br>(Saves to Vault queue)</div>
+                    <div><span class="text-emerald-400 font-bold block">🌿 + Mastered</span>Completely finished!<br>(Ranks it on Tier List)</div>
                 </div>
             </section>
 
+            <!-- Main Input Query Matrix Component -->
             <section class="matrix-card p-3 rounded-2xl">
                 <div class="flex gap-2">
                     <input type="text" id="input-search" placeholder="Type title... (e.g. JJK, Demon Slayer, One Piece)" class="flex-1 bg-slate-950 border border-white/5 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-400">
@@ -93,10 +107,13 @@
                 </div>
             </section>
 
+            <!-- Dynamic Stream Results Card Grid Canvas -->
             <div id="search-grid" class="grid grid-cols-1 gap-3"></div>
         </div>
 
+        <!-- ================= VIEW NODE 3: VAULT & GRADE RANK MATRIX ================= -->
         <div id="view-vault" class="page-view page-hidden space-y-4">
+            <!-- Watchlist Section Queue -->
             <div class="matrix-card p-3 rounded-2xl">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider">⏳ Backlog Storage Queue</h3>
@@ -108,11 +125,13 @@
                 <div id="shelf-queue" class="space-y-2"></div>
             </div>
 
+            <!-- Master Finished Log Library -->
             <div class="matrix-card p-3 rounded-2xl">
                 <div class="flex items-center justify-between mb-2"><h3 class="font-black text-xs uppercase text-emerald-400 tracking-wider">✅ Finished Library Logs</h3><span id="badge-mastered" class="text-xs text-emerald-400 font-bold bg-emerald-400/10 px-2 py-0.5 rounded-full">0</span></div>
                 <div id="shelf-completed" class="space-y-2"></div>
             </div>
 
+            <!-- Interactive Tier Standings Alignment Grid -->
             <section class="matrix-card p-3 rounded-2xl bg-gradient-to-t from-slate-950 to-transparent">
                 <h3 class="font-black text-xs uppercase tracking-wider text-purple-400 mb-2.5">🏆 Structural Grade Alignment Matrix</h3>
                 <div class="space-y-1.5 rounded-xl overflow-hidden bg-slate-950/70 p-2 border border-white/5">
@@ -125,7 +144,9 @@
             </section>
         </div>
 
+        <!-- ================= PAGE 4: SYSTEM ANALYTICS TERMINAL ================= -->
         <div id="view-analytics" class="page-view page-hidden space-y-4">
+            <!-- Live Generated SVG Dynamic Data Graph Columns -->
             <section class="matrix-card p-4 rounded-3xl space-y-3">
                 <h3 class="font-black text-xs uppercase text-cyan-400 tracking-wider">📊 Real-Time Analytics Dashboard</h3>
                 <p class="text-[10px] text-slate-400">Algorithmic analysis of database entry distribution balances mapped inside the core memory loop.</p>
@@ -135,6 +156,7 @@
                 </div>
             </section>
 
+            <!-- Advanced Configuration Skin Controls -->
             <section class="matrix-card p-4 rounded-3xl space-y-2">
                 <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider">⚙️ System Core Theme Settings</h3>
                 <div class="grid grid-cols-2 gap-2 text-xs font-bold pt-1">
@@ -146,6 +168,7 @@
             </section>
         </div>
 
+        <!-- Global Sharing Features -->
         <button onclick="exportData()" class="w-full bg-[#0d1024] hover:bg-[#121634] border border-white/5 text-slate-400 text-[10px] tracking-wider uppercase font-black py-2.5 rounded-xl transition-all shadow cursor-pointer">✨ Export Global Network Architecture Payload</button>
         <a id="back-to-mine" href="?" class="hidden w-full bg-slate-950 text-slate-200 text-xs font-black py-2.5 rounded-xl text-center items-center justify-center border border-white/5 shadow-md">Back to My Vault</a>
     </div>
@@ -153,7 +176,7 @@
     <script>
         let vaultStorage = []; let viewOnly = false;
         
-        // Premium Client-Side Acoustic Sound-Waves Synthesizer (Web Audio API Engine Matrix)
+        // Custom Sound Engine Synthesis (Web Audio API Engine)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playTone(freq, type, duration) {
             try {
@@ -169,7 +192,7 @@
         function soundSuccess() { playTone(880, 'sine', 0.1); setTimeout(() => playTone(1318.51, 'sine', 0.15), 70); }
         function soundAlert() { playTone(440, 'sawtooth', 0.12); setTimeout(() => playTone(349.23, 'sawtooth', 0.15), 90); }
 
-        // Massive Embedded Pop-Culture Character & Dialogue Matrix Registry Database
+        // Anime Character Grid Modules Registry Database Dictionary
         const dynamicUniverseData = {
             senku: { character: "Senku Ishigami", icon: "🧪", quote: "This database structure is ten billion percent operational! Sourcing clean matrix parameters.", color: "text-emerald-400" },
             demon: { character: "Tanjiro Kamado", icon: "🎴", quote: "Look straight ahead. No matter how painful it gets, sharpen your blade and record your path!", color: "text-orange-400" },
@@ -186,7 +209,7 @@
             { c: "Roronoa Zoro", q: "If I die here, then I'm a man who could only go this far.", a: "⚔️" }
         ];
 
-        // Canvas Particle Rendering Engine Physics Layout 
+        // Canvas Particles Physics Layout Generator Engine 
         const canvas = document.getElementById('particleCanvas'); const ctx = canvas.getContext('2d');
         let particles = [];
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -205,7 +228,6 @@
         function makeViewOnlyMode() { document.getElementById('tab-discover')?.remove(); document.getElementById('tab-analytics')?.remove(); document.getElementById('back-to-mine').style.display = 'flex'; navigate('hub'); }
         function syncLocal() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v6', JSON.stringify(vaultStorage)); }
 
-        // Core Theme Configuration Matrix Panel Controllers
         const themes = {
             cyber: { primary: 'from-cyan-400 via-purple-400 to-amber-400', navText: 'text-cyan-400', border: 'border-cyan-400' },
             sakura: { primary: 'from-rose-400 via-pink-400 to-purple-400', navText: 'text-rose-400', border: 'border-rose-400' },
@@ -220,7 +242,6 @@
             localStorage.setItem('nexusThemeKey', themeKey); toastAlert(`Theme Engine Adjusted to ${themeKey.toUpperCase()}`);
         }
 
-        // Hardware-Accelerated App Navigation System Page Changer
         function navigate(pageId) {
             soundClick();
             ['hub', 'discover', 'vault', 'analytics'].forEach(p => {
@@ -340,7 +361,6 @@
             }, 120);
         }
 
-        // Native Technical SVG Data Visualization Engine Graph Generator
         function renderAnalyticsCharts() {
             const counts = { 'watching': 0, 'plan-to-watch': 0, 'completed': 0 };
             vaultStorage.forEach(i => { counts[i.status]++; });
@@ -356,7 +376,7 @@
                 barWrapper.className = "flex-1 flex flex-col items-center justify-end h-full gap-2";
                 barWrapper.innerHTML = `
                     <span class="text-[10px] font-mono font-black text-slate-200">${counts[s]}</span>
-                    <div class="w-8 ${colors[idx]} rounded-t-lg transition-all duration-700" style="height: ${Math.max(pct, 10)}%"></div>
+                    <div class="w-8 ${colors[idx]} rounded-t-lg transition-all duration-700" style="style: height: ${Math.max(pct, 10)}%"></div>
                 `;
                 container.appendChild(barWrapper);
             });
