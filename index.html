@@ -21,7 +21,10 @@
         .matrix-card { background: linear-gradient(180deg, rgba(22,28,54,0.45) 0%, rgba(10,12,28,0.85) 100%); border: 1px solid rgba(255, 255, 255, 0.04); backdrop-filter: blur(12px); box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5); }
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-        canvas#particleCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1; opacity: 0.25; }
+        
+        /* Fixed Background Canvas Layering to stop click interference completely */
+        canvas#particleCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; opacity: 0.25; }
+        .main-app-content { position: relative; z-index: 10; pointer-events: auto; }
     </style>
 </head>
 <body class="pb-28 pt-16 px-4">
@@ -42,12 +45,13 @@
 
     <div id="toast" class="hidden fixed top-20 left-4 right-4 max-w-md mx-auto bg-[#0b0f24] border border-cyan-500/30 text-cyan-400 p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all"></div>
 
-    <div class="max-w-md mx-auto space-y-4 relative z-10">
+    <div class="main-app-content max-w-md mx-auto space-y-4">
 
-        <div id="view-hub" class="page-view space-view space-y-4">
+        <div id="view-hub" class="page-view space-y-4">
             <section class="matrix-card p-4 rounded-3xl relative overflow-hidden bg-gradient-to-br from-cyan-950/15 via-transparent to-purple-950/10">
+                <div class="absolute -right-6 -top-6 text-7xl opacity-[0.03] font-serif select-none">“</div>
                 <span class="text-[8px] font-mono tracking-widest text-cyan-400 uppercase font-bold block mb-1">KuroDeck Terminal Feed</span>
-                <p id="display-quote" class="text-xs italic text-slate-200 leading-relaxed font-medium">"Welcome to the KuroDeck database dashboard, Akbar. Jump into the Discover view node to sync live titles with high-res cover art smoothly!"</p>
+                <p id="display-quote" class="text-xs italic text-slate-200 leading-relaxed font-medium">"System layers calibrated, Akbar. Head over to the Discover tab to sync high-resolution posters automatically!"</p>
                 <p id="display-author" class="text-[9px] font-bold text-amber-400 mt-2.5 text-right">— AI Terminal Controller</p>
             </section>
 
@@ -73,15 +77,15 @@
                 <span class="text-[9px] font-mono tracking-widest text-cyan-400 uppercase font-bold block mb-1">🕹️ Interface Action Operator Guide</span>
                 <div class="grid grid-cols-3 gap-2 text-[9px] text-slate-400 font-medium">
                     <div><span class="text-cyan-400 font-bold block">💎 + Active</span>Locks show directly onto your active Stream Shelf.</div>
-                    <div><span class="text-purple-400 font-bold block">🔮 + Queue</span>Saves title inside the Roulette memory watchlist.</div>
+                    <div><span class="text-purple-400 font-bold block">🔮 + Queue</span>Saves title inside the Roulette watchlist space.</div>
                     <div><span class="text-emerald-400 font-bold block">🌿 + Mastered</span>Archives logs and drops entry into Grade Tier rows.</div>
                 </div>
             </section>
 
             <section class="matrix-card p-3 rounded-2xl">
                 <div class="flex gap-2">
-                    <input type="text" id="input-search" placeholder="Query Global Matrix... (e.g. JJK, Demon Slayer, Naruto)" class="flex-1 bg-slate-950 border border-white/5 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-400">
-                    <button onclick="runQuery()" class="bg-gradient-to-r from-cyan-500 to-blue-500 text-slate-950 px-5 rounded-xl text-xs font-black active:scale-95 transition-all shadow-md">Query</button>
+                    <input type="text" id="input-search" placeholder="Type title... (e.g. JJK, Demon Slayer, One Piece)" class="flex-1 bg-slate-950 border border-white/5 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-400">
+                    <button onclick="runQuery()" class="bg-gradient-to-r from-cyan-500 to-blue-500 text-slate-950 px-5 rounded-xl text-xs font-black active:scale-95 transition-all shadow-md cursor-pointer">Query</button>
                 </div>
                 <div class="flex justify-center gap-6 mt-2.5 pt-2 border-t border-white/5 text-xs text-slate-400">
                     <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="mode" value="anime" checked class="accent-cyan-400"> Anime Catalog</label>
@@ -97,7 +101,7 @@
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider">⏳ Backlog Storage Queue</h3>
                     <div class="flex items-center gap-2">
-                        <button onclick="spinRoulette()" class="text-[9px] bg-gradient-to-r from-purple-500 to-cyan-500 text-slate-950 font-black px-2.5 py-0.5 rounded-full shadow active:scale-95 transition-all">Roulette 🎲</button>
+                        <button onclick="spinRoulette()" class="text-[9px] bg-gradient-to-r from-purple-500 to-cyan-500 text-slate-950 font-black px-2.5 py-0.5 rounded-full shadow active:scale-95 transition-all cursor-pointer">Roulette 🎲</button>
                         <span id="badge-queue" class="text-xs text-purple-400 font-bold bg-purple-400/10 px-2 py-0.5 rounded-full">0</span>
                     </div>
                 </div>
@@ -134,7 +138,285 @@
             <section class="matrix-card p-4 rounded-3xl space-y-2">
                 <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider">⚙️ System Core Theme Settings</h3>
                 <div class="grid grid-cols-2 gap-2 text-xs font-bold pt-1">
-                    <button onclick="applyTheme('cyber')" class="p-2 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 active:scale-95 transition-all">Cyber Neon Blue</button>
-                    <button onclick="applyTheme('sakura')" class="p-2 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-400 active:scale-95 transition-all">Midnight Sakura</button>
-                    <button onclick="applyTheme('cursed')" class="p-2 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-400 active:scale-95 transition-all">Cursed Violet</button>
-                    <button onclick="applyTheme('moctale')" class="p-2 rounded-xl bg-amber-950/
+                    <button onclick="applyTheme('cyber')" class="p-2 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 active:scale-95 transition-all cursor-pointer">Cyber Neon Blue</button>
+                    <button onclick="applyTheme('sakura')" class="p-2 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-400 active:scale-95 transition-all cursor-pointer">Midnight Sakura</button>
+                    <button onclick="applyTheme('cursed')" class="p-2 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-400 active:scale-95 transition-all cursor-pointer">Cursed Violet</button>
+                    <button onclick="applyTheme('moctale')" class="p-2 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-400 active:scale-95 transition-all cursor-pointer">Moctale Gold</button>
+                </div>
+            </section>
+        </div>
+
+        <button onclick="exportData()" class="w-full bg-[#0d1024] hover:bg-[#121634] border border-white/5 text-slate-400 text-[10px] tracking-wider uppercase font-black py-2.5 rounded-xl transition-all shadow cursor-pointer">✨ Export Global Network Architecture Payload</button>
+        <a id="back-to-mine" href="?" class="hidden w-full bg-slate-950 text-slate-200 text-xs font-black py-2.5 rounded-xl text-center items-center justify-center border border-white/5 shadow-md">Back to My Vault</a>
+    </div>
+
+    <script>
+        let vaultStorage = []; let viewOnly = false;
+        
+        // Premium Client-Side Acoustic Sound-Waves Synthesizer (Web Audio API Engine Matrix)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, type, duration) {
+            try {
+                const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
+                osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + duration);
+            } catch (e) { console.log(e); }
+        }
+        function soundClick() { playTone(587.33, 'triangle', 0.08); }
+        function soundSuccess() { playTone(880, 'sine', 0.1); setTimeout(() => playTone(1318.51, 'sine', 0.15), 70); }
+        function soundAlert() { playTone(440, 'sawtooth', 0.12); setTimeout(() => playTone(349.23, 'sawtooth', 0.15), 90); }
+
+        // Massive Embedded Pop-Culture Character & Dialogue Matrix Registry Database
+        const dynamicUniverseData = {
+            senku: { character: "Senku Ishigami", icon: "🧪", quote: "This database structure is ten billion percent operational! Sourcing clean matrix parameters.", color: "text-emerald-400" },
+            demon: { character: "Tanjiro Kamado", icon: "🎴", quote: "Look straight ahead. No matter how painful it gets, sharpen your blade and record your path!", color: "text-orange-400" },
+            gojo: { character: "Gojo Satoru", icon: "👁️", quote: "Don't sweat it, your custom database tracking layers are literally the strongest.", color: "text-purple-400" },
+            naruto: { character: "Naruto Uzumaki", icon: "🦊", quote: "I never go back on my records. That's my custom tracking methodology, believe it!", color: "text-yellow-400" },
+            luffy: { character: "Monkey D. Luffy", icon: "🍖", quote: "If you don't take cataloging risks, you can't build a legendary media profile fleet!", color: "text-rose-500" }
+        };
+
+        const staticFallbackDatabase = [
+            { c: "Gojo Satoru", q: "Don't worry, I'm the absolute strongest.", a: "👁️" },
+            { c: "Tanjiro Kamado", q: "Look straight ahead. Sharpen your blade.", a: "🎴" },
+            { c: "Naruto Uzumaki", q: "I never go back on my word. That's my ninja way!", a: "🦊" },
+            { c: "Senku Ishigami", q: "This is ten billion percent exhilarating!", a: "🧪" },
+            { c: "Roronoa Zoro", q: "If I die here, then I'm a man who could only go this far.", a: "⚔️" }
+        ];
+
+        // Canvas Particle Rendering Engine Physics Layout 
+        const canvas = document.getElementById('particleCanvas'); const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas); resizeCanvas();
+        class Particle {
+            constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.size = Math.random()*2+0.5; this.speedX = Math.random()*0.3-0.15; this.speedY = Math.random()*0.3-0.15; }
+            update() { this.x += this.speedX; this.y += this.speedY; if(this.x>canvas.width||this.x<0) this.speedX *= -1; if(this.y>canvas.height||this.y<0) this.speedY *= -1; }
+            draw() { ctx.fillStyle = 'rgba(6, 182, 212, 0.15)'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
+        }
+        for(let i=0; i<40; i++) { particles.push(new Particle()); }
+        function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{ p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
+        animateParticles();
+
+        function init() { const urlParams = new URLSearchParams(window.location.search); const shared = urlParams.get('vault'); if (shared) { try { vaultStorage = JSON.parse(atob(shared)); viewOnly = true; makeViewOnlyMode(); } catch (e) { loadLocal(); } } else { loadLocal(); } renderAppFramework(); document.getElementById('input-search').addEventListener('keypress', (e) => { if (e.key === 'Enter') runQuery(); }); }
+        function loadLocal() { const data = localStorage.getItem('kuroDeckStorage_v6'); vaultStorage = data ? JSON.parse(data) : []; }
+        function makeViewOnlyMode() { document.getElementById('tab-discover')?.remove(); document.getElementById('tab-analytics')?.remove(); document.getElementById('back-to-mine').style.display = 'flex'; navigate('hub'); }
+        function syncLocal() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v6', JSON.stringify(vaultStorage)); }
+
+        // Core Theme Configuration Matrix Panel Controllers
+        const themes = {
+            cyber: { primary: 'from-cyan-400 via-purple-400 to-amber-400', navText: 'text-cyan-400', border: 'border-cyan-400' },
+            sakura: { primary: 'from-rose-400 via-pink-400 to-purple-400', navText: 'text-rose-400', border: 'border-rose-400' },
+            cursed: { primary: 'from-purple-500 via-indigo-500 to-violet-500', navText: 'text-purple-400', border: 'border-purple-400' },
+            moctale: { primary: 'from-amber-400 via-orange-400 to-yellow-500', navText: 'text-amber-400', border: 'border-amber-400' }
+        };
+        function applyTheme(themeKey) {
+            soundClick(); const t = themes[themeKey]; if(!t) return;
+            document.querySelector('nav span').className = `text-xs font-black tracking-widest bg-gradient-to-r ${t.primary} text-transparent bg-clip-text uppercase flex items-center gap-1`;
+            const activeTab = document.querySelector('nav .text-cyan-400, nav .text-rose-400, nav .text-purple-400, nav .text-amber-400');
+            if (activeTab) { activeTab.className = `${t.navText} border-b-2 ${t.border} pb-1 transition-all`; }
+            localStorage.setItem('nexusThemeKey', themeKey); toastAlert(`Theme Engine Adjusted to ${themeKey.toUpperCase()}`);
+        }
+
+        // Hardware-Accelerated App Navigation System Page Changer
+        function navigate(pageId) {
+            soundClick();
+            ['hub', 'discover', 'vault', 'analytics'].forEach(p => {
+                document.getElementById(`view-${p}`).classList.add('page-hidden');
+                const btn = document.getElementById(`tab-${p}`); if (btn) btn.className = "text-slate-400 pb-1 transition-all duration-300";
+            });
+            document.getElementById(`view-${pageId}`).classList.remove('page-hidden');
+            const tk = localStorage.getItem('nexusThemeKey') || 'cyber';
+            document.getElementById(`tab-${pageId}`).className = `${themes[tk].navText} border-b-2 ${themes[tk].border} pb-1 font-bold transition-all duration-300`;
+            if(pageId === 'analytics') renderAnalyticsCharts();
+        }
+
+        function triggerCompanionSaying(id) { const c = dynamicUniverseData[id]; if (c) { soundSuccess(); toastAlert(`<strong>${c.character}:</strong> "${c.quote}"`); document.getElementById('display-quote').innerText = `"${c.quote}"`; document.getElementById('display-author').innerText = `— ${c.character}`; } }
+        function toastAlert(msg) { const t = document.getElementById('toast'); t.innerHTML = msg; t.classList.remove('hidden'); setTimeout(() => { t.classList.add('hidden'); }, 3500); }
+
+        async function runQuery() {
+            const val = document.getElementById('input-search').value.trim(); const grid = document.getElementById('search-grid');
+            if(val.length < 2) { soundAlert(); toastAlert("❌ Enter at least 2 characters to engage search array."); return; }
+            grid.innerHTML = `<div class="text-xs text-cyan-400 font-mono italic p-8 text-center animate-pulse">📡 Fetching data vectors from international library indexes...</div>`;
+            const mode = document.querySelector('input[name="mode"]:checked').value;
+            try {
+                const res = await fetch(`https://api.jikan.moe/v4/${mode}?q=${encodeURIComponent(val)}&limit=5`);
+                const json = await res.json(); renderSearchCards(json.data, mode);
+            } catch (e) { soundAlert(); grid.innerHTML = `<div class="text-xs text-rose-500 font-mono p-8 text-center">❌ Synchronizer latency node failure. Click query button again.</div>`; }
+        }
+
+        function renderSearchCards(data, mode) {
+            const grid = document.getElementById('search-grid'); grid.innerHTML = '';
+            if(!data || data.length === 0) { grid.innerHTML = `<div class="text-xs text-slate-500 italic p-8 text-center">Zero matches synchronized inside server array.</div>`; return; }
+            data.forEach(item => {
+                const title = item.title; const img = item.images?.jpg?.large_image_url || item.images?.jpg?.image_url || '';
+                const typeStr = item.type || (mode === 'anime' ? 'TV' : 'Manga');
+                const meta = `${typeStr} • ${item.episodes || item.chapters || 'Ongoing Structure'} (${item.score ? '★ ' + item.score : 'MAL Unrated'})`;
+                
+                const card = document.createElement('div');
+                card.className = "matrix-card p-3 rounded-2xl flex gap-3 items-start relative border border-white/5 shadow transition-all duration-300";
+                
+                let controls = !viewOnly ? `
+                    <div class="flex items-center gap-1.5 mt-2 flex-wrap">
+                        <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'watching', 'B')" class="text-[9px] bg-cyan-500 font-black px-2 py-1 rounded-md text-slate-950 active:scale-90 transition-all cursor-pointer">💎 + Active</button>
+                        <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'plan-to-watch', 'B')" class="text-[9px] bg-purple-600 font-bold px-2 py-1 rounded-md text-white active:scale-90 transition-all cursor-pointer">🔮 + Queue</button>
+                        <div class="relative inline-block">
+                            <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="text-[9px] bg-emerald-500 font-black px-2 py-1 rounded-md text-slate-950 active:scale-90 transition-all cursor-pointer">🌿 + Mastered</button>
+                            <div class="hidden absolute right-0 bottom-full mb-1 bg-slate-950 border border-slate-800 rounded-xl p-1.5 z-50 flex flex-col gap-1 shadow-2xl min-w-[80px]">
+                                <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'completed', 'S')" class="text-[8px] bg-rose-500/20 text-rose-400 font-bold p-1 rounded hover:bg-rose-500/30">S-Tier</button>
+                                <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'completed', 'A')" class="text-[8px] bg-orange-500/20 text-orange-400 font-bold p-1 rounded hover:bg-orange-500/30">A-Tier</button>
+                                <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'completed', 'B')" class="text-[8px] bg-yellow-500/20 text-yellow-400 font-bold p-1 rounded hover:bg-yellow-500/30">B-Tier</button>
+                                <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'completed', 'C')" class="text-[8px] bg-green-500/20 text-green-400 font-bold p-1 rounded hover:bg-green-500/30">C-Tier</button>
+                                <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'completed', 'Trash')" class="text-[8px] bg-slate-800 text-slate-400 p-1 rounded hover:bg-slate-700">Trash</button>
+                            </div>
+                        </div>
+                    </div>` : '';
+
+                card.innerHTML = `
+                    <img src="${img}" class="w-14 h-20 object-cover rounded-xl border border-white/5 shadow flex-shrink-0 bg-slate-950">
+                    <div class="flex-1 min-w-0 flex flex-col justify-between h-full">
+                        <div>
+                            <div class="flex justify-between items-start gap-1">
+                                <h4 class="font-black text-xs text-slate-100 truncate flex-1">${title}</h4>
+                                <span class="text-[8px] font-mono bg-amber-500/10 border border-amber-500/20 px-1 rounded text-amber-400 font-black">${item.score?'★ '+item.score:'Unrated'}</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 font-medium mt-0.5">${meta}</p>
+                        </div>
+                        ${controls}
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        function saveNode(encodedTitle, img, meta, status, tier) {
+            soundSuccess();
+            const title = decodeURIComponent(escape(atob(encodedTitle)));
+            vaultStorage.push({ id: Date.now(), title: title, status: status, type: meta.includes('Chapters')?'manga':'anime', metadata: meta, rating: null, tier: tier, image: img });
+            processDynamicQuote(title); syncLocal(); renderAppFramework();
+            document.getElementById('input-search').value = ''; document.getElementById('search-grid').innerHTML = '';
+            toastAlert(`✅ Synced "${title}" directly to KuroDeck.`);
+            setTimeout(() => navigate('hub'), 400);
+        }
+
+        function processDynamicQuote(title) {
+            const low = title.toLowerCase(); let k = null;
+            if(low.includes('stone') || low.includes('ishigami')) k = 'senku';
+            else if(low.includes('demon') || low.includes('slayer') || low.includes('tanjiro') || low.includes('kimetsu')) k = 'demon';
+            else if(low.includes('jujutsu') || low.includes('jjk') || low.includes('kaisen') || low.includes('gojo')) k = 'gojo';
+            else if(low.includes('naruto') || low.includes('uzumaki') || low.includes('shippuden')) k = 'naruto';
+            else if(low.includes('piece') || low.includes('luffy')) k = 'luffy';
+            
+            if(k && dynamicUniverseData[k]) {
+                const d = dynamicUniverseData[k];
+                document.getElementById('display-quote').innerText = `"${d.quote}"`;
+                document.getElementById('display-author').innerText = `— ${d.character}`;
+            } else {
+                const f = staticFallbackDatabase[Math.floor(Math.random()*staticFallbackDatabase.length)];
+                document.getElementById('display-quote').innerText = `"${f.q}"`;
+                document.getElementById('display-author').innerText = `— ${f.c}`;
+            }
+        }
+
+        function updateStatus(id, ns) { soundClick(); vaultStorage = vaultStorage.map(i=>i.id===id?{...i, status:ns}:i); syncLocal(); renderAppFramework(); }
+        function purgeNode(id) { soundAlert(); vaultStorage = vaultStorage.filter(i=>i.id!==id); syncStorage(); renderAppFramework(); }
+        function syncStorage() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v6', JSON.stringify(vaultStorage)); }
+
+        function spinRoulette() {
+            const targets = vaultStorage.filter(i => i.status === 'plan-to-watch');
+            if (targets.length === 0) { soundAlert(); toastAlert("❌ Backlog watchlists empty. Add items first!"); return; }
+            let cycles = 0; navigate('hub');
+            let spin = setInterval(() => {
+                const pick = targets[Math.floor(Math.random() * targets.length)];
+                playTone(440 + (cycles * 45), 'sine', 0.05);
+                toastAlert(`🔬 Scanning matrix parameters... [${pick.title}]`); cycles++;
+                if (cycles > 8) {
+                    clearInterval(spin); const choice = targets[Math.floor(Math.random() * targets.length)];
+                    soundSuccess(); document.getElementById('toast').classList.add('hidden');
+                    document.getElementById('display-quote').innerHTML = `⚡ <strong>Roulette Sweep Complete:</strong> Track and stream <strong>${choice.title}</strong> next! 🚀`;
+                    document.getElementById('display-author').innerText = `— System Analytics Node`; processDynamicQuote(choice.title);
+                }
+            }, 120);
+        }
+
+        // Native Technical SVG Data Visualization Engine Graph Generator
+        function renderAnalyticsCharts() {
+            const counts = { 'watching': 0, 'plan-to-watch': 0, 'completed': 0 };
+            vaultStorage.forEach(i => { counts[i.status]++; });
+            const max = Math.max(counts['watching'], counts['plan-to-watch'], counts['completed'], 1);
+            
+            const container = document.getElementById('chart-container'); container.innerHTML = '';
+            const statuses = ['watching', 'plan-to-watch', 'completed'];
+            const colors = ['bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.4)]', 'bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.4)]', 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]'];
+            
+            statuses.forEach((s, idx) => {
+                const pct = (counts[s] / max) * 100;
+                const barWrapper = document.createElement('div');
+                barWrapper.className = "flex-1 flex flex-col items-center justify-end h-full gap-2";
+                barWrapper.innerHTML = `
+                    <span class="text-[10px] font-mono font-black text-slate-200">${counts[s]}</span>
+                    <div class="w-8 ${colors[idx]} rounded-t-lg transition-all duration-700" style="height: ${Math.max(pct, 10)}%"></div>
+                `;
+                container.appendChild(barWrapper);
+            });
+        }
+
+        function exportData() { const b64 = btoa(JSON.stringify(vaultStorage)); navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?vault=${b64}`).then(() => { soundSuccess(); toastAlert("🚀 Link copied successfully!"); }); }
+
+        function renderAppFramework() {
+            const sw = document.getElementById('shelf-watching'); const sq = document.getElementById('shelf-queue'); const sc = document.getElementById('shelf-completed');
+            const counts = { 'watching': 0, 'plan-to-watch': 0, 'completed': 0 }; const rows = { 'S': document.getElementById('row-S'), 'A': document.getElementById('row-A'), 'B': document.getElementById('row-B'), 'C': document.getElementById('row-C'), 'Trash': document.getElementById('row-Trash') };
+            const deck = document.getElementById('guild-deck');
+            
+            sw.innerHTML = ''; sq.innerHTML = ''; sc.innerHTML = ''; Object.values(rows).forEach(r => r.innerHTML = '');
+            deck.innerHTML = '';
+            
+            let keyMap = { "stone": "senku", "ishigami": "senku", "slayer": "demon", "demon": "demon", "kimetsu": "demon", "gojo": "gojo", "jujutsu": "gojo", "jjk": "gojo", "naruto": "naruto", "shippuden": "naruto", "luffy": "luffy", "piece": "luffy" };
+            let unlocked = new Set();
+
+            vaultStorage.forEach(item => {
+                counts[item.status]++; const lowTitle = item.title.toLowerCase();
+                Object.keys(keyMap).forEach(k => { if(lowTitle.includes(k)) unlocked.add(keyMap[k]); });
+
+                if (item.status === 'watching') {
+                    const block = document.createElement('div'); block.className = "matrix-card p-3 rounded-2xl flex gap-3 items-center bg-slate-900/40 border border-white/5 shadow relative animate-fade-in";
+                    let select = !viewOnly ? `<select onchange="updateStatus(${item.id}, this.value)" class="text-[10px] bg-slate-950 border border-slate-800 rounded px-1 text-slate-400 py-1 focus:outline-none shadow-inner"><option value="watching" selected>Streaming</option><option value="completed">Complete</option></select>` : '';
+                    block.innerHTML = `<img src="${item.image}" class="w-12 h-16 object-cover rounded-xl border border-slate-900 shadow bg-slate-950 flex-shrink-0"><div class="flex-1 min-w-0"><p class="text-xs font-black text-slate-100 truncate">${item.title}</p><p class="text-[9px] text-slate-500 mt-0.5 font-medium truncate">${item.metadata}</p><span class="text-[8px] font-mono bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 px-1.5 rounded mt-2 inline-block font-semibold">Active Rotation</span></div><div class="flex flex-col items-end gap-4">${select}</div>`; sw.appendChild(block);
+                } else if (item.status === 'plan-to-watch') {
+                    const block = document.createElement('div'); block.className = "matrix-card p-2 rounded-xl flex items-center justify-between text-xs bg-slate-900/20";
+                    let ctrl = !viewOnly ? `<div class="flex gap-2"><button onclick="updateStatus(${item.id}, 'completed')" class="text-[9px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-black cursor-pointer">Done</button><button onclick="purgeNode(${item.id})" class="text-slate-600 hover:text-rose-400 font-bold px-1 cursor-pointer">×</button></div>` : '';
+                    block.innerHTML = `<div class="flex items-center gap-2 truncate"><img src="${item.image}" class="w-6 h-8 object-cover rounded-md border border-slate-900 bg-slate-950 shadow"><span class="truncate font-semibold text-slate-300">${item.title}</span></div>${ctrl}`; sq.appendChild(block);
+                } else if (item.status === 'completed') {
+                    const block = document.createElement('div'); block.className = "matrix-card p-2 rounded-xl flex items-center justify-between text-xs bg-slate-900/20 border-emerald-500/5";
+                    let action = !viewOnly ? `<button onclick="purgeNode(${item.id})" class="text-slate-600 hover:text-rose-400 text-[10px] px-1 cursor-pointer">🗑️</button>` : '';
+                    block.innerHTML = `<div class="flex items-center gap-2"><img src="${item.image}" class="w-6 h-8 object-cover rounded-md border border-slate-900 bg-slate-950 shadow"><div class="min-w-0 max-w-[200px]"><p class="font-black text-slate-200 text-xs truncate">${item.title}</p><p class="text-[8px] text-slate-500 font-medium truncate">${item.metadata}</p></div></div>${action}`; sc.appendChild(block);
+                    
+                    const badge = document.createElement('span'); badge.className = "text-[9px] font-black bg-slate-900 border border-slate-800 text-slate-300 px-2 py-0.5 rounded shadow max-w-[96px] truncate"; badge.innerText = item.title;
+                    if(rows[item.tier || 'B']) rows[item.tier || 'B'].appendChild(badge);
+                }
+            });
+
+            unlocked.forEach(k => {
+                const companion = dynamicUniverseData[k]; if(!companion) return;
+                const n = document.createElement('div'); n.className = "matrix-card p-2 rounded-xl text-center min-w-[76px] cursor-pointer border-cyan-500/10 active:scale-95 transition-all duration-300";
+                n.onclick = function() { triggerCompanionSaying(k); };
+                n.innerHTML = `<p class="text-xl">${companion.icon}</p><p class="text-[9px] font-black ${companion.color} mt-0.5 truncate">${companion.character.split(' ')[0]}</p>`; deck.appendChild(n);
+            });
+
+            if(deck.children.length === 0) deck.innerHTML = `<div class="text-[10px] text-slate-600 italic py-1">Discover titles to sync custom anime character modules.</div>`;
+            document.getElementById('count-all').innerText = vaultStorage.length; document.getElementById('count-active').innerText = counts['watching']; document.getElementById('count-done').innerText = counts['completed'];
+            document.getElementById('badge-queue').innerText = counts['plan-to-watch']; document.getElementById('badge-mastered').innerText = counts['completed'];
+            
+            if(sw.children.length === 0) sw.innerHTML = `<div class="text-[10px] text-slate-600 italic p-6 w-full text-center border border-dashed border-white/5 rounded-2xl bg-slate-950/20">Active rotation streaming list clear. Sift through the Discover tab to log series with full live high-res covers.</div>`;
+            if(sq.children.length === 0) sq.innerHTML = `<div class="text-[10px] text-slate-600 italic p-3 text-center border border-dashed border-white/5 rounded-xl bg-slate-950/20">Backlog targets clear.</div>`;
+            if(sc.children.length === 0) sc.innerHTML = `<div class="text-[10px] text-slate-600 italic p-3 text-center border border-dashed border-white/5 rounded-xl bg-slate-950/20">Vault logs clear.</div>`;
+            Object.keys(rows).forEach(k => { if(rows[k].children.length === 0) rows[k].innerHTML = `<span class="text-[8px] text-slate-700 italic flex items-center py-0.5">Empty Row Slat</span>`; });
+        }
+        
+        function triggerCompanionSaying(key) { const data = dynamicUniverseData[key]; if (data) { fireSystemAlert(`<strong>${data.character}:</strong> "${data.quote}"`); document.getElementById('display-quote').innerText = `"${data.quote}"`; document.getElementById('display-author').innerText = `— ${data.character}`; } }
+        function fireSystemAlert(msg) { const a = document.getElementById('toast'); a.innerHTML = msg; a.classList.remove('hidden'); setTimeout(() => a.classList.add('hidden'), 4000); }
+        window.onload = init;
+    </script>
+</body>
+</html>
