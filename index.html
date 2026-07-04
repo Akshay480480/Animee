@@ -1,24 +1,3 @@
-You did it! Your website is officially live and looks awesome. I definitely went a little overboard with the sci-fi, "hacking" terms. It looks like a spaceship cockpit right now, but underneath the fancy words, it is just a simple 3-step list.
-Let’s translate the sci-fi words into normal words so it's incredibly easy to use.
-## 🧭 The Kid-Friendly Guide to Your App
-### 1. The Top Boxes (Your Scoreboard)
- * **Total Entries:** How many total anime you have added to your app.
- * **Active Operations:** How many shows you are watching right now.
- * **Completed Logs:** How many shows you have completely finished.
- * **Completion Rate:** A fun percentage score that shows how close you are to finishing your whole list.
-### 2. The Middle Box (How to Add a Show)
- * **"Enter series index title..."** \rightarrow Just type the name of the anime here (like *Naruto* or *One Piece*).
- * **🍿 Currently Watching** \rightarrow Click this to pick if you are watching it now, want to watch it later, or finished it.
- * **★ /10** \rightarrow Type a number here (like 9 or 10) to give the show a score. You can also leave it blank!
- * **Deploy to Database +** \rightarrow This is just a fancy **"SAVE"** button. Tap it to add the show to your list.
-### 3. The Bottom Lists (Where Your Shows Go)
- * **Active Rotations** \rightarrow This is your **"Watching Right Now"** list.
- * **Target Queue** \rightarrow This is your **"Watchlist"** (shows you want to watch next).
- * **System Archives** \rightarrow This is your **"Finished"** list.
-## 🛠️ Want to Make the App Text Simpler?
-If you want the app to actually *say* simple words instead of the sci-fi words, I rewrote the code for you below. It changes "Deploy to Database" to **"Add Anime 🚀"** and "Target Queue" to **"My Watchlist ⏳"**.
-If you want this simpler version, just edit your index.html file on GitHub one more time and paste this code in:
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,6 +13,7 @@ If you want this simpler version, just edit your index.html file on GitHub one m
 <body class="p-4">
     <div class="max-w-5xl mx-auto">
         
+        <!-- Simple Header -->
         <header class="mb-6 pb-4 border-b border-slate-800">
             <h1 id="site-title" class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400">Akshay's Anime Tracker</h1>
             <div class="flex gap-2 mt-4">
@@ -42,6 +22,7 @@ If you want this simpler version, just edit your index.html file on GitHub one m
             </div>
         </header>
 
+        <!-- Simple Stats Counters -->
         <section class="grid grid-cols-2 gap-2 mb-6">
             <div class="glass-card p-3 rounded-xl text-center"><p class="text-[10px] uppercase text-slate-500">Total Shows</p><p id="stat-total" class="text-lg font-bold mt-0.5 text-slate-100">0</p></div>
             <div class="glass-card p-3 rounded-xl text-center"><p class="text-[10px] uppercase text-amber-400">Watching Now</p><p id="stat-watching" class="text-lg font-bold mt-0.5 text-amber-400">0</p></div>
@@ -51,6 +32,7 @@ If you want this simpler version, just edit your index.html file on GitHub one m
 
         <div id="toast" class="hidden fixed bottom-6 right-6 left-6 bg-slate-900 border border-emerald-500/30 text-emerald-400 p-4 rounded-xl text-xs z-50 text-center">🚀 Link copied! Send it to your friends.</div>
 
+        <!-- Easy Input Panel -->
         <section id="controls-section" class="glass-card p-4 rounded-xl mb-6">
             <div class="flex flex-col gap-3">
                 <input type="text" id="anime-title" placeholder="Type Anime Name Here..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
@@ -66,6 +48,7 @@ If you want this simpler version, just edit your index.html file on GitHub one m
             </div>
         </section>
 
+        <!-- Easy Lists -->
         <main class="space-y-6">
             <div>
                 <div class="flex items-center justify-between mb-2"><h3 class="font-bold text-xs uppercase text-amber-400">🍿 Watching Now</h3><span id="badge-watching" class="text-xs text-amber-400 font-bold bg-amber-400/5 px-2 py-0.5 rounded">0</span></div>
@@ -112,5 +95,3 @@ If you want this simpler version, just edit your index.html file on GitHub one m
     </script>
 </body>
 </html>
-
-```
