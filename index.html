@@ -8,273 +8,266 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22The%20Ishigami%20Science%20Codex%22%2C%22short_name%22%3A%22Science%20Codex%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020408%22%2C%22theme_color%22%3A%22%23a855f7%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fneon%2F512%2Ftest-tube.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image/png%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22The%20Ishigami%20Science%20Codex%22%2C%22short_name%22%3A%22Science%20Codex%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23030712%22%2C%22theme_color%22%3A%22%2306b6d4%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fneon%2F512%2Ftest-tube.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image/png%22%7D%5D%7D">
 
     <link rel="icon" type="image/png" sizes="512x512" href="https://img.icons8.com/neon/512/test-tube.png">
     <link rel="apple-touch-icon" sizes="512x512" href="https://img.icons8.com/neon/512/test-tube.png">
     
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        body { background: radial-gradient(ellipse at top, #0b132b, #030712); color: #f1f5f9; min-height: 100vh; font-family: system-ui, sans-serif; }
-        .glass-panel { background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .tier-row { border-left: 4px solid currentColor; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        body { background-color: #030712; color: #f3f4f6; min-height: 100vh; font-family: system-ui, sans-serif; }
+        .otaku-card { background-color: #0b1329; border: 1px solid #1e293b; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); }
+        .matrix-row { border-left: 4px solid currentColor; background-color: #020617; }
     </style>
 </head>
-<body class="p-4 pb-24">
+<body class="p-4 pt-16">
     <div class="max-w-md mx-auto space-y-4">
         
-        <header class="text-center pt-2">
-            <div class="flex items-center justify-center gap-1.5 mb-1">
-                <span class="h-1.5 w-1.5 rounded-full bg-purple-400 animate-ping"></span>
-                <span class="text-[9px] font-mono tracking-widest text-purple-400 uppercase font-black">Nexus Matrix v6.0</span>
+        <nav class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-slate-950 border-b border-slate-800 flex justify-between items-center px-4 py-2.5 z-50">
+            <span class="text-xs font-black tracking-wider text-cyan-400 uppercase">Science Codex 🧪</span>
+            <div class="flex gap-3 text-xs font-bold">
+                <button onclick="changePage('deck')" id="tab-deck" class="text-cyan-400 border-b-2 border-cyan-400 pb-0.5">Deck</button>
+                <button onclick="changePage('query')" id="tab-query" class="text-slate-400 pb-0.5">Search</button>
+                <button onclick="changePage('grid')" id="tab-grid" class="text-slate-400 pb-0.5">Vault</button>
             </div>
-            <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-cyan-400 to-emerald-400 tracking-tight">Science Codex</h1>
-        </header>
+        </nav>
 
-        <div id="toast" class="hidden glass-panel border-purple-500/20 text-purple-300 p-3 rounded-xl text-xs text-center shadow-xl font-medium"></div>
+        <div id="alert-feed" class="hidden bg-slate-900 border border-cyan-500/20 text-cyan-400 p-3 rounded-xl text-xs text-center font-medium shadow-lg transition-all"></div>
 
-        <div id="page-hub" class="space-y-4">
-            
-            <section class="glass-panel p-4 rounded-2xl relative overflow-hidden bg-gradient-to-br from-purple-950/10 to-transparent">
-                <div class="flex justify-between items-start mb-2">
-                    <div>
-                        <span class="text-[8px] font-mono uppercase bg-purple-500/10 border border-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">Companion Node</span>
-                        <h2 id="char-name" class="text-xl font-black text-cyan-400 mt-1">Senku Ishigami</h2>
-                    </div>
-                    <div id="char-avatar" class="text-3xl p-1 bg-slate-900/60 rounded-xl border border-slate-800">🧪</div>
-                </div>
-                <div class="bg-slate-950/50 p-3 rounded-xl border border-slate-900">
-                    <p id="char-quote" class="text-xs italic text-slate-300 font-medium leading-relaxed">"This database structure is ten billion percent operational! Add entries in the search matrix to synchronize universes."</p>
+        <div id="view-deck" class="space-y-4">
+            <section class="space-y-2">
+                <span class="text-[9px] font-mono tracking-widest text-slate-500 uppercase font-black">Unlocked Active Companions</span>
+                <div id="guild-deck" class="grid grid-cols-4 gap-2">
+                    <div onclick="triggerQuote('senku')" class="otaku-card p-2 rounded-xl text-center cursor-pointer border-emerald-500/20 active:scale-95 transition"><p class="text-2xl">🧪</p><p class="text-[9px] font-black text-emerald-400 mt-1 truncate">Senku</p></div>
                 </div>
             </section>
 
-            <section class="grid grid-cols-3 gap-2">
-                <div class="glass-panel p-3 rounded-xl text-center border-slate-800/40"><p class="text-[9px] uppercase text-slate-400 font-bold">Total Index</p><p id="stat-total" class="text-xl font-black text-slate-100">0</p></div>
-                <div class="glass-panel p-3 rounded-xl text-center border-cyan-950/40"><p class="text-[9px] uppercase text-cyan-400 font-bold">Active Logs</p><p id="stat-watching" class="text-xl font-black text-cyan-400">0</p></div>
-                <div class="glass-panel p-3 rounded-xl text-center border-emerald-950/40"><p class="text-[9px] uppercase text-emerald-400 font-bold">Completed</p><p id="stat-completed" class="text-xl font-black text-emerald-400">0</p></div>
+            <section class="grid grid-cols-3 gap-2 bg-slate-950 p-2 rounded-2xl border border-slate-900">
+                <div class="text-center"><p class="text-[9px] uppercase text-slate-500 font-bold">All Logs</p><p id="count-all" class="text-lg font-black text-slate-100">0</p></div>
+                <div class="text-center border-x border-slate-900"><p class="text-[9px] uppercase text-cyan-500 font-bold">Active</p><p id="count-active" class="text-lg font-black text-cyan-400">0</p></div>
+                <div class="text-center"><p class="text-[9px] uppercase text-emerald-500 font-bold">Mastered</p><p id="count-done" class="text-lg font-black text-emerald-400">0</p></div>
             </section>
 
             <section class="space-y-2">
-                <h3 class="font-bold text-xs uppercase text-cyan-400 tracking-wider">🍿 Active Rotation Logs</h3>
-                <div id="carousel-watching" class="flex gap-3 overflow-x-auto pb-2 pt-1 hide-scrollbar"></div>
+                <h3 class="font-black text-xs uppercase text-cyan-400 tracking-wider">🍿 Currently Streaming Rotations</h3>
+                <div id="stream-deck-watching" class="space-y-2.5"></div>
             </section>
         </div>
 
-        <div id="page-search" class="hidden space-y-4">
-            <section class="glass-panel p-4 rounded-2xl border-slate-900 shadow-xl bg-slate-950/10">
+        <div id="view-query" class="hidden space-y-4">
+            <section class="otaku-card p-4 rounded-2xl">
                 <div class="flex flex-col gap-3">
                     <div class="grid grid-cols-2 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-900">
-                        <button id="type-anime" onclick="setMediaType('anime')" class="text-xs font-bold py-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-cyan-500 text-slate-950 transition">Anime Deck</button>
-                        <button id="type-manga" onclick="setMediaType('manga')" class="text-xs font-bold py-1.5 rounded-lg text-slate-400 transition">Manga Deck</button>
+                        <button id="mode-anime" onclick="toggleMode('anime')" class="text-xs font-bold py-1.5 rounded-lg bg-cyan-500 text-slate-950 transition">Anime Node</button>
+                        <button id="mode-manga" onclick="toggleMode('manga')" class="text-xs font-bold py-1.5 rounded-lg text-slate-400 transition">Manga Node</button>
                     </div>
 
-                    <div class="relative flex flex-col gap-1.5">
+                    <div class="relative">
                         <div class="flex gap-2">
-                            <input type="text" id="anime-title" placeholder="Type title... (e.g. Demon Slayer)" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
-                            <button onclick="searchMedia()" class="bg-gradient-to-r from-purple-600 to-cyan-600 text-white px-4 rounded-xl text-xs font-bold active:scale-95 transition shadow-lg">Query 🔍</button>
+                            <input type="text" id="input-title" placeholder="Search global database titles..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
+                            <button onclick="executeSearch()" class="bg-cyan-500 text-slate-950 px-4 rounded-xl text-xs font-black active:scale-95 transition">Search</button>
                         </div>
-                        <div id="search-results" class="hidden absolute left-0 right-0 top-full mt-2 bg-slate-950 border border-slate-800 rounded-xl max-h-52 overflow-y-auto z-50 shadow-2xl divide-y divide-slate-900/60"></div>
+                        <div id="dropdown-results" class="hidden absolute left-0 right-0 top-full mt-2 bg-slate-950 border border-slate-800 rounded-xl max-h-52 overflow-y-auto z-50 shadow-2xl divide-y divide-slate-900/60"></div>
                     </div>
                     
                     <div class="grid grid-cols-12 gap-2">
-                        <select id="anime-status" class="col-span-6 bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-xs text-slate-300 focus:outline-none">
-                            <option value="watching" id="opt-watching">🍿 Tracking Active</option>
-                            <option value="plan-to-watch" id="opt-plan">⏳ Save for Future</option>
-                            <option value="completed" id="opt-done">✅ Archive Finished</option>
+                        <select id="select-status" class="col-span-6 bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-xs text-slate-300 focus:outline-none">
+                            <option value="watching" id="lbl-watch">🍿 Active Tracking</option>
+                            <option value="plan-to-watch" id="lbl-plan">⏳ Save in Queue</option>
+                            <option value="completed" id="lbl-done">✅ Mark Completed</option>
                         </select>
-                        <input type="number" id="anime-rating" min="1" max="10" step="0.5" placeholder="★ Score" class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl px-1 py-2 text-center text-xs text-white focus:outline-none">
-                        <select id="anime-tier" class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl px-1 py-2 text-xs text-purple-400 font-black focus:outline-none">
+                        <input type="number" id="input-score" min="1" max="10" step="0.5" placeholder="★ Rating" class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl px-1 py-2 text-center text-xs text-white focus:outline-none">
+                        <select id="select-tier" class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl px-1 py-2 text-xs text-purple-400 font-bold focus:outline-none">
                             <option value="S">S-Tier</option><option value="A">A-Tier</option><option value="B">B-Tier</option><option value="C">C-Tier</option><option value="Trash">Trash</option>
                         </select>
                     </div>
-                    <input type="text" id="anime-notes" placeholder="Personal notes or comments..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-1.5 text-xs text-slate-300 focus:outline-none">
-                    <button onclick="addAnime()" class="w-full bg-gradient-to-r from-purple-500 via-cyan-500 to-emerald-500 text-slate-950 font-black py-2.5 rounded-xl text-xs uppercase tracking-wider transition shadow-lg">Sync Into Vault</button>
+                    <input type="text" id="input-notes" placeholder="Favorite details or comments..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-1.5 text-xs text-slate-300 focus:outline-none">
+                    <button onclick="commitToVault()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-slate-950 font-black py-2.5 rounded-xl text-xs uppercase tracking-wider transition shadow-lg">Commit to Core Database</button>
                 </div>
             </section>
         </div>
 
-        <div id="page-vault" class="hidden space-y-4">
-            <div class="glass-panel p-3 rounded-2xl border-purple-950/30">
+        <div id="view-grid" class="hidden space-y-4">
+            <div class="otaku-card p-3 rounded-2xl">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider">⏳ Future Targets Queue</h3>
                     <div class="flex items-center gap-2">
-                        <button onclick="runScienceRoulette()" class="text-[9px] bg-gradient-to-r from-purple-500 to-cyan-500 text-slate-950 font-black px-2 py-0.5 rounded shadow">Roulette 🎲</button>
-                        <span id="badge-plan-to-watch" class="text-xs text-purple-400 font-bold bg-purple-400/10 px-2 py-0.5 rounded-full">0</span>
+                        <button onclick="triggerRoulette()" class="text-[9px] bg-cyan-500 text-slate-950 font-black px-2 py-0.5 rounded shadow">Spin Wheel 🎲</button>
+                        <span id="badge-queue" class="text-xs text-purple-400 font-bold bg-purple-400/10 px-2 py-0.5 rounded-full">0</span>
                     </div>
                 </div>
-                <div id="list-plan-to-watch" class="space-y-2"></div>
+                <div id="deck-queue" class="space-y-2"></div>
             </div>
 
-            <div class="glass-panel p-3 rounded-2xl border-emerald-950/30">
-                <div class="flex items-center justify-between mb-2"><h3 class="font-black text-xs uppercase text-emerald-400 tracking-wider">✅ Completed Masterworks</h3><span id="badge-completed" class="text-xs text-emerald-400 font-bold bg-emerald-400/10 px-2 py-0.5 rounded-full">0</span></div>
-                <div id="list-completed" class="space-y-2"></div>
+            <div class="otaku-card p-3 rounded-2xl">
+                <div class="flex items-center justify-between mb-2"><h3 class="font-black text-xs uppercase text-emerald-400 tracking-wider">✅ Finished Library Logs</h3><span id="badge-mastered" class="text-xs text-emerald-400 font-bold bg-emerald-400/10 px-2 py-0.5 rounded-full">0</span></div>
+                <div id="deck-completed" class="space-y-2"></div>
             </div>
 
-            <section class="glass-panel p-3 rounded-2xl border-slate-900 bg-slate-950/30">
-                <h3 class="font-black text-xs uppercase tracking-wider text-purple-400 mb-2.5">🏆 Matrix Tier Rankings</h3>
+            <section class="otaku-card p-3 rounded-2xl">
+                <h3 class="font-black text-xs uppercase tracking-wider text-purple-400 mb-2.5">🏆 Grade Ranking Matrix</h3>
                 <div class="space-y-1.5 rounded-xl overflow-hidden bg-slate-950 p-1.5 border border-slate-900">
-                    <div class="flex items-center gap-2 p-1 rounded tier-row text-rose-500"><div class="w-10 text-center font-black text-xs text-rose-500">S</div><div id="tier-S" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
-                    <div class="flex items-center gap-2 p-1 rounded tier-row text-orange-400"><div class="w-10 text-center font-black text-xs text-orange-400">A</div><div id="tier-A" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
-                    <div class="flex items-center gap-2 p-1 rounded tier-row text-yellow-400"><div class="w-10 text-center font-black text-xs text-yellow-400">B</div><div id="tier-B" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
-                    <div class="flex items-center gap-2 p-1 rounded tier-row text-green-400"><div class="w-10 text-center font-black text-xs text-green-400">C</div><div id="tier-C" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
-                    <div class="flex items-center gap-2 p-1 rounded tier-row text-slate-500"><div class="w-10 text-center font-black text-[10px] text-slate-500">Trash</div><div id="tier-Trash" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded matrix-row text-rose-500"><div class="w-10 text-center font-black text-xs text-rose-500">S</div><div id="row-S" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded matrix-row text-orange-400"><div class="w-10 text-center font-black text-xs text-orange-400">A</div><div id="row-A" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded matrix-row text-yellow-400"><div class="w-10 text-center font-black text-xs text-yellow-400">B</div><div id="row-B" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded matrix-row text-green-400"><div class="w-10 text-center font-black text-xs text-green-400">C</div><div id="row-C" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded matrix-row text-slate-500"><div class="w-10 text-center font-black text-[10px] text-slate-500">Trash</div><div id="row-Trash" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
                 </div>
             </section>
         </div>
 
-        <nav class="fixed bottom-4 left-4 right-4 max-w-md mx-auto glass-panel rounded-2xl p-1.5 flex justify-around items-center shadow-2xl z-50 bg-slate-950/80 border-white/5">
-            <button onclick="switchView('hub')" id="nav-hub" class="flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition text-cyan-400 font-black"><span class="text-base">📡</span><span class="text-[9px] tracking-tight">Hub</span></button>
-            <button onclick="switchView('search')" id="nav-search" class="flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition text-slate-400 font-medium"><span class="text-base">🔍</span><span class="text-[9px] tracking-tight">Search</span></button>
-            <button onclick="switchView('vault')" id="nav-vault" class="flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition text-slate-400 font-medium"><span class="text-base">🏆</span><span class="text-[9px] tracking-tight">Vault</span></button>
-        </nav>
-        
-        <button id="share-btn" onclick="shareList()" class="w-full bg-slate-950 border border-slate-800 text-slate-400 text-[11px] font-bold py-2 rounded-xl transition active:scale-95 shadow">✨ Teleport Global Archive Link</button>
-        <a id="back-to-mine" href="?" class="hidden w-full bg-slate-900 text-slate-100 text-xs font-bold py-2 rounded-xl text-center items-center justify-center">Back to Personal Grid</a>
+        <button id="share-btn" onclick="transmitData()" class="w-full bg-slate-950 border border-slate-800 text-slate-400 text-[11px] font-bold py-2 rounded-xl transition active:scale-95 shadow">✨ Distribute Architecture Payload</button>
+        <a id="back-to-mine" href="?" class="hidden w-full bg-slate-900 text-slate-100 text-xs font-bold py-2 rounded-xl text-center items-center justify-center">Back to Personal Hub</a>
     </div>
 
     <script>
-        let animeList = []; let isViewOnlyMode = false; let currentFormType = 'anime'; let tempImgUrl = ''; let tempMeta = '';
+        let dbList = []; let isViewOnly = false; let activeMode = 'anime'; let cacheImg = ''; let cacheMeta = '';
         
-        const dynamicCompanions = [
-            { triggers: ["stone", "ishigami"], name: "Senku Ishigami", avatar: "🧪", quote: "This database structure is ten billion percent operational! Sourcing clean matrix parameters.", color: "text-emerald-400" },
-            { triggers: ["demon", "slayer", "tanjiro", "kimetsu"], name: "Tanjiro Kamado", avatar: "🎴", quote: "Look straight ahead. Sharpen your blade and record your legendary path without hesitation!", color: "text-orange-400" },
-            { triggers: ["jujutsu", "jjk", "kaisen", "gojo"], name: "Gojo Satoru", avatar: "👁️", quote: "Don't worry, my tracking architecture is the strongest. Your S-Tier logs look immaculate.", color: "text-purple-400" },
-            { triggers: ["naruto", "uzumaki", "shippuden"], name: "Naruto Uzumaki", avatar: "🦊", quote: "I never go back on my records, that's my custom ninja logging methodology, believe it!", color: "text-yellow-500" },
-            { triggers: ["piece", "luffy", "straw"], name: "Monkey D. Luffy", avatar: "🍖", quote: "If you don't track your favorite series risks, you can't build an elite pirate archive realm!", color: "text-rose-500" }
-        ];
+        const masterGuildRegistry = {
+            senku: { char: "Senku Ishigami", icon: "🧪", quote: "Ten billion percent operational! Try checking your search configurations.", col: "text-emerald-400" },
+            demon: { char: "Tanjiro Kamado", icon: "🎴", quote: "Sharpen your blade! Live out your recorded quest with absolute honor.", col: "text-orange-400" },
+            gojo: { char: "Gojo Satoru", icon: "👁️", quote: "Don't sweat it, your custom grading profile index is literally the strongest.", col: "text-purple-400" },
+            naruto: { char: "Naruto Uzumaki", icon: "🦊", quote: "I'm turning this tracking catalog grid into the supreme Hokage library tier!", col: "text-yellow-500" },
+            luffy: { char: "Monkey D. Luffy", icon: "🍖", quote: "We are establishing the ultimate legendary king index fleet layout across the seas!", col: "text-rose-500" }
+        };
 
-        function init() { const urlParams = new URLSearchParams(window.location.search); const sharedData = urlParams.get('vault'); if (sharedData) { try { animeList = JSON.parse(atob(sharedData)); isViewOnlyMode = true; setupViewOnlyUI(); } catch (e) { loadFromLocalStorage(); } } else { loadFromLocalStorage(); } renderList(); document.addEventListener('touchstart', (e) => { if (e.target.id !== 'anime-title') { const rb = document.getElementById('search-results'); if (rb) rb.classList.add('hidden'); } }); }
-        function loadFromLocalStorage() { const localData = localStorage.getItem('nexusCodexV6_A'); animeList = localData ? JSON.parse(localData) : []; }
-        function setupViewOnlyUI() { const ctrl = document.getElementById('controls-section'); if (ctrl) ctrl.remove(); document.getElementById('share-btn').remove(); document.getElementById('nav-search').remove(); document.getElementById('back-to-mine').style.display = 'flex'; switchView('hub'); }
-        function saveToStorage() { if (!isViewOnlyMode) localStorage.setItem('nexusCodexV6_A', JSON.stringify(animeList)); }
+        function init() { const urlParams = new URLSearchParams(window.location.search); const sharedData = urlParams.get('vault'); if (sharedData) { try { dbList = JSON.parse(atob(sharedData)); isViewOnly = true; buildViewOnlyEnvironment(); } catch (e) { loadLocalStorage(); } } else { loadLocalStorage(); } renderAppDeck(); document.addEventListener('touchstart', (e) => { if (e.target.id !== 'input-title') { const db = document.getElementById('dropdown-results'); if (db) db.classList.add('hidden'); } }); }
+        function loadLocalStorage() { const local = localStorage.getItem('otakuPortal_V6_B'); dbList = local ? JSON.parse(local) : []; }
+        function buildViewOnlyEnvironment() { document.getElementById('controls-section')?.remove(); document.getElementById('share-btn')?.remove(); document.getElementById('tab-query')?.remove(); document.getElementById('back-to-mine').style.display = 'flex'; changePage('deck'); }
+        function syncStorage() { if (!isViewOnly) localStorage.setItem('otakuPortal_V6_B', JSON.stringify(dbList)); }
         
-        function switchView(target) {
-            ['hub', 'search', 'vault'].forEach(v => {
-                const el = document.getElementById(`page-${v}`); if (el) el.classList.add('hidden');
-                const nav = document.getElementById(`nav-${v}`); if (nav) { nav.classList.remove('text-cyan-400', 'font-black'); nav.classList.add('text-slate-400', 'font-medium'); }
+        function changePage(target) {
+            ['deck', 'query', 'grid'].forEach(p => {
+                document.getElementById(`view-${p}`).classList.add('hidden');
+                const t = document.getElementById(`tab-${p}`); if (t) { t.className = "text-slate-400 pb-0.5"; }
             });
-            const activeEl = document.getElementById(`page-${target}`); if (activeEl) activeEl.classList.remove('hidden');
-            const activeNav = document.getElementById(`nav-${target}`); if (activeNav) { activeNav.classList.remove('text-slate-400', 'font-medium'); activeNav.classList.add('text-cyan-400', 'font-black'); }
+            document.getElementById(`view-${target}`).classList.remove('hidden');
+            const activeTab = document.getElementById(`tab-${target}`); if (activeTab) { activeTab.className = "text-cyan-400 border-b-2 border-cyan-400 pb-0.5 font-bold"; }
         }
 
-        function setMediaType(type) {
-            currentFormType = type; tempImgUrl = ''; tempMeta = ''; document.getElementById('anime-title').value = '';
-            const btnAnime = document.getElementById('type-anime'); const btnManga = document.getElementById('type-manga');
-            if (type === 'anime') {
-                btnAnime.className = "text-xs font-bold py-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-cyan-500 text-slate-950 transition"; btnManga.className = "text-xs font-bold py-1.5 rounded-lg text-slate-400 transition";
-                document.getElementById('opt-watching').innerText = "🍿 Tracking Active"; document.getElementById('opt-plan').innerText = "⏳ Save for Future"; document.getElementById('opt-done').innerText = "✅ Archive Finished";
+        function triggerQuote(id) { const entry = masterGuildRegistry[id]; if (entry) displayFeed(`<strong>${entry.char}:</strong> "${entry.quote}"`); }
+        function displayFeed(msg) { const f = document.getElementById('alert-feed'); f.innerHTML = msg; f.classList.remove('hidden'); setTimeout(() => f.classList.add('hidden'), 5000); }
+
+        function toggleMode(mode) {
+            activeMode = mode; cacheImg = ''; cacheMeta = ''; document.getElementById('input-title').value = '';
+            const btnAnime = document.getElementById('mode-anime'); const btnManga = document.getElementById('mode-manga');
+            if (mode === 'anime') {
+                btnAnime.className = "text-xs font-bold py-1.5 rounded-lg bg-cyan-500 text-slate-950 transition"; btnManga.className = "text-xs font-bold py-1.5 rounded-lg text-slate-400 transition";
+                document.getElementById('lbl-watch').innerText = "🍿 Active Tracking"; document.getElementById('lbl-plan').innerText = "⏳ Save in Queue"; document.getElementById('lbl-done').innerText = "✅ Mark Completed";
             } else {
-                btnAnime.className = "text-xs font-bold py-1.5 rounded-lg text-slate-400 transition"; btnManga.className = "text-xs font-bold py-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-cyan-500 text-slate-950 transition";
-                document.getElementById('opt-watching').innerText = "📖 Reading Active"; document.getElementById('opt-plan').innerText = "⏳ Want to Read"; document.getElementById('opt-done').innerText = "✅ Log Completed";
+                btnAnime.className = "text-xs font-bold py-1.5 rounded-lg text-slate-400 transition"; btnManga.className = "text-xs font-bold py-1.5 rounded-lg bg-cyan-500 text-slate-950 transition";
+                document.getElementById('lbl-watch').innerText = "📖 Reading Content"; document.getElementById('lbl-plan').innerText = "⏳ Save in Queue"; document.getElementById('lbl-done').innerText = "✅ Archive Completed";
             }
         }
 
-        async function searchMedia() {
-            const query = document.getElementById('anime-title').value.trim(); const resultsBox = document.getElementById('search-results');
-            if (query.length < 2) { showToast("🧪 Enter at least 2 characters to search."); return; }
-            showToast("🔬 Connecting to live global database...");
+        async function executeSearch() {
+            const query = document.getElementById('input-title').value.trim(); const box = document.getElementById('dropdown-results');
+            if (query.length < 2) { displayFeed("🧪 Write at least 2 symbols to sync link network paths."); return; }
+            displayFeed("📡 Pulling data dimensions from database...");
             try {
-                const res = await fetch(`https://api.jikan.moe/v4/${currentFormType}?q=${encodeURIComponent(query)}&limit=5`);
-                const json = await res.json(); document.getElementById('toast').classList.add('hidden');
-                renderSearchResults(json.data);
-            } catch (e) { showToast("❌ Database timeout. Try clicking again."); }
+                const res = await fetch(`https://api.jikan.moe/v4/${activeMode}?q=${encodeURIComponent(query)}&limit=5`);
+                const json = await res.json(); document.getElementById('alert-feed').classList.add('hidden');
+                renderDropdownRows(json.data);
+            } catch (e) { displayFeed("❌ External connection lag node encountered."); }
         }
 
-        function renderSearchResults(data) {
-            const box = document.getElementById('search-results'); box.innerHTML = '';
-            if (!data || data.length === 0) { showToast("❌ No matches discovered."); box.classList.add('hidden'); return; }
+        function renderDropdownRows(data) {
+            const box = document.getElementById('dropdown-results'); box.innerHTML = '';
+            if (!data || data.length === 0) { displayFeed("❌ Grid matches empty."); box.classList.add('hidden'); return; }
             data.forEach(item => {
-                const row = document.createElement('div'); row.className = "flex items-center gap-3 p-2.5 hover:bg-cyan-500/10 active:bg-cyan-500/20 text-xs border-b border-slate-900 transition";
+                const row = document.createElement('div'); row.className = "flex items-center gap-3 p-2.5 hover:bg-cyan-500/10 active:bg-cyan-500/20 text-xs border-b border-slate-900 transition cursor-pointer";
                 const titleText = item.title; const img = item.images?.jpg?.image_url || '';
-                const typeStr = item.type || (currentFormType === 'anime' ? 'TV' : 'Manga');
-                const metaStr = `${typeStr} • ${item.episodes || item.chapters || 'Ongoing Structure'} (${item.score ? '★ ' + item.score : 'Unrated'})`;
-                row.addEventListener('click', function() { selectRow(titleText, img, metaStr); });
-                row.innerHTML = `<img src="${img}" class="w-6 h-8 object-cover rounded shadow border border-slate-800"><div><p class="font-bold text-slate-200 line-clamp-1">${titleText}</p><p class="text-[9px] text-slate-500">${metaStr}</p></div>`; box.appendChild(row);
+                const formatMeta = `${item.type || 'Series'} • ${item.episodes || item.chapters || 'In Production'} (${item.score ? '★ ' + item.score : 'Unranked'})`;
+                row.onclick = function() { document.getElementById('input-title').value = titleText; cacheImg = img; cacheMeta = formatMeta; box.classList.add('hidden'); };
+                row.innerHTML = `<img src="${img}" class="w-6 h-8 object-cover rounded border border-slate-800"><div><p class="font-bold text-slate-200 line-clamp-1">${titleText}</p><p class="text-[9px] text-slate-500">${formatMeta}</p></div>`; box.appendChild(row);
             });
             box.classList.remove('hidden');
         }
 
-        function selectRow(title, img, meta) {
-            document.getElementById('anime-title').value = title; tempImgUrl = img; tempMeta = meta;
-            document.getElementById('search-results').classList.add('hidden');
-        }
-
-        function updateCompanionBanner(title) {
-            const lowerTitle = title.toLowerCase();
-            let matched = dynamicCompanions.find(c => c.triggers.some(t => lowerTitle.includes(t)));
-            if (!matched) return;
-            const nameEl = document.getElementById('char-name'); const avEl = document.getElementById('char-avatar'); const qeEl = document.getElementById('char-quote');
-            if(nameEl) { nameEl.innerText = matched.name; nameEl.className = `text-xl font-black ${matched.color} mt-1`; }
-            if(avEl) avEl.innerText = matched.avatar; if(qeEl) qeEl.innerText = `"${matched.quote}"`;
-        }
-
-        function addAnime() { 
-            const t = document.getElementById('anime-title'); const s = document.getElementById('anime-status'); const r = document.getElementById('anime-rating'); const tr = document.getElementById('anime-tier'); const n = document.getElementById('anime-notes');
-            if (!t.value.trim()) return; 
-            let finalImg = tempImgUrl || 'https://img.icons8.com/neon/512/test-tube.png';
-            let finalMeta = tempMeta || (currentFormType === 'anime' ? 'TV Series • Structure Live' : 'Manga Vol • Structure Live');
+        function commitToVault() {
+            const t = document.getElementById('input-title'); const s = document.getElementById('select-status'); const r = document.getElementById('input-score'); const tr = document.getElementById('select-tier'); const n = document.getElementById('input-notes');
+            if (!t.value.trim()) return;
+            let finalImg = cacheImg || 'https://img.icons8.com/neon/512/test-tube.png';
+            let finalMeta = cacheMeta || (activeMode === 'anime' ? 'TV Series Log Structure' : 'Manga Edition Structure');
             
-            animeList.push({ id: Date.now(), title: t.value.trim(), status: s.value, type: currentFormType, metadata: finalMeta, rating: r.value ? parseFloat(r.value) : null, tier: tr.value, notes: n.value.trim(), image: finalImg }); 
-            updateCompanionBanner(t.value.trim()); t.value = ''; r.value = ''; n.value = ''; tempImgUrl = ''; tempMeta = '';
-            saveToStorage(); renderList(); showToast("✅ Vault Record Connected."); setTimeout(() => switchView('hub'), 800);
+            dbList.push({ id: Date.now(), title: t.value.trim(), status: s.value, type: activeMode, metadata: finalMeta, rating: r.value ? parseFloat(r.value) : null, tier: tr.value, notes: n.value.trim(), image: finalImg });
+            t.value = ''; r.value = ''; n.value = ''; cacheImg = ''; cacheMeta = ''; syncStorage(); renderAppDeck();
+            displayFeed("✅ Track Block Committed."); setTimeout(() => changePage('deck'), 800);
         }
-        
-        function updateStatus(id, newStatus) { animeList = animeList.map(item => item.id === id ? { ...item, status: newStatus } : item); saveToStorage(); renderList(); }
-        function deleteAnime(id) { animeList = animeList.filter(item => item.id !== id); saveToStorage(); renderList(); }
-        
-        function runScienceRoulette() {
-            const planQueue = animeList.filter(item => item.status === 'plan-to-watch'); const alertBox = document.getElementById('toast');
-            if (planQueue.length === 0) { showToast("❌ Future targets empty. Add entries to process selector."); return; }
-            let counter = 0; switchView('hub');
-            let interval = setInterval(() => {
-                const randomShow = planQueue[Math.floor(Math.random() * planQueue.length)]; showToast(`🔬 Calculating trajectories... [${randomShow.title}]`); counter++;
-                if (counter > 8) {
-                    clearInterval(interval); const choice = planQueue[Math.floor(Math.random() * planQueue.length)];
-                    alertBox.innerHTML = `⚡ <strong>Target Selection Located:</strong><br>Deploy resources to watch/read <strong>${choice.title}</strong> right now! 🚀`; updateCompanionBanner(choice.title);
+
+        function changeItemStatus(id, targetStatus) { dbList = dbList.map(i => i.id === id ? { ...i, status: targetStatus } : i); syncStorage(); renderAppDeck(); }
+        function purgeItem(id) { dbList = dbList.filter(i => i.id !== id); syncStorage(); renderAppDeck(); }
+
+        function triggerRoulette() {
+            const targets = dbList.filter(i => i.status === 'plan-to-watch');
+            if (targets.length === 0) { displayFeed("❌ Queue blocks empty! Populated target metrics first."); return; }
+            let cycles = 0; changePage('deck');
+            let timer = setInterval(() => {
+                const step = targets[Math.floor(Math.random() * targets.length)]; displayFeed(`🔬 Matrix cycling... [${step.title}]`); cycles++;
+                if (cycles > 8) {
+                    clearInterval(timer); const finalChoice = targets[Math.floor(Math.random() * targets.length)];
+                    document.getElementById('alert-feed').innerHTML = `⚡ <strong>Roulette Sweep Complete:</strong> Stream <strong>${finalChoice.title}</strong> next! 🚀`;
                 }
             }, 120);
         }
 
-        function showToast(text) { const toast = document.getElementById('toast'); toast.innerHTML = text; toast.classList.remove('hidden'); setTimeout(() => { if(!text.includes('Decision') && !text.includes('Target')) toast.classList.add('hidden'); }, 3000); }
-        function shareList() { const base64 = btoa(JSON.stringify(animeList)); navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?vault=${base64}`).then(() => { showToast("🚀 Wireless Link Transmitted to Clipboard!"); }); }
-        
-        function renderList() {
-            const containerWatching = document.getElementById('carousel-watching'); const containerPlan = document.getElementById('list-plan-to-watch'); const containerCompleted = document.getElementById('list-completed');
-            const counts = { 'watching': 0, 'plan-to-watch': 0, 'completed': 0 }; const tierContainers = { 'S': document.getElementById('tier-S'), 'A': document.getElementById('tier-A'), 'B': document.getElementById('tier-B'), 'C': document.getElementById('tier-C'), 'Trash': document.getElementById('tier-Trash') };
+        function transmitData() { const base64 = btoa(JSON.stringify(dbList)); navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?vault=${base64}`).then(() => { displayFeed("🚀 Compressed Configuration String Anchored to Clipboard!"); }); }
+
+        function renderAppDeck() {
+            const watchBox = document.getElementById('stream-deck-watching'); const queueBox = document.getElementById('deck-queue'); const doneBox = document.getElementById('deck-completed');
+            const counts = { 'watching': 0, 'plan-to-watch': 0, 'completed': 0 }; const tierGrids = { 'S': document.getElementById('row-S'), 'A': document.getElementById('row-A'), 'B': document.getElementById('row-B'), 'C': document.getElementById('row-C'), 'Trash': document.getElementById('row-Trash') };
+            const characterGuild = document.getElementById('guild-deck');
             
-            containerWatching.innerHTML = ''; containerPlan.innerHTML = ''; containerCompleted.innerHTML = ''; Object.values(tierContainers).forEach(tc => tc.innerHTML = '');
+            watchBox.innerHTML = ''; queueBox.innerHTML = ''; doneBox.innerHTML = ''; Object.values(tierGrids).forEach(tg => tg.innerHTML = '');
+            characterGuild.innerHTML = `<div onclick="triggerQuote('senku')" class="otaku-card p-2 rounded-xl text-center cursor-pointer border-emerald-500/20 active:scale-95 transition"><p class="text-2xl">🧪</p><p class="text-[9px] font-black text-emerald-400 mt-1 truncate">Senku</p></div>`;
+            
+            let trackingKeywords = {
+                "slayer": "demon", "demon": "demon", "kimetsu": "demon",
+                "gojo": "gojo", "jujutsu": "gojo", "jjk": "gojo",
+                "naruto": "naruto", "shippuden": "naruto",
+                "luffy": "luffy", "piece": "luffy"
+            };
+            let unlockedCompanions = new Set();
 
-            animeList.forEach(anime => {
-                counts[anime.status]++; const isAnime = anime.type !== 'manga';
+            dbList.forEach(item => {
+                counts[item.status]++;
+                const titleLower = item.title.toLowerCase();
+                Object.keys(trackingKeywords).forEach(k => { if(titleLower.includes(k)) unlockedCompanions.add(trackingKeywords[k]); });
 
-                if (anime.status === 'watching') {
-                    const slide = document.createElement('div'); slide.className = "flex-shrink-0 w-28 glass-panel p-2 rounded-xl text-center flex flex-col gap-1.5 relative border-cyan-500/10 bg-slate-950/20";
-                    let selectOpt = !isViewOnlyMode ? `<select onchange="updateStatus(${anime.id}, this.value)" class="text-[9px] w-full bg-slate-950 border border-slate-800 rounded py-0.5 text-slate-400 mt-1"><option value="watching" selected>Active</option><option value="completed">Done</option></select>` : '';
-                    slide.innerHTML = `<img src="${anime.image}" class="w-full h-32 object-cover rounded-lg border border-slate-900 shadow-inner"><p class="text-[10px] font-bold text-slate-200 truncate mt-1 text-left px-0.5">${anime.title}</p><p class="text-[8px] text-slate-500 text-left px-0.5 truncate">${anime.metadata}</p>${selectOpt}`; containerWatching.appendChild(slide);
-                } else if (anime.status === 'plan-to-watch') {
-                    const card = document.createElement('div'); card.className = "glass-panel p-2 rounded-xl flex items-center justify-between gap-3 bg-slate-950/10";
-                    let btnDone = !isViewOnlyMode ? `<div class="flex gap-2"><button onclick="updateStatus(${anime.id}, 'completed')" class="text-[10px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 rounded font-bold">Done</button><button onclick="deleteAnime(${anime.id})" class="text-[10px] text-slate-600 hover:text-rose-400">×</button></div>` : '';
-                    card.innerHTML = `<div class="flex items-center gap-2"><img src="${anime.image}" class="w-7 h-9 object-cover rounded-md border border-slate-900"><div class="max-w-[180px]"><p class="text-xs font-bold text-slate-200 truncate">${anime.title}</p><p class="text-[8px] text-slate-500 truncate">${anime.metadata}</p></div></div>${btnDone}`; containerPlan.appendChild(card);
-                } else if (anime.status === 'completed') {
-                    const card = document.createElement('div'); card.className = "glass-panel p-2 rounded-xl flex items-center justify-between gap-3 bg-slate-950/10 border-emerald-500/5";
-                    let scorePill = anime.rating ? `<span class="text-[9px] font-mono font-bold text-amber-400 bg-amber-400/5 border border-amber-400/20 px-1.5 rounded">★ ${anime.rating}</span>` : '';
-                    let delBtn = !isViewOnlyMode ? `<button onclick="deleteAnime(${anime.id})" class="text-[10px] text-slate-600 hover:text-rose-400 px-1">🗑️</button>` : '';
-                    card.innerHTML = `<div class="flex items-center gap-2"><img src="${anime.image}" class="w-7 h-9 object-cover rounded-md border border-slate-900"><div><p class="text-xs font-bold text-slate-200 line-clamp-1">${anime.title}</p><div class="flex items-center gap-1.5 mt-0.5"><span class="text-[8px] px-1 bg-slate-900 rounded text-slate-500 border border-slate-800">${anime.tier}</span>${scorePill}</div></div></div>${delBtn}`; containerCompleted.appendChild(card);
+                if (item.status === 'watching') {
+                    const block = document.createElement('div'); block.className = "otaku-card p-3 rounded-xl flex gap-3 items-center position-relative";
+                    let actionSelect = !isViewOnly ? `<select onchange="changeItemStatus(${item.id}, this.value)" class="text-[10px] bg-slate-950 border border-slate-800 rounded px-1 text-slate-400 py-0.5"><option value="watching" selected>Streaming</option><option value="completed">Complete</option></select>` : '';
+                    block.innerHTML = `<img src="${item.image}" class="w-10 h-14 object-cover rounded border border-slate-900 shadow"><div class="flex-1 min-w-0"><p class="text-xs font-black text-slate-200 truncate">${item.title}</p><p class="text-[9px] text-slate-500 mt-0.5 truncate">${item.metadata}</p><p class="text-[10px] text-cyan-400 font-mono italic mt-1">${item.notes || 'No active notes saved'}</p></div><div class="flex flex-col items-end gap-2">${actionSelect}</div>`; watchBox.appendChild(block);
+                } else if (item.status === 'plan-to-watch') {
+                    const block = document.createElement('div'); block.className = "otaku-card p-2 rounded-xl flex items-center justify-between text-xs";
+                    let actionGroup = !isViewOnly ? `<div class="flex gap-2"><button onclick="changeItemStatus(${item.id}, 'completed')" class="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-bold">Done</button><button onclick="purgeItem(${item.id})" class="text-slate-600 hover:text-rose-400 font-bold px-1">×</button></div>` : '';
+                    block.innerHTML = `<div class="flex items-center gap-2 truncate"><img src="${item.image}" class="w-6 h-8 object-cover rounded border border-slate-900"><span class="truncate font-medium text-slate-300">${item.title}</span></div>${actionGroup}`; queueBox.appendChild(block);
+                } else if (item.status === 'completed') {
+                    const block = document.createElement('div'); block.className = "otaku-card p-2 rounded-xl flex items-center justify-between text-xs border-emerald-500/5";
+                    let scoreDisplay = item.rating ? `<span class="text-[9px] font-bold text-amber-400 bg-amber-400/5 px-1 rounded border border-amber-400/10">★ ${item.rating}</span>` : '';
+                    let delAction = !isViewOnly ? `<button onclick="purgeItem(${item.id})" class="text-slate-600 hover:text-rose-400 text-[10px] px-1">🗑️</button>` : '';
+                    block.innerHTML = `<div class="flex items-center gap-2"><img src="${item.image}" class="w-6 h-8 object-cover rounded border border-slate-900"><div><p class="font-bold text-slate-200 text-xs line-clamp-1">${item.title}</p><p class="text-[9px] text-slate-500 mt-0.5">${item.metadata}</p></div></div><div class="flex items-center gap-2">${scoreDisplay}${delAction}</div>`; doneBox.appendChild(block);
                     
-                    const badge = document.createElement('span'); badge.className = "text-[9px] font-bold bg-slate-900 border border-slate-800 text-slate-300 px-1.5 py-0.5 rounded truncate max-w-[90px] shadow"; badge.innerText = anime.title;
-                    if(tierContainers[anime.tier]) tierContainers[anime.tier].appendChild(badge);
+                    const badge = document.createElement('span'); badge.className = "text-[9px] font-black bg-slate-900 border border-slate-800 text-slate-300 px-2 py-0.5 rounded shadow max-w-[95px] truncate"; badge.innerText = item.title;
+                    if(tierGrids[item.tier]) tierGrids[item.tier].appendChild(badge);
                 }
             });
+
+            unlockedCompanions.forEach(companionKey => {
+                const companion = masterGuildRegistry[companionKey]; if (!companion) return;
+                const node = document.createElement('div'); node.className = "otaku-card p-2 rounded-xl text-center cursor-pointer border-cyan-500/10 active:scale-95 transition";
+                node.onclick = function() { triggerQuote(companionKey); };
+                node.innerHTML = `<p class="text-2xl">${companion.icon}</p><p class="text-[9px] font-black ${companion.col} mt-1 truncate">${companion.char.split(' ')[0]}</p>`;
+                characterGuild.appendChild(node);
+            });
+
+            document.getElementById('count-all').innerText = dbList.length; document.getElementById('count-active').innerText = counts['watching']; document.getElementById('count-done').innerText = counts['completed'];
+            document.getElementById('badge-queue').innerText = counts['plan-to-watch']; document.getElementById('badge-mastered').innerText = counts['completed'];
             
-            document.getElementById('stat-total').innerText = animeList.length; document.getElementById('stat-watching').innerText = counts['watching']; document.getElementById('stat-completed').innerText = counts['completed'];
-            document.getElementById('badge-plan-to-watch').innerText = counts['plan-to-watch']; document.getElementById('badge-completed').innerText = counts['completed'];
-            
-            if(containerWatching.children.length === 0) containerWatching.innerHTML = `<div class="text-[10px] text-slate-600 italic p-6 w-full text-center border border-dashed border-slate-800/60 rounded-xl bg-slate-950/5">No active rotations logged inside system. Go to Search to sync titles.</div>`;
-            if(containerPlan.children.length === 0) containerPlan.innerHTML = `<div class="text-[10px] text-slate-600 italic p-3 text-center border border-dashed border-slate-800/40 rounded-xl bg-slate-950/5">Queue metrics clear.</div>`;
-            if(containerCompleted.children.length === 0) containerCompleted.innerHTML = `<div class="text-[10px] text-slate-600 italic p-3 text-center border border-dashed border-slate-800/40 rounded-xl bg-slate-950/5">Archive database clear.</div>`;
-            Object.keys(tierContainers).forEach(k => { if(tierContainers[k].children.length === 0) tierContainers[k].innerHTML = `<span class="text-[9px] text-slate-700 italic flex items-center py-0.5">Empty</span>`; });
+            if(watchBox.children.length === 0) watchBox.innerHTML = `<div class="text-[10px] text-slate-600 italic p-4 text-center border border-dashed border-slate-800 rounded-xl bg-slate-950/20">Active rotation stream matrix clear. Query items above.</div>`;
+            if(queueBox.children.length === 0) queueBox.innerHTML = `<div class="text-[10px] text-slate-600 italic p-3 text-center border border-dashed border-slate-800 rounded-xl bg-slate-950/20">Target pipeline empty.</div>`;
+            if(doneBox.children.length === 0) doneBox.innerHTML = `<div class="text-[10px] text-slate-600 italic p-3 text-center border border-dashed border-slate-800 rounded-xl bg-slate-950/20">Archive array empty.</div>`;
+            Object.keys(tierGrids).forEach(k => { if(tierGrids[k].children.length === 0) tierGrids[k].innerHTML = `<span class="text-[9px] text-slate-800 italic flex items-center py-0.5">Empty row container</span>`; });
         }
         window.onload = init;
     </script>
