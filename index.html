@@ -15,60 +15,76 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        body { background: radial-gradient(ellipse at top, #080f0c, #030605); color: #f1f5f9; min-height: 100vh; font-family: system-ui, sans-serif; }
-        .science-card { background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); backdrop-filter: blur(16px); border: 1px solid rgba(52, 211, 153, 0.15); }
-        .tier-row { border-left: 5px solid currentColor; }
+        body { background: radial-gradient(ellipse at top, #060b11, #020407); color: #f1f5f9; min-height: 100vh; font-family: system-ui, sans-serif; }
+        .premium-card { background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.06); }
+        .tier-row { border-left: 4px solid currentColor; }
     </style>
 </head>
 <body class="p-4 pb-12">
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-md mx-auto space-y-4">
         
-        <header class="mb-6 pb-4 border-b border-emerald-900/40">
-            <div class="flex items-center gap-1.5 mb-1">
-                <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span class="text-[10px] font-mono tracking-widest text-emerald-400 uppercase">Global Database Sync</span>
+        <header class="text-center pt-2">
+            <div class="flex items-center justify-center gap-1.5 mb-1">
+                <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span class="text-[9px] font-mono tracking-widest text-cyan-400 uppercase font-bold">Kingdom of Science Network</span>
             </div>
-            <h1 id="site-title" class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300">
-                The Ishigami Science Codex 🧪
+            <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-purple-400 tracking-tight">
+                Science Codex
             </h1>
-            <div class="flex gap-2 mt-4">
-                <button id="share-btn" onclick="shareList()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-3 rounded-xl shadow-lg transition">✨ Share Codex with Friends</button>
-                <a id="back-to-mine" href="?" class="hidden w-full bg-slate-800 text-slate-200 text-xs font-bold py-3 rounded-xl text-center items-center justify-center">Back to My Codex</a>
-            </div>
         </header>
 
-        <section class="grid grid-cols-2 gap-2 mb-6">
-            <div class="science-card p-3 rounded-xl text-center"><p class="text-[10px] uppercase text-slate-400">Total Entries</p><p id="stat-total" class="text-lg font-bold mt-0.5 text-slate-100">0</p></div>
-            <div class="science-card p-3 rounded-xl text-center"><p class="text-[10px] uppercase text-amber-400">Active Logs</p><p id="stat-watching" class="text-lg font-bold mt-0.5 text-amber-400">0</p></div>
-            <div class="science-card p-3 rounded-xl text-center"><p class="text-[10px] uppercase text-emerald-400">Fully Mastered</p><p id="stat-completed" class="text-lg font-bold mt-0.5 text-emerald-400">0</p></div>
-            <div class="science-card p-3 rounded-xl text-center border-amber-500/30"><p class="text-[10px] uppercase text-amber-400">⏳ Screen Petrification</p><p id="stat-time" class="text-xs font-mono font-bold mt-1 text-amber-300">0h 0m</p></div>
+        <section class="grid grid-cols-4 gap-1.5 p-1 bg-slate-950/80 rounded-xl border border-slate-900/60 shadow-inner">
+            <div onclick="speakCharacter('senku')" class="premium-card p-1.5 rounded-lg text-center cursor-pointer active:scale-95 transition border-emerald-500/20">
+                <p class="text-lg">🧪</p>
+                <p class="text-[9px] font-bold text-emerald-400 truncate">Senku</p>
+            </div>
+            <div onclick="speakCharacter('gen')" class="premium-card p-1.5 rounded-lg text-center cursor-pointer active:scale-95 transition border-purple-500/20">
+                <p class="text-lg">🃏</p>
+                <p class="text-[9px] font-bold text-purple-400 truncate">Gen</p>
+            </div>
+            <div onclick="speakCharacter('chrome')" class="premium-card p-1.5 rounded-lg text-center cursor-pointer active:scale-95 transition border-cyan-500/20">
+                <p class="text-lg">⚡</p>
+                <p class="text-[9px] font-bold text-cyan-400 truncate">Chrome</p>
+            </div>
+            <div onclick="speakCharacter('suika')" class="premium-card p-1.5 rounded-lg text-center cursor-pointer active:scale-95 transition border-amber-500/20">
+                <p class="text-lg">🍉</p>
+                <p class="text-[9px] font-bold text-amber-400 truncate">Suika</p>
+            </div>
         </section>
 
-        <div id="toast" class="hidden fixed top-6 right-6 left-6 bg-slate-900 border border-emerald-500/40 text-emerald-400 p-4 rounded-xl text-xs z-50 text-center shadow-2xl transition-all"></div>
+        <section class="grid grid-cols-4 gap-2">
+            <div class="premium-card p-2 rounded-xl text-center border-slate-800"><p class="text-[9px] uppercase text-slate-400 font-semibold">All</p><p id="stat-total" class="text-base font-black text-slate-100">0</p></div>
+            <div class="premium-card p-2 rounded-xl text-center border-cyan-950"><p class="text-[9px] uppercase text-cyan-400 font-semibold">Current</p><p id="stat-watching" class="text-base font-black text-cyan-400">0</p></div>
+            <div class="premium-card p-2 rounded-xl text-center border-emerald-950"><p class="text-[9px] uppercase text-emerald-400 font-semibold">Done</p><p id="stat-completed" class="text-base font-black text-emerald-400">0</p></div>
+            <div class="premium-card p-2 rounded-xl text-center border-purple-950"><p class="text-[9px] uppercase text-purple-400 font-semibold">Hours</p><p id="stat-time" class="text-sm font-mono font-black text-purple-300 mt-0.5">0h</p></div>
+        </section>
 
-        <section id="controls-section" class="science-card p-4 rounded-xl mb-6">
+        <div id="toast" class="hidden bg-slate-950 border border-cyan-500/30 text-cyan-400 p-3 rounded-xl text-xs text-center shadow-xl font-medium"></div>
+
+        <section id="controls-section" class="premium-card p-4 rounded-2xl border-slate-900 bg-slate-950/20 shadow-xl">
             <div class="flex flex-col gap-3">
+                
                 <div class="grid grid-cols-2 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-900">
-                    <button id="type-anime" onclick="setMediaType('anime')" class="text-xs font-bold py-2 rounded-lg bg-emerald-400 text-slate-950 transition">🧪 Anime Mode</button>
-                    <button id="type-manga" onclick="setMediaType('manga')" class="text-xs font-bold py-2 rounded-lg text-slate-400 transition">📚 Manga Mode</button>
+                    <button id="type-anime" onclick="setMediaType('anime')" class="text-xs font-bold py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 transition">Anime Mode</button>
+                    <button id="type-manga" onclick="setMediaType('manga')" class="text-xs font-bold py-1.5 rounded-lg text-slate-400 transition">Manga Mode</button>
                 </div>
 
-                <div class="relative flex flex-col gap-1.5">
+                <div class="relative">
                     <div class="flex gap-2">
-                        <input type="text" id="anime-title" placeholder="Type anime name here..." class="flex-1 bg-slate-950 border border-emerald-900/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
-                        <button onclick="searchMedia()" class="bg-slate-800 hover:bg-slate-700 border border-emerald-500/20 px-4 rounded-xl text-xs font-bold transition whitespace-nowrap text-emerald-400">Search 🔍</button>
+                        <input type="text" id="anime-title" placeholder="Search title... (e.g. Dr Stone)" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
+                        <button onclick="searchMedia()" class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-4 rounded-xl text-xs font-bold active:scale-95 transition shadow-md">Search 🔍</button>
                     </div>
-                    <div id="search-results" class="hidden absolute left-0 right-0 top-full mt-1.5 bg-slate-950 border border-emerald-500/40 rounded-xl max-h-60 overflow-y-auto z-50 shadow-2xl divide-y divide-slate-900/60"></div>
+                    <div id="search-results" class="hidden absolute left-0 right-0 top-full mt-2 bg-slate-950 border border-slate-800 rounded-xl max-h-60 overflow-y-auto z-50 shadow-2xl divide-y divide-slate-900/60"></div>
                 </div>
                 
                 <div class="grid grid-cols-12 gap-2">
-                    <select id="anime-status" class="col-span-6 bg-slate-950 border border-emerald-900/30 rounded-xl px-2 py-2.5 text-xs text-slate-300 focus:outline-none">
+                    <select id="anime-status" class="col-span-6 bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-xs text-slate-300 focus:outline-none">
                         <option value="watching" id="opt-watching">🍿 Watching Now</option>
                         <option value="plan-to-watch" id="opt-plan">⏳ Want to Watch</option>
                         <option value="completed" id="opt-done">✅ Finished</option>
                     </select>
-                    <input type="number" id="anime-rating" min="1" max="10" step="0.5" placeholder="★ /10" class="col-span-3 bg-slate-950 border border-emerald-900/30 rounded-xl px-1 py-2.5 text-center text-xs text-white focus:outline-none">
-                    <select id="anime-tier" class="col-span-3 bg-slate-950 border border-emerald-900/30 rounded-xl px-1 py-2.5 text-xs text-purple-400 font-bold focus:outline-none">
+                    <input type="number" id="anime-rating" min="1" max="10" step="0.5" placeholder="★ Score" class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl px-1 py-2 text-center text-xs text-white focus:outline-none">
+                    <select id="anime-tier" class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl px-1 py-2 text-xs text-purple-400 font-black focus:outline-none">
                         <option value="S">S-Tier</option>
                         <option value="A">A-Tier</option>
                         <option value="B">B-Tier</option>
@@ -77,114 +93,121 @@
                     </select>
                 </div>
 
-                <input type="text" id="anime-notes" placeholder="Favorite Character or Notes... (Optional)" class="w-full bg-slate-950 border border-emerald-900/30 rounded-xl px-4 py-2 text-xs text-slate-300 focus:outline-none">
+                <input type="text" id="anime-notes" placeholder="Favorite Character or custom notes..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-1.5 text-xs text-slate-300 focus:outline-none">
 
-                <button onclick="addAnime()" class="w-full bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-black py-2.5 rounded-xl text-sm transition cursor-pointer">Deploy to Codex +</button>
+                <button onclick="addAnime()" class="w-full bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 text-slate-950 font-black py-2.5 rounded-xl text-xs uppercase tracking-wider transition shadow-lg">Save to Database</button>
             </div>
         </section>
 
-        <main class="space-y-6">
-            <div>
-                <div class="flex items-center justify-between mb-2"><h3 class="font-bold text-xs uppercase text-amber-400" id="head-watching">🍿 Active Rotations</h3><span id="badge-watching" class="text-xs text-amber-400 font-bold bg-amber-400/5 px-2 py-0.5 rounded">0</span></div>
+        <main class="space-y-4">
+            <div class="premium-card p-3 rounded-2xl border-cyan-950/40 bg-cyan-950/5">
+                <div class="flex items-center justify-between mb-2"><h3 class="font-black text-xs uppercase text-cyan-400 tracking-wider" id="head-watching">🍿 Active Rotations</h3><span id="badge-watching" class="text-xs text-cyan-400 font-bold bg-cyan-400/10 px-2 py-0.5 rounded-full">0</span></div>
                 <div id="list-watching" class="space-y-2"></div>
             </div>
-            <div>
+            
+            <div class="premium-card p-3 rounded-2xl border-purple-950/40 bg-purple-950/5">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-bold text-xs uppercase text-teal-400" id="head-plan">⏳ Queue Targets</h3>
+                    <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider" id="head-plan">⏳ Future Targets</h3>
                     <div class="flex items-center gap-2">
-                        <button onclick="runScienceRoulette()" class="text-[10px] bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-black px-2 py-1 rounded-md active:scale-95 transition cursor-pointer">Science Roulette 🎲</button>
-                        <span id="badge-plan-to-watch" class="text-xs text-teal-400 font-bold bg-teal-400/5 px-2 py-0.5 rounded">0</span>
+                        <button onclick="runScienceRoulette()" class="text-[9px] bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-bold px-2 py-0.5 rounded shadow active:scale-95 transition">Roulette 🎲</button>
+                        <span id="badge-plan-to-watch" class="text-xs text-purple-400 font-bold bg-purple-400/10 px-2 py-0.5 rounded-full">0</span>
                     </div>
                 </div>
                 <div id="list-plan-to-watch" class="space-y-2"></div>
             </div>
-            <div>
-                <div class="flex items-center justify-between mb-2"><h3 class="font-bold text-xs uppercase text-emerald-400" id="head-completed">✅ Archived Logs</h3><span id="badge-completed" class="text-xs text-emerald-400 font-bold bg-emerald-400/5 px-2 py-0.5 rounded">0</span></div>
+            
+            <div class="premium-card p-3 rounded-2xl border-emerald-950/40 bg-emerald-950/5">
+                <div class="flex items-center justify-between mb-2"><h3 class="font-black text-xs uppercase text-emerald-400 tracking-wider" id="head-completed">✅ Completed Logs</h3><span id="badge-completed" class="text-xs text-emerald-400 font-bold bg-emerald-400/10 px-2 py-0.5 rounded-full">0</span></div>
                 <div id="list-completed" class="space-y-2"></div>
             </div>
         </main>
 
-        <section class="mt-10 pt-6 border-t border-emerald-900/40">
-            <h3 class="font-bold text-xs uppercase tracking-wider text-purple-400 mb-4 flex items-center gap-1.5">
-                <svg class="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                Master Tier List Matrix
+        <section class="premium-card p-3 rounded-2xl border-slate-900 bg-slate-950/30">
+            <h3 class="font-black text-xs uppercase tracking-wider text-purple-400 mb-3 flex items-center gap-1">
+                🏆 Matrix Tier Rankings
             </h3>
-            <div class="space-y-2 rounded-xl overflow-hidden bg-slate-950/40 border border-slate-900 p-2">
-                <div class="flex items-center gap-2 p-1 bg-slate-950/60 rounded-lg tier-row text-rose-500"><div class="w-12 text-center font-black text-sm text-rose-500">S</div><div id="tier-S" class="flex flex-wrap gap-1.5 p-1 min-h-[36px]"></div></div>
-                <div class="flex items-center gap-2 p-1 bg-slate-950/60 rounded-lg tier-row text-orange-400"><div class="w-12 text-center font-black text-sm text-orange-400">A</div><div id="tier-A" class="flex flex-wrap gap-1.5 p-1 min-h-[36px]"></div></div>
-                <div class="flex items-center gap-2 p-1 bg-slate-950/60 rounded-lg tier-row text-yellow-400"><div class="w-12 text-center font-black text-sm text-yellow-400">B</div><div id="tier-B" class="flex flex-wrap gap-1.5 p-1 min-h-[36px]"></div></div>
-                <div class="flex items-center gap-2 p-1 bg-slate-950/60 rounded-lg tier-row text-green-400"><div class="w-12 text-center font-black text-sm text-green-400">C</div><div id="tier-C" class="flex flex-wrap gap-1.5 p-1 min-h-[36px]"></div></div>
-                <div class="flex items-center gap-2 p-1 bg-slate-950/60 rounded-lg tier-row text-slate-500"><div class="w-12 text-center font-black text-xs text-slate-500">Trash</div><div id="tier-Trash" class="flex flex-wrap gap-1.5 p-1 min-h-[36px]"></div></div>
+            <div class="space-y-1.5 rounded-xl overflow-hidden bg-slate-950 p-1.5 border border-slate-900">
+                <div class="flex items-center gap-2 p-1 rounded tier-row text-rose-500"><div class="w-10 text-center font-black text-xs text-rose-500">S</div><div id="tier-S" class="flex flex-wrap gap-1 p-1 min-h-[28px]"></div></div>
+                <div class="flex items-center gap-2 p-1 rounded tier-row text-orange-400"><div class="w-10 text-center font-black text-xs text-orange-400">A</div><div id="tier-A" class="flex flex-wrap gap-1 p-1 min-h-[28px]"></div></div>
+                <div class="flex items-center gap-2 p-1 rounded tier-row text-yellow-400"><div class="w-10 text-center font-black text-xs text-yellow-400">B</div><div id="tier-B" class="flex flex-wrap gap-1 p-1 min-h-[28px]"></div></div>
+                <div class="flex items-center gap-2 p-1 rounded tier-row text-green-400"><div class="w-10 text-center font-black text-xs text-green-400">C</div><div id="tier-C" class="flex flex-wrap gap-1 p-1 min-h-[28px]"></div></div>
+                <div class="flex items-center gap-2 p-1 rounded tier-row text-slate-500"><div class="w-10 text-center font-black text-[10px] text-slate-500">Trash</div><div id="tier-Trash" class="flex flex-wrap gap-1 p-1 min-h-[28px]"></div></div>
             </div>
         </section>
+
+        <button id="share-btn" onclick="shareList()" class="w-full bg-slate-950 border border-slate-800 text-slate-300 text-xs font-bold py-2.5 rounded-xl transition active:scale-95 shadow">✨ Teleport Database Link</button>
+        <a id="back-to-mine" href="?" class="hidden w-full bg-slate-900 text-slate-100 text-xs font-bold py-2.5 rounded-xl text-center items-center justify-center">Back to My Vault</a>
     </div>
 
     <script>
         let animeList = []; let isViewOnlyMode = false; let currentFormType = 'anime'; let tempImgUrl = '';
         
-        function init() { const urlParams = new URLSearchParams(window.location.search); const sharedData = urlParams.get('vault'); if (sharedData) { try { animeList = JSON.parse(atob(sharedData)); isViewOnlyMode = true; setupViewOnlyUI(); } catch (e) { loadFromLocalStorage(); } } else { loadFromLocalStorage(); } renderList(); document.addEventListener('click', (e) => { if (e.target.id !== 'anime-title') { const resBox = document.getElementById('search-results'); if (resBox) resBox.classList.add('hidden'); } }); }
-        function loadFromLocalStorage() { const localData = localStorage.getItem('ishigamiScienceCodexV4'); animeList = localData ? JSON.parse(localData) : []; }
+        const characterQuotes = {
+            senku: "🧪 Senku: 'This application is 10 billion percent functional! Try searching a show.'",
+            gen: "🃏 Gen: 'A psychological masterpiece list, Akbar! Let's choose an elite S-Tier.'",
+            chrome: "⚡ Chrome: 'BADASS! The global internet connection node is synced perfectly!'",
+            suika: "🍉 Suika: 'Suika is tracking everything smoothly! Tap Roulette to pick a target.'"
+        };
+
+        function init() { const urlParams = new URLSearchParams(window.location.search); const sharedData = urlParams.get('vault'); if (sharedData) { try { animeList = JSON.parse(atob(sharedData)); isViewOnlyMode = true; setupViewOnlyUI(); } catch (e) { loadFromLocalStorage(); } } else { loadFromLocalStorage(); } renderList(); document.addEventListener('touchstart', (e) => { if (e.target.id !== 'anime-title') { const rb = document.getElementById('search-results'); if (rb) rb.classList.add('hidden'); } }); }
+        function loadFromLocalStorage() { const localData = localStorage.getItem('ishigamiScienceCodexV5'); animeList = localData ? JSON.parse(localData) : []; }
         function setupViewOnlyUI() { const ctrl = document.getElementById('controls-section'); if (ctrl) ctrl.remove(); document.getElementById('share-btn').remove(); document.getElementById('site-title').innerText = "Shared Science Codex"; document.getElementById('back-to-mine').style.display = 'flex'; }
-        function saveToStorage() { if (!isViewOnlyMode) localStorage.setItem('ishigamiScienceCodexV4', JSON.stringify(animeList)); }
+        function saveToStorage() { if (!isViewOnlyMode) localStorage.setItem('ishigamiScienceCodexV5', JSON.stringify(animeList)); }
         
+        function speakCharacter(name) { showToast(characterQuotes[name]); }
+
         function setMediaType(type) {
             currentFormType = type; tempImgUrl = ''; document.getElementById('anime-title').value = '';
             const btnAnime = document.getElementById('type-anime'); const btnManga = document.getElementById('type-manga');
             if (type === 'anime') {
-                btnAnime.className = "text-xs font-bold py-2 rounded-lg bg-emerald-400 text-slate-950 transition"; btnManga.className = "text-xs font-bold py-2 rounded-lg text-slate-400 transition";
+                btnAnime.className = "text-xs font-bold py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 transition"; btnManga.className = "text-xs font-bold py-1.5 rounded-lg text-slate-400 transition";
                 document.getElementById('opt-watching').innerText = "🍿 Watching Now"; document.getElementById('opt-plan').innerText = "⏳ Want to Watch"; document.getElementById('opt-done').innerText = "✅ Finished Watching";
             } else {
-                btnAnime.className = "text-xs font-bold py-2 rounded-lg text-slate-400 transition"; btnManga.className = "text-xs font-bold py-2 rounded-lg bg-emerald-400 text-slate-950 transition";
+                btnAnime.className = "text-xs font-bold py-1.5 rounded-lg text-slate-400 transition"; btnManga.className = "text-xs font-bold py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 transition";
                 document.getElementById('opt-watching').innerText = "📖 Reading Now"; document.getElementById('opt-plan').innerText = "⏳ Want to Read"; document.getElementById('opt-done').innerText = "✅ Finished Reading";
             }
         }
 
-        // Triggered only when the manual click happens
         async function searchMedia() {
-            const query = document.getElementById('anime-title').value.trim();
-            const resultsBox = document.getElementById('search-results');
-            if (query.length < 2) { showToast("🧪 Enter at least 2 characters to track mapping."); return; }
-            
-            showToast("🔬 Searching global database records...");
+            const query = document.getElementById('anime-title').value.trim(); const resultsBox = document.getElementById('search-results');
+            if (query.length < 2) { showToast("🧪 Enter at least 2 characters to search."); return; }
+            showToast("🔬 Sourcing database dimensions...");
             try {
                 const res = await fetch(`https://api.jikan.moe/v4/${currentFormType}?q=${encodeURIComponent(query)}&limit=5`);
-                const json = await res.json();
-                document.getElementById('toast').classList.add('hidden');
+                const json = await res.json(); document.getElementById('toast').classList.add('hidden');
                 renderSearchResults(json.data);
-            } catch (e) { 
-                showToast("❌ Synchronization node failed. Try again."); 
-                console.error(e);
-            }
+            } catch (e) { showToast("❌ Synchronization latency error. Try clicking search again."); }
         }
 
         function renderSearchResults(data) {
             const box = document.getElementById('search-results'); box.innerHTML = '';
-            if (!data || data.length === 0) { showToast("❌ No matches located inside matrix."); box.classList.add('hidden'); return; }
+            if (!data || data.length === 0) { showToast("❌ No records loaded inside matrix."); box.classList.add('hidden'); return; }
             
             data.forEach(item => {
                 const row = document.createElement('div');
-                row.className = "flex items-center gap-3 p-2 hover:bg-emerald-500/10 cursor-pointer border-b border-slate-900/60 last:border-0 transition text-xs";
-                const titleText = item.title;
-                const img = item.images?.jpg?.image_url || 'https://img.icons8.com/neon/512/test-tube.png';
+                row.className = "flex items-center gap-3 p-2.5 hover:bg-cyan-500/10 active:bg-cyan-500/20 border-b border-slate-900 text-xs transition";
+                const titleText = item.title; const img = item.images?.jpg?.image_url || 'https://img.icons8.com/neon/512/test-tube.png';
                 
-                row.onclick = function() {
-                    document.getElementById('anime-title').value = titleText;
-                    tempImgUrl = img;
-                    box.classList.add('hidden');
-                };
-                row.innerHTML = `<img src="${img}" class="w-7 h-9 object-cover rounded shadow border border-slate-800"><div><p class="font-bold text-slate-200">${titleText}</p><p class="text-[10px] text-slate-500">${item.type || ''} (${item.score ? '★ ' + item.score : 'N/A'})</p></div>`;
+                // Use safe handler to prevent keyboard collision freezes
+                row.addEventListener('touchend', function(e) { e.preventDefault(); selectRow(titleText, img); });
+                row.addEventListener('click', function() { selectRow(titleText, img); });
+                
+                row.innerHTML = `<img src="${img}" class="w-6 h-8 object-cover rounded border border-slate-800"><div><p class="font-bold text-slate-200">${titleText}</p><p class="text-[9px] text-slate-500">${item.type || 'TV'} (${item.score ? '★ ' + item.score : 'N/A'})</p></div>`;
                 box.appendChild(row);
             });
             box.classList.remove('hidden');
         }
 
+        function selectRow(title, img) {
+            document.getElementById('anime-title').value = title; tempImgUrl = img;
+            document.getElementById('search-results').classList.add('hidden');
+        }
+
         function addAnime() { 
             const t = document.getElementById('anime-title'); const s = document.getElementById('anime-status'); const r = document.getElementById('anime-rating'); const tr = document.getElementById('anime-tier'); const n = document.getElementById('anime-notes');
             if (!t.value.trim()) return; 
-            
             let finalImg = tempImgUrl || 'https://img.icons8.com/neon/512/test-tube.png';
             animeList.push({ id: Date.now(), title: t.value.trim(), status: s.value, type: currentFormType, currentEp: 0, rating: r.value ? parseFloat(r.value) : null, tier: tr.value, notes: n.value.trim(), image: finalImg }); 
-            
             t.value = ''; r.value = ''; n.value = ''; tempImgUrl = ''; saveToStorage(); renderList(); 
         }
         
@@ -194,30 +217,16 @@
         
         function runScienceRoulette() {
             const planQueue = animeList.filter(item => item.status === 'plan-to-watch'); const alertBox = document.getElementById('toast');
-            if (planQueue.length === 0) { showToast("❌ Queue targets empty. Populate lists first."); return; }
+            if (planQueue.length === 0) { showToast("❌ Your Future Targets list is empty! Populate it first."); return; }
             let counter = 0;
             let interval = setInterval(() => {
                 const randomShow = planQueue[Math.floor(Math.random() * planQueue.length)]; showToast(`🔬 Calculating matrix... [${randomShow.title}]`); counter++;
                 if (counter > 8) {
                     clearInterval(interval); const finalChoice = planQueue[Math.floor(Math.random() * planQueue.length)];
-                    alertBox.innerHTML = `⚡ <strong>Senku's Choice Decision:</strong><br>Go watch/read <strong>${finalChoice.title}</strong> right now! 🚀`;
+                    alertBox.innerHTML = `⚡ <strong>Senku's Logic Decision:</strong><br>Go watch/read <strong>${finalChoice.title}</strong> right now! 🚀`;
                 }
-            }, 150);
+            }, 120);
         }
 
         function showToast(text) { const toast = document.getElementById('toast'); toast.innerHTML = text; toast.classList.remove('hidden'); }
-        function shareList() { const base64 = btoa(JSON.stringify(animeList)); navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?vault=${base64}`).then(() => { showToast("🚀 Wireless Codex Link Copied! Teleport it to friends."); setTimeout(() => document.getElementById('toast').classList.add('hidden'), 3000); }); }
-        
-        function renderList() {
-            const containers = { 'watching': document.getElementById('list-watching'), 'plan-to-watch': document.getElementById('list-plan-to-watch'), 'completed': document.getElementById('list-completed') }; const counts = { 'watching': 0, 'plan-to-watch': 0, 'completed': 0 }; const tierContainers = { 'S': document.getElementById('tier-S'), 'A': document.getElementById('tier-A'), 'B': document.getElementById('tier-B'), 'C': document.getElementById('tier-C'), 'Trash': document.getElementById('tier-Trash') };
-            Object.values(containers).forEach(c => c.innerHTML = ''); Object.values(tierContainers).forEach(tc => tc.innerHTML = '');
-            let calculatedMinutes = 0;
-
-            animeList.forEach(anime => {
-                counts[anime.status]++; const isAnime = anime.type !== 'manga';
-                if (isAnime) calculatedMinutes += (anime.currentEp || 0) * 24;
-
-                const card = document.createElement('div'); card.className = "science-card p-3 rounded-xl flex gap-3 items-start border border-emerald-900/15";
-                let typeBadge = `<span class="text-[9px] uppercase px-1.5 py-0.5 rounded ${isAnime?'bg-emerald-500/10 text-emerald-400 border border-emerald-400/20':'bg-blue-500/10 text-blue-400 border border-blue-500/20'}">${anime.type || 'Anime'}</span>`;
-                let scorePill = anime.rating ? `<span class="text-[10px] font-mono bg-amber-400/10 text-amber-400 border border-amber-400/20 px-2 py-0.5 rounded">★ ${anime.rating} [${anime.tier}]</span>` : '';
-                let noteLayout = anime.notes ? `<div class="text-[11px] text-slate-400 italic bg-slate-950/40 px-2 py-1 rounded-md border border-slate-900/40">🧬 Notes: ${a
+        function shareList() { const base64 = btoa(JSON.stringify(animeList)); navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?vault=${base64}`).then(() => { showToast("🚀 Link copied successfully! Paste it to your frien
