@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KuroDeck</title>
     
-    <!-- PWA Real Standalone Mobile App Configuration -->
+    <!-- PWA Standalone Mobile App Configurations -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22KuroDeck%22%2C%22short_name%22%3A%22KuroDeck%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23040610%22%2C%22theme_color%22%3A%22%2306b6d4%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fneon%2F512%2Fsword.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image/png%22%7D%5D%7D">
 
-    <!-- Premium Mobile Display Icon Assets -->
+    <!-- Premium Icon System Assets -->
     <link rel="icon" type="image/png" sizes="512x512" href="https://img.icons8.com/neon/512/sword.png">
     <link rel="apple-touch-icon" sizes="512x512" href="https://img.icons8.com/neon/512/sword.png">
     
@@ -24,20 +24,23 @@
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Fixed Background Canvas Layering to stop click interference completely */
-        canvas#particleCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; opacity: 0.25; }
+        /* Layout fix to prevent background click interference */
+        canvas#particleCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; }
         .main-app-content { position: relative; z-index: 10; pointer-events: auto; }
+        
+        /* Fully customizable navigation system styles */
+        nav#topNav { transition: border-color 0.3s ease, background-color 0.3s ease; }
     </style>
 </head>
 <body class="pb-28 pt-16 px-4">
 
-    <!-- Ambient Dynamic Particle Visual Canvas -->
+    <!-- Ambient Dynamic Background Canvas -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- Top Fixed Premium Desktop/Mobile Navigation Module -->
-    <nav class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-[#060812]/95 border-b border-white/5 flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md">
-        <span class="text-xs font-black tracking-widest bg-gradient-to-r from-cyan-400 via-purple-400 to-amber-400 text-transparent bg-clip-text uppercase flex items-center gap-1">
-            ⚔️ KURODECK
+    <!-- Top Fixed Customizable Navigation Header Module -->
+    <nav id="topNav" class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-[#060812]/95 border-b border-cyan-500/20 flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md">
+        <span id="navLogo" class="text-xs font-black tracking-widest bg-gradient-to-r from-cyan-400 via-purple-400 to-amber-400 text-transparent bg-clip-text uppercase flex items-center gap-1">
+            🎬 KURODECK
         </span>
         <div class="flex gap-4 text-xs font-bold tracking-tight z-50">
             <button onclick="navigate('hub')" id="tab-hub" class="text-cyan-400 border-b-2 border-cyan-400 pb-1 transition-all">Hub</button>
@@ -47,10 +50,10 @@
         </div>
     </nav>
 
-    <!-- System Live Dialogue Alert Banner -->
+    <!-- System Dialogue Notification Alert Banner -->
     <div id="toast" class="hidden fixed top-20 left-4 right-4 max-w-md mx-auto bg-[#0b0f24] border border-cyan-500/30 text-cyan-400 p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all"></div>
 
-    <!-- Main Content click container box -->
+    <!-- Main Content Container Wrapper -->
     <div class="main-app-content max-w-md mx-auto space-y-4">
 
         <!-- ================= VIEW NODE 1: MAIN DECK HUB ================= -->
@@ -69,7 +72,7 @@
                 <div id="guild-deck" class="flex gap-2 overflow-x-auto pb-1 hide-scroll"></div>
             </section>
 
-            <!-- Simple Metric Dashboard Displays -->
+            <!-- Metric Summary Analytics Displays -->
             <section class="grid grid-cols-3 gap-2 bg-[#080a14] p-2.5 rounded-2xl border border-white/5 shadow-inner">
                 <div class="text-center"><p class="text-[9px] uppercase text-slate-500 font-bold">Total Vault</p><p id="count-all" class="text-xl font-black text-slate-100">0</p></div>
                 <div class="text-center border-x border-white/5"><p class="text-[9px] uppercase text-cyan-400 font-bold">Streaming</p><p id="count-active" class="text-xl font-black text-cyan-400">0</p></div>
@@ -144,11 +147,11 @@
             </section>
         </div>
 
-        <!-- ================= PAGE 4: SYSTEM ANALYTICS TERMINAL ================= -->
+        <!-- ================= PAGE 4: SYSTEM ANALYTICS & THEME CONFIG ================= -->
         <div id="view-analytics" class="page-view page-hidden space-y-4">
             <!-- Live Generated SVG Dynamic Data Graph Columns -->
             <section class="matrix-card p-4 rounded-3xl space-y-3">
-                <h3 class="font-black text-xs uppercase text-cyan-400 tracking-wider">📊 Real-Time Analytics Dashboard</h3>
+                <h3 class="font-black text-xs uppercase text-cyan-400 tracking-wider" id="analyticsHeader">📊 Real-Time Analytics Dashboard</h3>
                 <p class="text-[10px] text-slate-400">Algorithmic analysis of database entry distribution balances mapped inside the core memory loop.</p>
                 <div id="chart-container" class="w-full flex justify-center items-end h-36 gap-4 pt-4 border-b border-white/10 px-2 bg-slate-950/40 rounded-xl shadow-inner"></div>
                 <div class="flex justify-around text-[9px] font-mono font-bold text-slate-500 px-1">
@@ -156,14 +159,21 @@
                 </div>
             </section>
 
-            <!-- Advanced Configuration Skin Controls -->
+            <!-- Theme Configuration Management Console Panel -->
             <section class="matrix-card p-4 rounded-3xl space-y-2">
-                <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider">⚙️ System Core Theme Settings</h3>
+                <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider" id="themeConfigHeader">⚙️ System Core Theme Settings</h3>
                 <div class="grid grid-cols-2 gap-2 text-xs font-bold pt-1">
+                    <!-- Standard Tier 1 Configurations -->
                     <button onclick="applyTheme('cyber')" class="p-2 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 active:scale-95 transition-all cursor-pointer">Cyber Neon Blue</button>
                     <button onclick="applyTheme('sakura')" class="p-2 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-400 active:scale-95 transition-all cursor-pointer">Midnight Sakura</button>
                     <button onclick="applyTheme('cursed')" class="p-2 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-400 active:scale-95 transition-all cursor-pointer">Cursed Violet</button>
                     <button onclick="applyTheme('moctale')" class="p-2 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-400 active:scale-95 transition-all cursor-pointer">Moctale Gold</button>
+                    
+                    <!-- New Tier 2 Premium Expanded Configurations -->
+                    <button onclick="applyTheme('crimson')" class="p-2 rounded-xl bg-red-950/40 border border-red-500/30 text-red-400 active:scale-95 transition-all cursor-pointer">Crimson Shonen</button>
+                    <button onclick="applyTheme('shinobi')" class="p-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 active:scale-95 transition-all cursor-pointer">Forest Shinobi</button>
+                    <button onclick="applyTheme('void')" class="p-2 rounded-xl bg-slate-900/40 border border-slate-500/30 text-slate-300 active:scale-95 transition-all cursor-pointer">Soul Void</button>
+                    <button onclick="applyTheme('electric')" class="p-2 rounded-xl bg-yellow-950/40 border border-yellow-500/30 text-yellow-400 active:scale-95 transition-all cursor-pointer">Lightning Yellow</button>
                 </div>
             </section>
         </div>
@@ -174,9 +184,9 @@
     </div>
 
     <script>
-        let vaultStorage = []; let viewOnly = false;
+        let vaultStorage = []; let viewOnly = false; let currentParticleColor = 'rgba(6, 182, 212, 0.15)';
         
-        // Custom Sound Engine Synthesis (Web Audio API Engine)
+        // Custom Sound Waves Acoustic Synthesizer (Web Audio API Engine)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playTone(freq, type, duration) {
             try {
@@ -192,13 +202,13 @@
         function soundSuccess() { playTone(880, 'sine', 0.1); setTimeout(() => playTone(1318.51, 'sine', 0.15), 70); }
         function soundAlert() { playTone(440, 'sawtooth', 0.12); setTimeout(() => playTone(349.23, 'sawtooth', 0.15), 90); }
 
-        // Anime Character Grid Modules Registry Database Dictionary
+        // Pop-Culture Character Module Matrix Registry Dictionary
         const dynamicUniverseData = {
-            senku: { character: "Senku Ishigami", icon: "🧪", quote: "This database structure is ten billion percent operational! Sourcing clean matrix parameters.", color: "text-emerald-400" },
-            demon: { character: "Tanjiro Kamado", icon: "🎴", quote: "Look straight ahead. No matter how painful it gets, sharpen your blade and record your path!", color: "text-orange-400" },
-            gojo: { character: "Gojo Satoru", icon: "👁️", quote: "Don't sweat it, your custom database tracking layers are literally the strongest.", color: "text-purple-400" },
-            naruto: { character: "Naruto Uzumaki", icon: "🦊", quote: "I never go back on my records. That's my custom tracking methodology, believe it!", color: "text-yellow-400" },
-            luffy: { character: "Monkey D. Luffy", icon: "🍖", quote: "If you don't take cataloging risks, you can't build a legendary media profile fleet!", color: "text-rose-500" }
+            senku: { character: "Senku Ishigami", icon: "🧪", quote: "This configuration layer is ten billion percent structural! Top headers fully synchronized.", color: "text-emerald-400" },
+            demon: { character: "Tanjiro Kamado", icon: "🎴", quote: "Look straight ahead! Record your legendary path across the AniMatrix layout with absolute honor.", color: "text-orange-400" },
+            gojo: { character: "Gojo Satoru", icon: "👁️", quote: "Don't sweat it, your custom tracking framework parameters are literally the strongest.", color: "text-purple-400" },
+            naruto: { character: "Naruto Uzumaki", icon: "🦊", quote: "I'm transforming this database catalog screen into the supreme Hokage library tier!", color: "text-yellow-500" },
+            luffy: { character: "Monkey D. Luffy", icon: "🍖", quote: "We are establishing the ultimate legendary king profile fleet dashboard layout across the seas!", color: "text-rose-500" }
         };
 
         const staticFallbackDatabase = [
@@ -209,7 +219,7 @@
             { c: "Roronoa Zoro", q: "If I die here, then I'm a man who could only go this far.", a: "⚔️" }
         ];
 
-        // Canvas Particles Physics Layout Generator Engine 
+        // Canvas Background Particles Physics Layout Generator Engine 
         const canvas = document.getElementById('particleCanvas'); const ctx = canvas.getContext('2d');
         let particles = [];
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -217,31 +227,52 @@
         class Particle {
             constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.size = Math.random()*2+0.5; this.speedX = Math.random()*0.3-0.15; this.speedY = Math.random()*0.3-0.15; }
             update() { this.x += this.speedX; this.y += this.speedY; if(this.x>canvas.width||this.x<0) this.speedX *= -1; if(this.y>canvas.height||this.y<0) this.speedY *= -1; }
-            draw() { ctx.fillStyle = 'rgba(6, 182, 212, 0.15)'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
+            draw() { ctx.fillStyle = currentParticleColor; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
         }
         for(let i=0; i<40; i++) { particles.push(new Particle()); }
         function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{ p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
         animateParticles();
 
-        function init() { const urlParams = new URLSearchParams(window.location.search); const shared = urlParams.get('vault'); if (shared) { try { vaultStorage = JSON.parse(shared); viewOnly = true; makeViewOnlyMode(); } catch (e) { loadLocal(); } } else { loadLocal(); } renderAppFramework(); document.getElementById('input-search').addEventListener('keypress', (e) => { if (e.key === 'Enter') runQuery(); }); }
-        function loadLocal() { const data = localStorage.getItem('kuroDeckStorage_v6'); vaultStorage = data ? JSON.parse(data) : []; }
+        function init() { const urlParams = new URLSearchParams(window.location.search); const shared = urlParams.get('vault'); if (shared) { try { vaultStorage = JSON.parse(shared); viewOnly = true; makeViewOnlyMode(); } catch (e) { loadLocal(); } } else { loadLocal(); } renderAppFramework(); document.getElementById('input-search').addEventListener('keypress', (e) => { if (e.key === 'Enter') runQuery(); }); const savedTheme = localStorage.getItem('nexusThemeKey') || 'cyber'; applyTheme(savedTheme); }
+        function loadLocal() { const data = localStorage.getItem('kuroDeckStorage_v7'); vaultStorage = data ? JSON.parse(data) : []; }
         function makeViewOnlyMode() { document.getElementById('tab-discover')?.remove(); document.getElementById('tab-analytics')?.remove(); document.getElementById('back-to-mine').style.display = 'flex'; navigate('hub'); }
-        function syncLocal() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v6', JSON.stringify(vaultStorage)); }
+        function syncLocal() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v7', JSON.stringify(vaultStorage)); }
 
+        // Comprehensive Core UI Themes Configuration Mapping Database
         const themes = {
-            cyber: { primary: 'from-cyan-400 via-purple-400 to-amber-400', navText: 'text-cyan-400', border: 'border-cyan-400' },
-            sakura: { primary: 'from-rose-400 via-pink-400 to-purple-400', navText: 'text-rose-400', border: 'border-rose-400' },
-            cursed: { primary: 'from-purple-500 via-indigo-500 to-violet-500', navText: 'text-purple-400', border: 'border-purple-400' },
-            moctale: { primary: 'from-amber-400 via-orange-400 to-yellow-500', navText: 'text-amber-400', border: 'border-amber-400' }
+            cyber: { primary: 'from-cyan-400 via-purple-400 to-amber-400', navText: 'text-cyan-400', border: 'border-cyan-500/30', headerText: 'text-cyan-400', particle: 'rgba(6, 182, 212, 0.18)' },
+            sakura: { primary: 'from-rose-400 via-pink-400 to-purple-400', navText: 'text-rose-400', border: 'border-rose-500/30', headerText: 'text-rose-400', particle: 'rgba(244, 63, 94, 0.18)' },
+            cursed: { primary: 'from-purple-500 via-indigo-500 to-violet-500', navText: 'text-purple-400', border: 'border-purple-500/30', headerText: 'text-purple-400', particle: 'rgba(168, 85, 247, 0.18)' },
+            moctale: { primary: 'from-amber-400 via-orange-400 to-yellow-500', navText: 'text-amber-400', border: 'border-amber-500/30', headerText: 'text-amber-400', particle: 'rgba(245, 158, 11, 0.18)' },
+            crimson: { primary: 'from-red-600 via-orange-500 to-rose-500', navText: 'text-red-500', border: 'border-red-500/30', headerText: 'text-red-500', particle: 'rgba(239, 68, 68, 0.18)' },
+            shinobi: { primary: 'from-emerald-500 via-green-400 to-teal-500', navText: 'text-emerald-400', border: 'border-emerald-500/30', headerText: 'text-emerald-400', particle: 'rgba(16, 185, 129, 0.18)' },
+            void: { primary: 'from-slate-400 via-slate-300 to-zinc-500', navText: 'text-slate-300', border: 'border-slate-500/30', headerText: 'text-slate-300', particle: 'rgba(203, 213, 225, 0.12)' },
+            electric: { primary: 'from-yellow-400 via-amber-300 to-orange-400', navText: 'text-yellow-400', border: 'border-yellow-500/30', headerText: 'text-yellow-400', particle: 'rgba(250, 204, 21, 0.18)' }
         };
+
         function applyTheme(themeKey) {
-            soundClick(); const t = themes[themeKey]; if(!t) return;
-            document.querySelector('nav span').className = `text-xs font-black tracking-widest bg-gradient-to-r ${t.primary} text-transparent bg-clip-text uppercase flex items-center gap-1`;
-            const activeTab = document.querySelector('nav .text-cyan-400, nav .text-rose-400, nav .text-purple-400, nav .text-amber-400');
-            if (activeTab) { activeTab.className = `${t.navText} border-b-2 ${t.border} pb-1 transition-all`; }
-            localStorage.setItem('nexusThemeKey', themeKey); toastAlert(`Theme Engine Adjusted to ${themeKey.toUpperCase()}`);
+            const t = themes[themeKey]; if(!t) return;
+            localStorage.setItem('nexusThemeKey', themeKey); currentParticleColor = t.particle;
+            
+            // Dynamic Synchronization logic for the top navigation header panel
+            const nav = document.getElementById('topNav'); if (nav) { nav.style.borderColor = themeKey === 'void' ? 'rgba(255,255,255,0.08)' : t.particle; }
+            document.getElementById('navLogo').className = `text-xs font-black tracking-widest bg-gradient-to-r ${t.primary} text-transparent bg-clip-text uppercase flex items-center gap-1`;
+            
+            // Sync current view active menu indicator link
+            const activeTab = document.querySelector('nav div .font-bold');
+            if (activeTab) {
+                activeTab.className = `${t.navText} border-b-2 pb-1 font-bold transition-all duration-300`;
+                activeTab.style.borderColor = themeKey === 'void' ? '#cbd5e1' : '';
+            }
+            
+            // Adjust individual card headers inside the configuration modules views dynamically
+            const aHeader = document.getElementById('analyticsHeader'); if (aHeader) aHeader.className = `font-black text-xs uppercase tracking-wider ${t.headerText}`;
+            const tHeader = document.getElementById('themeConfigHeader'); if (tHeader) tHeader.className = `font-black text-xs uppercase tracking-wider ${t.headerText}`;
+            
+            renderAnalyticsCharts();
         }
 
+        // Hardware-Accelerated App Navigation System Page Changer
         function navigate(pageId) {
             soundClick();
             ['hub', 'discover', 'vault', 'analytics'].forEach(p => {
@@ -250,7 +281,9 @@
             });
             document.getElementById(`view-${pageId}`).classList.remove('page-hidden');
             const tk = localStorage.getItem('nexusThemeKey') || 'cyber';
-            document.getElementById(`tab-${pageId}`).className = `${themes[tk].navText} border-b-2 ${themes[tk].border} pb-1 font-bold transition-all duration-300`;
+            const activeBtn = document.getElementById(`tab-${pageId}`);
+            activeBtn.className = `${themes[tk].navText} border-b-2 pb-1 font-bold transition-all duration-300`;
+            activeBtn.style.borderColor = tk === 'void' ? '#cbd5e1' : '';
             if(pageId === 'analytics') renderAnalyticsCharts();
         }
 
@@ -342,7 +375,7 @@
 
         function updateStatus(id, ns) { soundClick(); vaultStorage = vaultStorage.map(i=>i.id===id?{...i, status:ns}:i); syncLocal(); renderAppFramework(); }
         function purgeNode(id) { soundAlert(); vaultStorage = vaultStorage.filter(i=>i.id!==id); syncStorage(); renderAppFramework(); }
-        function syncStorage() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v6', JSON.stringify(vaultStorage)); }
+        function syncStorage() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v7', JSON.stringify(vaultStorage)); }
 
         function spinRoulette() {
             const targets = vaultStorage.filter(i => i.status === 'plan-to-watch');
@@ -361,22 +394,37 @@
             }, 120);
         }
 
+        // Native Technical SVG Data Visualization Engine Graph Generator
         function renderAnalyticsCharts() {
             const counts = { 'watching': 0, 'plan-to-watch': 0, 'completed': 0 };
             vaultStorage.forEach(i => { counts[i.status]++; });
             const max = Math.max(counts['watching'], counts['plan-to-watch'], counts['completed'], 1);
             
-            const container = document.getElementById('chart-container'); container.innerHTML = '';
-            const statuses = ['watching', 'plan-to-watch', 'completed'];
-            const colors = ['bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.4)]', 'bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.4)]', 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]'];
+            const container = document.getElementById('chart-container'); if(!container) return;
+            container.innerHTML = '';
             
-            statuses.forEach((s, idx) => {
+            const statuses = ['watching', 'plan-to-watch', 'completed'];
+            const tk = localStorage.getItem('nexusThemeKey') || 'cyber';
+            
+            // Dynamic bar styling matching active theme logic profile settings block
+            const barColors = {
+                cyber: 'bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.4)]',
+                sakura: 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]',
+                cursed: 'bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.4)]',
+                moctale: 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]',
+                crimson: 'bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)]',
+                shinobi: 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]',
+                void: 'bg-slate-400 shadow-[0_0_15px_rgba(148,163,184,0.3)]',
+                electric: 'bg-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.4)]'
+            };
+            
+            statuses.forEach((s) => {
                 const pct = (counts[s] / max) * 100;
                 const barWrapper = document.createElement('div');
                 barWrapper.className = "flex-1 flex flex-col items-center justify-end h-full gap-2";
                 barWrapper.innerHTML = `
                     <span class="text-[10px] font-mono font-black text-slate-200">${counts[s]}</span>
-                    <div class="w-8 ${colors[idx]} rounded-t-lg transition-all duration-700" style="height: ${Math.max(pct, 10)}%"></div>
+                    <div class="w-8 ${barColors[tk]} rounded-t-lg transition-all duration-700" style="height: ${Math.max(pct, 10)}%"></div>
                 `;
                 container.appendChild(barWrapper);
             });
@@ -389,6 +437,7 @@
             const counts = { 'watching': 0, 'plan-to-watch': 0, 'completed': 0 }; const rows = { 'S': document.getElementById('row-S'), 'A': document.getElementById('row-A'), 'B': document.getElementById('row-B'), 'C': document.getElementById('row-C'), 'Trash': document.getElementById('row-Trash') };
             const deck = document.getElementById('guild-deck');
             
+            if(!sw) return;
             sw.innerHTML = ''; sq.innerHTML = ''; sc.innerHTML = ''; Object.values(rows).forEach(r => r.innerHTML = '');
             deck.innerHTML = '';
             
@@ -434,7 +483,7 @@
             Object.keys(rows).forEach(k => { if(rows[k].children.length === 0) rows[k].innerHTML = `<span class="text-[8px] text-slate-700 italic flex items-center py-0.5">Empty Row Slat</span>`; });
         }
         
-        function triggerCompanionSaying(key) { const data = dynamicUniverseData[key]; if (data) { fireSystemAlert(`<strong>${data.character}:</strong> "${data.quote}"`); document.getElementById('display-quote').innerText = `"${data.quote}"`; document.getElementById('display-author').innerText = `— ${data.character}`; } }
+        function triggerCompanionSaying(key) { const data = dynamicUniverseData[key]; if (data) { fireSystemAlert Levant(`<strong>${data.character}:</strong> "${data.quote}"`); document.getElementById('display-quote').innerText = `"${data.quote}"`; document.getElementById('display-author').innerText = `— ${data.character}`; } }
         function fireSystemAlert(msg) { const a = document.getElementById('toast'); a.innerHTML = msg; a.classList.remove('hidden'); setTimeout(() => a.classList.add('hidden'), 4000); }
         window.onload = init;
     </script>
