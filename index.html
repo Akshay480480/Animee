@@ -5,270 +5,386 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>The Ishigami Science Codex</title>
     
+    <!-- PWA Real Standalone Mobile App Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22The%20Ishigami%20Science%20Codex%22%2C%22short_name%22%3A%22Science%20Codex%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23030712%22%2C%22theme_color%22%3A%22%2306b6d4%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fneon%2F512%2Ftest-tube.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image/png%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22The%20Ishigami%20Science%20Codex%22%2C%22short_name%22%3A%22Science%20Codex%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23060814%22%2C%22theme_color%22%3A%22%23ffb703%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fneon%2F512%2Ftest-tube.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image/png%22%7D%5D%7D">
 
+    <!-- High-End Graphical Assets -->
     <link rel="icon" type="image/png" sizes="512x512" href="https://img.icons8.com/neon/512/test-tube.png">
     <link rel="apple-touch-icon" sizes="512x512" href="https://img.icons8.com/neon/512/test-tube.png">
     
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        body { background-color: #030712; color: #f3f4f6; min-height: 100vh; font-family: system-ui, sans-serif; }
-        .otaku-card { background-color: #0b1329; border: 1px solid #1e293b; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); }
-        .matrix-row { border-left: 4px solid currentColor; background-color: #020617; }
+        body { background-color: #05070f; color: #f3f4f6; min-height: 100vh; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+        /* Blue Box Inspired Premium Smooth Canvas Transitions */
+        .page-view { transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .page-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; display: none !important; }
+        .mi-card { background: linear-gradient(180deg, rgba(20,24,44,0.6) 0%, rgba(11,13,26,0.9) 100%); border: 1px solid rgba(255, 255, 255, 0.04); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); }
+        .hianime-badge { background: linear-gradient(90deg, #ffb703 0%, #fb8500 100%); color: #02040a; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="p-4 pt-16">
+<body class="pb-24 pt-16 px-4">
+
+    <!-- Premium Anchored Navigation Bar (Top Layout Router) -->
+    <nav class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-[#070913]/95 border-b border-white/5 flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md">
+        <span class="text-xs font-black tracking-widest bg-gradient-to-r from-amber-400 via-cyan-400 to-purple-400 text-transparent bg-clip-text uppercase">SCIENCE CODEX</span>
+        <div class="flex gap-4 text-xs font-bold tracking-tight">
+            <button onclick="routeTo('deck')" id="tab-deck" class="text-amber-400 border-b-2 border-amber-400 pb-1 transition-all duration-300">Hub</button>
+            <button onclick="routeTo('query')" id="tab-query" class="text-slate-400 pb-1 transition-all duration-300">Discover</button>
+            <button onclick="routeTo('vault')" id="tab-grid" class="text-slate-400 pb-1 transition-all duration-300">Vault</button>
+        </div>
+    </nav>
+
+    <!-- Global Floating System Alert Window -->
+    <div id="alert-overlay" class="hidden fixed top-20 left-4 right-4 max-w-md mx-auto bg-[#0b0e1a] border border-cyan-500/20 text-cyan-400 p-3 rounded-xl text-xs text-center font-semibold shadow-2xl z-50 animate-pulse"></div>
+
     <div class="max-w-md mx-auto space-y-4">
-        
-        <nav class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-slate-950 border-b border-slate-800 flex justify-between items-center px-4 py-2.5 z-50">
-            <span class="text-xs font-black tracking-wider text-cyan-400 uppercase">Science Codex 🧪</span>
-            <div class="flex gap-3 text-xs font-bold">
-                <button onclick="changePage('deck')" id="tab-deck" class="text-cyan-400 border-b-2 border-cyan-400 pb-0.5">Deck</button>
-                <button onclick="changePage('query')" id="tab-query" class="text-slate-400 pb-0.5">Search</button>
-                <button onclick="changePage('grid')" id="tab-grid" class="text-slate-400 pb-0.5">Vault</button>
+
+        <!-- ================= PAGE 1: DECK COMPANION & HUB ================= -->
+        <div id="view-deck" class="page-view space-y-4">
+            
+            <!-- Elegant Blue Box Cinematic Anime Quote Block -->
+            <section id="cinema-quote-card" class="mi-card p-4 rounded-2xl bg-gradient-to-br from-purple-950/10 via-transparent to-cyan-950/5 relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 text-7xl opacity-[0.03] font-serif select-none">“</div>
+                <span class="text-[8px] font-mono tracking-widest text-cyan-400 uppercase font-bold block mb-1">Legendary Verse</span>
+                <p id="display-quote" class="text-xs italic text-slate-200 leading-relaxed font-medium">"This system matrix is ready, Akbar. Jump into the Discover console to pull live posters and synchronize titles automatically!"</p>
+                <p id="display-author" class="text-[9px] font-bold text-amber-400 mt-2 text-right">— Senku Ishigami</p>
+            </section>
+
+            <!-- Dynamic Pop-Culture Character Crew Avatars Box -->
+            <section class="space-y-2">
+                <span class="text-[9px] font-mono tracking-widest text-slate-500 uppercase font-black block">Active Character Guild</span>
+                <div id="guild-deck" class="flex gap-2 overflow-x-auto pb-1 hide-scroll">
+                    <!-- Standard Fallback Avatar Node -->
+                    <div onclick="speakCharacter('senku')" class="mi-card p-2 rounded-xl text-center min-w-[76px] cursor-pointer active:scale-95 transition-all"><p class="text-xl">🧪</p><p class="text-[9px] font-black text-emerald-400 mt-0.5 truncate">Senku</p></div>
+                </div>
+            </section>
+
+            <!-- Stripped Counter Matrices Dashboard -->
+            <section class="grid grid-cols-3 gap-2 bg-[#090b14] p-2.5 rounded-2xl border border-white/5">
+                <div class="text-center"><p class="text-[9px] uppercase text-slate-500 font-bold tracking-wider">All Titles</p><p id="count-all" class="text-xl font-black text-slate-100">0</p></div>
+                <div class="text-center border-x border-white/5"><p class="text-[9px] uppercase text-cyan-400 font-bold tracking-wider">Streaming</p><p id="count-active" class="text-xl font-black text-cyan-400">0</p></div>
+                <div class="text-center"><p class="text-[9px] uppercase text-emerald-400 font-bold tracking-wider">Completed</p><p id="count-done" class="text-xl font-black text-emerald-400">0</p></div>
+            </section>
+
+            <!-- Premium HiAnime-Style Active Rotations Shelf -->
+            <section class="space-y-2">
+                <h3 class="font-black text-xs uppercase text-cyan-400 tracking-wider flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span> Currently Watching
+                </h3>
+                <div id="shelf-watching" class="space-y-3"></div>
+            </section>
+        </div>
+
+
+        <!-- ================= PAGE 2: DISCOVER CATALOG SEARCH (HIANIME INSPIRED) ================= -->
+        <div id="view-query" class="page-view page-hidden space-y-4">
+            
+            <!-- Miruro Clean Searching Container Element -->
+            <section class="mi-card p-3 rounded-2xl">
+                <div class="flex gap-2">
+                    <input type="text" id="input-search" placeholder="Search anime... (e.g. Jujutsu Kaisen, JJK)" class="flex-1 bg-slate-950 border border-white/5 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-amber-400 transition-all">
+                    <button onclick="executeGlobalQuery()" class="bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 px-5 rounded-xl text-xs font-black active:scale-95 transition-all shadow-md">Search</button>
+                </div>
+                <div class="flex justify-center gap-4 mt-2.5 pt-2 border-t border-white/5">
+                    <label class="flex items-center gap-1.5 text-xs text-slate-400 cursor-pointer"><input type="radio" name="media-mode" value="anime" checked onclick="clearSearchGrid()" class="accent-amber-500"> Anime</label>
+                    <label class="flex items-center gap-1.5 text-xs text-slate-400 cursor-pointer"><input type="radio" name="media-mode" value="manga" onclick="clearSearchGrid()" class="accent-amber-500"> Manga</label>
+                </div>
+            </section>
+
+            <!-- Streaming Layout Search Results Dynamic Catalog Grid -->
+            <div id="catalog-search-grid" class="grid grid-cols-1 gap-3">
+                <div class="text-xs text-slate-600 italic p-8 text-center">Type an anime title inside the search bar to interface with the database.</div>
             </div>
-        </nav>
-
-        <div id="alert-feed" class="hidden bg-slate-900 border border-cyan-500/20 text-cyan-400 p-3 rounded-xl text-xs text-center font-medium shadow-lg transition-all"></div>
-
-        <div id="view-deck" class="space-y-4">
-            <section class="space-y-2">
-                <span class="text-[9px] font-mono tracking-widest text-slate-500 uppercase font-black">Unlocked Active Companions</span>
-                <div id="guild-deck" class="grid grid-cols-4 gap-2">
-                    <div onclick="triggerQuote('senku')" class="otaku-card p-2 rounded-xl text-center cursor-pointer border-emerald-500/20 active:scale-95 transition"><p class="text-2xl">🧪</p><p class="text-[9px] font-black text-emerald-400 mt-1 truncate">Senku</p></div>
-                </div>
-            </section>
-
-            <section class="grid grid-cols-3 gap-2 bg-slate-950 p-2 rounded-2xl border border-slate-900">
-                <div class="text-center"><p class="text-[9px] uppercase text-slate-500 font-bold">All Logs</p><p id="count-all" class="text-lg font-black text-slate-100">0</p></div>
-                <div class="text-center border-x border-slate-900"><p class="text-[9px] uppercase text-cyan-500 font-bold">Active</p><p id="count-active" class="text-lg font-black text-cyan-400">0</p></div>
-                <div class="text-center"><p class="text-[9px] uppercase text-emerald-500 font-bold">Mastered</p><p id="count-done" class="text-lg font-black text-emerald-400">0</p></div>
-            </section>
-
-            <section class="space-y-2">
-                <h3 class="font-black text-xs uppercase text-cyan-400 tracking-wider">🍿 Currently Streaming Rotations</h3>
-                <div id="stream-deck-watching" class="space-y-2.5"></div>
-            </section>
         </div>
 
-        <div id="view-query" class="hidden space-y-4">
-            <section class="otaku-card p-4 rounded-2xl">
-                <div class="flex flex-col gap-3">
-                    <div class="grid grid-cols-2 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-900">
-                        <button id="mode-anime" onclick="toggleMode('anime')" class="text-xs font-bold py-1.5 rounded-lg bg-cyan-500 text-slate-950 transition">Anime Node</button>
-                        <button id="mode-manga" onclick="toggleMode('manga')" class="text-xs font-bold py-1.5 rounded-lg text-slate-400 transition">Manga Node</button>
-                    </div>
 
-                    <div class="relative">
-                        <div class="flex gap-2">
-                            <input type="text" id="input-title" placeholder="Search global database titles..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
-                            <button onclick="executeSearch()" class="bg-cyan-500 text-slate-950 px-4 rounded-xl text-xs font-black active:scale-95 transition">Search</button>
-                        </div>
-                        <div id="dropdown-results" class="hidden absolute left-0 right-0 top-full mt-2 bg-slate-950 border border-slate-800 rounded-xl max-h-52 overflow-y-auto z-50 shadow-2xl divide-y divide-slate-900/60"></div>
-                    </div>
-                    
-                    <div class="grid grid-cols-12 gap-2">
-                        <select id="select-status" class="col-span-6 bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-xs text-slate-300 focus:outline-none">
-                            <option value="watching" id="lbl-watch">🍿 Active Tracking</option>
-                            <option value="plan-to-watch" id="lbl-plan">⏳ Save in Queue</option>
-                            <option value="completed" id="lbl-done">✅ Mark Completed</option>
-                        </select>
-                        <input type="number" id="input-score" min="1" max="10" step="0.5" placeholder="★ Rating" class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl px-1 py-2 text-center text-xs text-white focus:outline-none">
-                        <select id="select-tier" class="col-span-3 bg-slate-950 border border-slate-800 rounded-xl px-1 py-2 text-xs text-purple-400 font-bold focus:outline-none">
-                            <option value="S">S-Tier</option><option value="A">A-Tier</option><option value="B">B-Tier</option><option value="C">C-Tier</option><option value="Trash">Trash</option>
-                        </select>
-                    </div>
-                    <input type="text" id="input-notes" placeholder="Favorite details or comments..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-1.5 text-xs text-slate-300 focus:outline-none">
-                    <button onclick="commitToVault()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-slate-950 font-black py-2.5 rounded-xl text-xs uppercase tracking-wider transition shadow-lg">Commit to Core Database</button>
-                </div>
-            </section>
-        </div>
-
-        <div id="view-grid" class="hidden space-y-4">
-            <div class="otaku-card p-3 rounded-2xl">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider">⏳ Future Targets Queue</h3>
+        <!-- ================= PAGE 3: VAULT BACKLOG & TIER RANKINGS ================= -->
+        <div id="view-grid" class="page-view page-hidden space-y-4">
+            
+            <!-- Future Plan Watchlist Backlog Deck Storage Area -->
+            <div class="mi-card p-3 rounded-2xl">
+                <div class="flex items-center justify-between mb-2.5">
+                    <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider">⏳ Future Backlog Queue</h3>
                     <div class="flex items-center gap-2">
-                        <button onclick="triggerRoulette()" class="text-[9px] bg-cyan-500 text-slate-950 font-black px-2 py-0.5 rounded shadow">Spin Wheel 🎲</button>
+                        <button onclick="runMoctaleRoulette()" class="text-[9px] bg-gradient-to-r from-purple-500 to-cyan-500 text-slate-950 font-black px-2.5 py-0.5 rounded-full shadow active:scale-95 transition-all">Roulette 🎲</button>
                         <span id="badge-queue" class="text-xs text-purple-400 font-bold bg-purple-400/10 px-2 py-0.5 rounded-full">0</span>
                     </div>
                 </div>
-                <div id="deck-queue" class="space-y-2"></div>
+                <div id="shelf-queue" class="space-y-2"></div>
             </div>
 
-            <div class="otaku-card p-3 rounded-2xl">
-                <div class="flex items-center justify-between mb-2"><h3 class="font-black text-xs uppercase text-emerald-400 tracking-wider">✅ Finished Library Logs</h3><span id="badge-mastered" class="text-xs text-emerald-400 font-bold bg-emerald-400/10 px-2 py-0.5 rounded-full">0</span></div>
-                <div id="deck-completed" class="space-y-2"></div>
+            <!-- Clean Finished Masterpiece Library Deck Storage Area -->
+            <div class="mi-card p-3 rounded-2xl">
+                <div class="flex items-center justify-between mb-2.5"><h3 class="font-black text-xs uppercase text-emerald-400 tracking-wider">✅ Finished Library Logs</h3><span id="badge-mastered" class="text-xs text-emerald-400 font-bold bg-emerald-400/10 px-2 py-0.5 rounded-full">0</span></div>
+                <div id="shelf-completed" class="space-y-2"></div>
             </div>
 
-            <section class="otaku-card p-3 rounded-2xl">
-                <h3 class="font-black text-xs uppercase tracking-wider text-purple-400 mb-2.5">🏆 Grade Ranking Matrix</h3>
-                <div class="space-y-1.5 rounded-xl overflow-hidden bg-slate-950 p-1.5 border border-slate-900">
-                    <div class="flex items-center gap-2 p-1 rounded matrix-row text-rose-500"><div class="w-10 text-center font-black text-xs text-rose-500">S</div><div id="row-S" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
-                    <div class="flex items-center gap-2 p-1 rounded matrix-row text-orange-400"><div class="w-10 text-center font-black text-xs text-orange-400">A</div><div id="row-A" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
-                    <div class="flex items-center gap-2 p-1 rounded matrix-row text-yellow-400"><div class="w-10 text-center font-black text-xs text-yellow-400">B</div><div id="row-B" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
-                    <div class="flex items-center gap-2 p-1 rounded matrix-row text-green-400"><div class="w-10 text-center font-black text-xs text-green-400">C</div><div id="row-C" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
-                    <div class="flex items-center gap-2 p-1 rounded matrix-row text-slate-500"><div class="w-10 text-center font-black text-[10px] text-slate-500">Trash</div><div id="row-Trash" class="flex flex-wrap gap-1 p-1 min-h-[24px]"></div></div>
+            <!-- Moctale Premium Interactive Tier Grading Dashboard Grid -->
+            <section class="mi-card p-3 rounded-2xl bg-gradient-to-t from-slate-950 to-transparent">
+                <h3 class="font-black text-xs uppercase tracking-wider text-purple-400 mb-2.5 flex items-center gap-1">🏆 Grade Matrix Standings</h3>
+                <div class="space-y-1.5 rounded-xl overflow-hidden bg-slate-950/80 p-2 border border-white/5">
+                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-rose-500 bg-[#160c12]/40 text-rose-400"><div class="w-8 text-center font-black text-xs">S</div><div id="row-S" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-orange-400 bg-[#16100c]/40 text-orange-400"><div class="w-8 text-center font-black text-xs">A</div><div id="row-A" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-yellow-400 bg-[#16150c]/40 text-yellow-400"><div class="w-8 text-center font-black text-xs">B</div><div id="row-B" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-green-400 bg-[#0c1610]/40 text-green-400"><div class="w-8 text-center font-black text-xs">C</div><div id="row-C" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-slate-500 bg-[#11131c]/40 text-slate-500"><div class="w-8 text-center font-black text-[9px]">Trash</div><div id="row-Trash" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
                 </div>
             </section>
         </div>
 
-        <button id="share-btn" onclick="transmitData()" class="w-full bg-slate-950 border border-slate-800 text-slate-400 text-[11px] font-bold py-2 rounded-xl transition active:scale-95 shadow">✨ Distribute Architecture Payload</button>
-        <a id="back-to-mine" href="?" class="hidden w-full bg-slate-900 text-slate-100 text-xs font-bold py-2 rounded-xl text-center items-center justify-center">Back to Personal Hub</a>
+        <!-- Footnote Transmission Button Platform Payload distribution link -->
+        <button onclick="exportCodexPayload()" class="w-full bg-[#0d1021] hover:bg-[#121630] border border-white/5 text-slate-400 text-[10px] tracking-wider uppercase font-bold py-2.5 rounded-xl transition-all active:scale-98 shadow">✨ Distribute Architecture Payload Link</button>
+        <a id="back-to-mine" href="?" class="hidden w-full bg-slate-950 text-slate-200 text-xs font-black py-2.5 rounded-xl text-center items-center justify-center border border-white/5 shadow">Back to My Vault</a>
     </div>
 
     <script>
-        let dbList = []; let isViewOnly = false; let activeMode = 'anime'; let cacheImg = ''; let cacheMeta = '';
+        let animeStorage = []; let isViewOnly = false;
         
-        const masterGuildRegistry = {
-            senku: { char: "Senku Ishigami", icon: "🧪", quote: "Ten billion percent operational! Try checking your search configurations.", col: "text-emerald-400" },
-            demon: { char: "Tanjiro Kamado", icon: "🎴", quote: "Sharpen your blade! Live out your recorded quest with absolute honor.", col: "text-orange-400" },
-            gojo: { char: "Gojo Satoru", icon: "👁️", quote: "Don't sweat it, your custom grading profile index is literally the strongest.", col: "text-purple-400" },
-            naruto: { char: "Naruto Uzumaki", icon: "🦊", quote: "I'm turning this tracking catalog grid into the supreme Hokage library tier!", col: "text-yellow-500" },
-            luffy: { char: "Monkey D. Luffy", icon: "🍖", quote: "We are establishing the ultimate legendary king index fleet layout across the seas!", col: "text-rose-500" }
+        // Massive Moctale Dynamic Quotes Repository System Database Matrix
+        const universeQuotes = {
+            senku: { character: "Senku Ishigami", icon: "🧪", quote: "This is ten billion percent operational! Search titles under the Discover view node.", color: "text-emerald-400" },
+            demon: { character: "Tanjiro Kamado", icon: "🎴", quote: "Look straight ahead. No matter how painful it gets, sharpen your blade and record your path!", color: "text-orange-400" },
+            gojo: { character: "Gojo Satoru", icon: "👁️", quote: "Don't worry, my custom database tracking layers are literally the strongest.", color: "text-purple-400" },
+            naruto: { character: "Naruto Uzumaki", icon: "🦊", quote: "I never go back on my records. That's my custom tracking methodology, believe it!", color: "text-yellow-400" },
+            luffy: { character: "Monkey D. Luffy", icon: "🍖", quote: "If you don't take cataloging risks, you can't build a legendary media profile fleet!", color: "text-rose-500" }
         };
 
-        function init() { const urlParams = new URLSearchParams(window.location.search); const sharedData = urlParams.get('vault'); if (sharedData) { try { dbList = JSON.parse(atob(sharedData)); isViewOnly = true; buildViewOnlyEnvironment(); } catch (e) { loadLocalStorage(); } } else { loadLocalStorage(); } renderAppDeck(); document.addEventListener('touchstart', (e) => { if (e.target.id !== 'input-title') { const db = document.getElementById('dropdown-results'); if (db) db.classList.add('hidden'); } }); }
-        function loadLocalStorage() { const local = localStorage.getItem('otakuPortal_V6_B'); dbList = local ? JSON.parse(local) : []; }
-        function buildViewOnlyEnvironment() { document.getElementById('controls-section')?.remove(); document.getElementById('share-btn')?.remove(); document.getElementById('tab-query')?.remove(); document.getElementById('back-to-mine').style.display = 'flex'; changePage('deck'); }
-        function syncStorage() { if (!isViewOnly) localStorage.setItem('otakuPortal_V6_B', JSON.stringify(dbList)); }
+        const backupStaticQuotes = [
+            { c: "Gojo Satoru", q: "Don't worry, I'm the absolute strongest.", a: "👁️" },
+            { c: "Tanjiro Kamado", q: "Look straight ahead. Sharpen your blade.", a: "🎴" },
+            { c: "Naruto Uzumaki", q: "I never go back on my word. That's my ninja way!", a: "🦊" },
+            { c: "Senku Ishigami", q: "This is ten billion percent exhilarating!", a: "🧪" },
+            { c: "Roronoa Zoro", q: "If I die here, then I'm a man who could only go this far.", a: "⚔️" },
+            { c: "Itachi Uchiha", q: "People live their lives bound by what they accept as correct and true.", a: "👁️‍🗨️" }
+        ];
+
+        function init() { const urlParams = new URLSearchParams(window.location.search); const sharedData = urlParams.get('vault'); if (sharedData) { try { animeStorage = JSON.parse(atob(sharedData)); isViewOnly = true; buildViewOnlyState(); } catch (e) { loadLocalData(); } } else { loadLocalData(); } renderAppFramework(); document.getElementById('input-search').addEventListener('keypress', (e) => { if (e.key === 'Enter') executeGlobalQuery(); }); }
+        function loadLocalData() { const stored = localStorage.getItem('hianimeCodexV6'); animeStorage = stored ? JSON.parse(stored) : []; }
+        function buildViewOnlyState() { document.getElementById('tab-query')?.remove(); document.getElementById('back-to-mine').style.display = 'flex'; routeTo('deck'); }
+        function syncLocalData() { if (!isViewOnly) localStorage.setItem('hianimeCodexV6', JSON.stringify(animeStorage)); }
         
-        function changePage(target) {
+        // Premium Blue Box Ease-Out Router view changer
+        function routeTo(targetPage) {
             ['deck', 'query', 'grid'].forEach(p => {
-                document.getElementById(`view-${p}`).classList.add('hidden');
-                const t = document.getElementById(`tab-${p}`); if (t) { t.className = "text-slate-400 pb-0.5"; }
+                const el = document.getElementById(`view-${p}`); if (el) el.classList.add('page-hidden');
+                const btn = document.getElementById(`tab-${p}`); if (btn) { btn.className = "text-slate-400 pb-1 transition-all duration-300"; }
             });
-            document.getElementById(`view-${target}`).classList.remove('hidden');
-            const activeTab = document.getElementById(`tab-${target}`); if (activeTab) { activeTab.className = "text-cyan-400 border-b-2 border-cyan-400 pb-0.5 font-bold"; }
+            const targetEl = document.getElementById(`view-${targetPage}`); if (targetEl) targetEl.classList.remove('page-hidden');
+            const activeTab = document.getElementById(`tab-${targetPage}`); if (activeTab) { activeTab.className = "text-amber-400 border-b-2 border-amber-400 pb-1 transition-all duration-300 font-bold"; }
         }
 
-        function triggerQuote(id) { const entry = masterGuildRegistry[id]; if (entry) displayFeed(`<strong>${entry.char}:</strong> "${entry.quote}"`); }
-        function displayFeed(msg) { const f = document.getElementById('alert-feed'); f.innerHTML = msg; f.classList.remove('hidden'); setTimeout(() => f.classList.add('hidden'), 5000); }
+        function speakCharacter(id) { const data = universeQuotes[id]; if (data) { document.getElementById('display-quote').innerText = `"${data.quote}"`; document.getElementById('display-author').innerText = `— ${data.character}`; } }
+        function fireSystemAlert(msg) { const a = document.getElementById('alert-overlay'); a.innerHTML = msg; a.classList.remove('hidden'); setTimeout(() => a.classList.add('hidden'), 4000); }
+        function clearSearchGrid() { document.getElementById('catalog-search-grid').innerHTML = `<div class="text-xs text-slate-600 italic p-8 text-center">Engine adjusted. Press search button to query catalog.</div>`; }
 
-        function toggleMode(mode) {
-            activeMode = mode; cacheImg = ''; cacheMeta = ''; document.getElementById('input-title').value = '';
-            const btnAnime = document.getElementById('mode-anime'); const btnManga = document.getElementById('mode-manga');
-            if (mode === 'anime') {
-                btnAnime.className = "text-xs font-bold py-1.5 rounded-lg bg-cyan-500 text-slate-950 transition"; btnManga.className = "text-xs font-bold py-1.5 rounded-lg text-slate-400 transition";
-                document.getElementById('lbl-watch').innerText = "🍿 Active Tracking"; document.getElementById('lbl-plan').innerText = "⏳ Save in Queue"; document.getElementById('lbl-done').innerText = "✅ Mark Completed";
+        async function executeGlobalQuery() {
+            const inputField = document.getElementById('input-search'); const query = inputField.value.trim();
+            const grid = document.getElementById('catalog-search-grid');
+            if (query.length < 2) { fireSystemAlert("🧪 Enter at least 2 characters to engage search array."); return; }
+            
+            const selectedMode = document.querySelector('input[name="media-mode"]:checked').value;
+            grid.innerHTML = `<div class="text-xs text-cyan-400 font-mono italic p-8 text-center animate-pulse">📡 Synchronizing database sectors...</div>`;
+            
+            try {
+                const response = await fetch(`https://api.jikan.moe/v4/${selectedMode}?q=${encodeURIComponent(query)}&limit=5`);
+                const json = await response.json();
+                renderCatalogCards(json.data, selectedMode);
+            } catch (e) { grid.innerHTML = `<div class="text-xs text-rose-400 font-mono p-8 text-center">❌ Data stream interrupted. Click Search button again.</div>`; }
+        }
+
+        function renderCatalogCards(data, mode) {
+            const grid = document.getElementById('catalog-search-grid'); grid.innerHTML = '';
+            if (!data || data.length === 0) { grid.innerHTML = `<div class="text-xs text-slate-500 italic p-8 text-center">❌ Zero records matched this index inside the global network.</div>`; return; }
+            
+            data.forEach(anime => {
+                const titleText = anime.title;
+                const imageSource = anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url || '';
+                const formatLabel = anime.type || (mode === 'anime' ? 'TV' : 'Manga');
+                
+                // Fetching complete metadata values directly to strip text boxes completely
+                let detailString = `${formatLabel} • `;
+                if (mode === 'anime') {
+                    detailString += anime.episodes ? `${anime.episodes} Episodes` : 'Ongoing Season';
+                    if (anime.year) detailString += ` (${anime.year})`;
+                } else {
+                    detailString += anime.chapters ? `${anime.chapters} Chapters` : 'Ongoing Serialization';
+                }
+                
+                const scoreValue = anime.score ? `★ ${anime.score}` : 'MAL Unrated';
+
+                const card = document.createElement('div');
+                card.className = "mi-card p-3 rounded-2xl flex gap-3 items-start bg-slate-900/40 relative group overflow-hidden border border-white/5 shadow-lg transition-transform duration-300 hover:scale-[1.01]";
+                
+                let systemControls = !isViewOnly ? `
+                    <div class="flex items-center gap-1 mt-2 flex-wrap">
+                        <button onclick="commitTrackedNode('${btoa(unescape(encodeURIComponent(titleText)))}', '${imageSource}', '${detailString}', 'watching', 'B')" class="text-[9px] bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-2 py-1 rounded-md transition-all active:scale-95 cursor-pointer">+ Active</button>
+                        <button onclick="commitTrackedNode('${btoa(unescape(encodeURIComponent(titleText)))}', '${imageSource}', '${detailString}', 'plan-to-watch', 'B')" class="text-[9px] bg-purple-600 hover:bg-purple-500 text-white font-bold px-2 py-1 rounded-md transition-all active:scale-95 cursor-pointer">+ Queue</button>
+                        <div class="relative inline-block">
+                            <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="text-[9px] bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-2 py-1 rounded-md transition-all active:scale-95 cursor-pointer">+ Mastered</button>
+                            <div class="hidden absolute right-0 bottom-full mb-1 bg-slate-950 border border-slate-800 rounded-lg p-1.5 z-50 flex flex-col gap-1 shadow-2xl min-w-[76px]">
+                                <button onclick="commitTrackedNode('${btoa(unescape(encodeURIComponent(titleText)))}', '${imageSource}', '${detailString}', 'completed', 'S')" class="text-[8px] bg-rose-500/20 text-rose-400 font-bold p-1 rounded hover:bg-rose-500/30">S-Tier</button>
+                                <button onclick="commitTrackedNode('${btoa(unescape(encodeURIComponent(titleText)))}', '${imageSource}', '${detailString}', 'completed', 'A')" class="text-[8px] bg-orange-500/20 text-orange-400 font-bold p-1 rounded hover:bg-orange-500/30">A-Tier</button>
+                                <button onclick="commitTrackedNode('${btoa(unescape(encodeURIComponent(titleText)))}', '${imageSource}', '${detailString}', 'completed', 'B')" class="text-[8px] bg-yellow-500/20 text-yellow-400 font-bold p-1 rounded hover:bg-yellow-500/30">B-Tier</button>
+                                <button onclick="commitTrackedNode('${btoa(unescape(encodeURIComponent(titleText)))}', '${imageSource}', '${detailString}', 'completed', 'C')" class="text-[8px] bg-green-500/20 text-green-400 font-bold p-1 rounded hover:bg-green-500/30">C-Tier</button>
+                                <button onclick="commitTrackedNode('${btoa(unescape(encodeURIComponent(titleText)))}', '${imageSource}', '${detailString}', 'completed', 'Trash')" class="text-[8px] bg-slate-800 text-slate-400 p-1 rounded hover:bg-slate-700">Trash</button>
+                            </div>
+                        </div>
+                    </div>` : '';
+
+                card.innerHTML = `
+                    <img src="${imageSource}" alt="${titleText}" class="w-16 h-24 object-cover rounded-xl border border-white/5 shadow-md bg-slate-950 flex-shrink-0">
+                    <div class="flex-1 min-w-0 flex flex-col justify-between h-full">
+                        <div>
+                            <div class="flex justify-between items-start gap-1">
+                                <h4 class="font-black text-xs text-slate-100 truncate flex-1">${titleText}</h4>
+                                <span class="text-[8px] font-mono bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded text-amber-400 font-bold flex-shrink-0">${scoreValue}</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 font-medium mt-0.5">${detailString}</p>
+                        </div>
+                        ${systemControls}
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        function commitTrackedNode(encodedTitle, image, metadata, status, tier) {
+            const decodedTitle = decodeURIComponent(escape(atob(encodedTitle)));
+            animeStorage.push({ id: Date.now(), title: decodedTitle, status: status, type: metadata.includes('Chapters') ? 'manga' : 'anime', metadata: metadata, rating: null, tier: tier, notes: '', image: image });
+            
+            // Loop and search title triggers to inject random matching quotes dynamically onto the UI dashboard header block
+            injectDynamicQuote(decodedTitle);
+            
+            syncLocalData(); renderAppFramework(); document.getElementById('input-search').value = '';
+            fireSystemAlert(`✅ Added "${decodedTitle}" straight to Vault.`);
+            setTimeout(() => routeTo('deck'), 500);
+        }
+
+        function injectDynamicQuote(title) {
+            const low = title.toLowerCase();
+            let targetKey = null;
+            if (low.includes('stone') || low.includes('ishigami')) targetKey = 'senku';
+            else if (low.includes('demon') || low.includes('slayer') || low.includes('tanjiro') || low.includes('kimetsu')) targetKey = 'demon';
+            else if (low.includes('jujutsu') || low.includes('jjk') || low.includes('kaisen') || low.includes('gojo')) targetKey = 'gojo';
+            else if (low.includes('naruto') || low.includes('uzumaki') || low.includes('shippuden')) targetKey = 'naruto';
+            else if (low.includes('piece') || low.includes('luffy')) targetKey = 'luffy';
+            
+            if (targetKey && universeQuotes[targetKey]) {
+                const data = universeQuotes[targetKey];
+                document.getElementById('display-quote').innerText = `"${data.quote}"`;
+                document.getElementById('display-author').innerText = `— ${data.character}`;
             } else {
-                btnAnime.className = "text-xs font-bold py-1.5 rounded-lg text-slate-400 transition"; btnManga.className = "text-xs font-bold py-1.5 rounded-lg bg-cyan-500 text-slate-950 transition";
-                document.getElementById('lbl-watch').innerText = "📖 Reading Content"; document.getElementById('lbl-plan').innerText = "⏳ Save in Queue"; document.getElementById('lbl-done').innerText = "✅ Archive Completed";
+                // If it's a unique show without a pre-baked character, shuffle one from legendary vaults
+                const fallback = backupStaticQuotes[Math.floor(Math.random() * backupStaticQuotes.length)];
+                document.getElementById('display-quote').innerText = `"${fallback.q}"`;
+                document.getElementById('display-author').innerText = `— ${fallback.c}`;
             }
         }
 
-        async function executeSearch() {
-            const query = document.getElementById('input-title').value.trim(); const box = document.getElementById('dropdown-results');
-            if (query.length < 2) { displayFeed("🧪 Write at least 2 symbols to sync link network paths."); return; }
-            displayFeed("📡 Pulling data dimensions from database...");
-            try {
-                const res = await fetch(`https://api.jikan.moe/v4/${activeMode}?q=${encodeURIComponent(query)}&limit=5`);
-                const json = await res.json(); document.getElementById('alert-feed').classList.add('hidden');
-                renderDropdownRows(json.data);
-            } catch (e) { displayFeed("❌ External connection lag node encountered."); }
-        }
+        function mutateStatus(id, newStatus) { animeStorage = animeStorage.map(i => i.id === id ? { ...i, status: newStatus } : i); syncStorage(); renderAppFramework(); }
+        function sliceNode(id) { animeStorage = animeStorage.filter(i => i.id !== id); syncStorage(); renderAppFramework(); }
 
-        function renderDropdownRows(data) {
-            const box = document.getElementById('dropdown-results'); box.innerHTML = '';
-            if (!data || data.length === 0) { displayFeed("❌ Grid matches empty."); box.classList.add('hidden'); return; }
-            data.forEach(item => {
-                const row = document.createElement('div'); row.className = "flex items-center gap-3 p-2.5 hover:bg-cyan-500/10 active:bg-cyan-500/20 text-xs border-b border-slate-900 transition cursor-pointer";
-                const titleText = item.title; const img = item.images?.jpg?.image_url || '';
-                const formatMeta = `${item.type || 'Series'} • ${item.episodes || item.chapters || 'In Production'} (${item.score ? '★ ' + item.score : 'Unranked'})`;
-                row.onclick = function() { document.getElementById('input-title').value = titleText; cacheImg = img; cacheMeta = formatMeta; box.classList.add('hidden'); };
-                row.innerHTML = `<img src="${img}" class="w-6 h-8 object-cover rounded border border-slate-800"><div><p class="font-bold text-slate-200 line-clamp-1">${titleText}</p><p class="text-[9px] text-slate-500">${formatMeta}</p></div>`; box.appendChild(row);
-            });
-            box.classList.remove('hidden');
-        }
-
-        function commitToVault() {
-            const t = document.getElementById('input-title'); const s = document.getElementById('select-status'); const r = document.getElementById('input-score'); const tr = document.getElementById('select-tier'); const n = document.getElementById('input-notes');
-            if (!t.value.trim()) return;
-            let finalImg = cacheImg || 'https://img.icons8.com/neon/512/test-tube.png';
-            let finalMeta = cacheMeta || (activeMode === 'anime' ? 'TV Series Log Structure' : 'Manga Edition Structure');
-            
-            dbList.push({ id: Date.now(), title: t.value.trim(), status: s.value, type: activeMode, metadata: finalMeta, rating: r.value ? parseFloat(r.value) : null, tier: tr.value, notes: n.value.trim(), image: finalImg });
-            t.value = ''; r.value = ''; n.value = ''; cacheImg = ''; cacheMeta = ''; syncStorage(); renderAppDeck();
-            displayFeed("✅ Track Block Committed."); setTimeout(() => changePage('deck'), 800);
-        }
-
-        function changeItemStatus(id, targetStatus) { dbList = dbList.map(i => i.id === id ? { ...i, status: targetStatus } : i); syncStorage(); renderAppDeck(); }
-        function purgeItem(id) { dbList = dbList.filter(i => i.id !== id); syncStorage(); renderAppDeck(); }
-
-        function triggerRoulette() {
-            const targets = dbList.filter(i => i.status === 'plan-to-watch');
-            if (targets.length === 0) { displayFeed("❌ Queue blocks empty! Populated target metrics first."); return; }
-            let cycles = 0; changePage('deck');
-            let timer = setInterval(() => {
-                const step = targets[Math.floor(Math.random() * targets.length)]; displayFeed(`🔬 Matrix cycling... [${step.title}]`); cycles++;
+        function runMoctaleRoulette() {
+            const targets = animeStorage.filter(i => i.status === 'plan-to-watch');
+            if (targets.length === 0) { fireSystemAlert("❌ Backlog layers completely clear. Populated choices first!"); return; }
+            let cycles = 0; routeTo('deck');
+            let wheel = setInterval(() => {
+                const pick = targets[Math.floor(Math.random() * targets.length)]; fireSystemAlert(`🔬 Scanning queue matrix... [${pick.title}]`); cycles++;
                 if (cycles > 8) {
-                    clearInterval(timer); const finalChoice = targets[Math.floor(Math.random() * targets.length)];
-                    document.getElementById('alert-feed').innerHTML = `⚡ <strong>Roulette Sweep Complete:</strong> Stream <strong>${finalChoice.title}</strong> next! 🚀`;
+                    clearInterval(wheel); const finalItem = targets[Math.floor(Math.random() * targets.length)];
+                    document.getElementById('alert-overlay').classList.add('hidden');
+                    document.getElementById('display-quote').innerHTML = `⚡ <strong>Moctale Selection Algorithm Complete:</strong><br>Go stream/read <strong>${finalItem.title}</strong> right now!`;
+                    document.getElementById('display-author').innerText = `— Global Archive Node`; injectDynamicQuote(finalItem.title);
                 }
             }, 120);
         }
 
-        function transmitData() { const base64 = btoa(JSON.stringify(dbList)); navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?vault=${base64}`).then(() => { displayFeed("🚀 Compressed Configuration String Anchored to Clipboard!"); }); }
+        function exportCodexPayload() { const base64 = btoa(JSON.stringify(animeStorage)); navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?vault=${base64}`).then(() => { fireSystemAlert("🚀 Transmitted compressed configuration link directly to clipboard!"); }); }
 
-        function renderAppDeck() {
-            const watchBox = document.getElementById('stream-deck-watching'); const queueBox = document.getElementById('deck-queue'); const doneBox = document.getElementById('deck-completed');
+        function renderAppFramework() {
+            const shelfWatching = document.getElementById('shelf-watching'); const shelfQueue = document.getElementById('shelf-queue'); const shelfCompleted = document.getElementById('shelf-completed');
             const counts = { 'watching': 0, 'plan-to-watch': 0, 'completed': 0 }; const tierGrids = { 'S': document.getElementById('row-S'), 'A': document.getElementById('row-A'), 'B': document.getElementById('row-B'), 'C': document.getElementById('row-C'), 'Trash': document.getElementById('row-Trash') };
             const characterGuild = document.getElementById('guild-deck');
             
-            watchBox.innerHTML = ''; queueBox.innerHTML = ''; doneBox.innerHTML = ''; Object.values(tierGrids).forEach(tg => tg.innerHTML = '');
-            characterGuild.innerHTML = `<div onclick="triggerQuote('senku')" class="otaku-card p-2 rounded-xl text-center cursor-pointer border-emerald-500/20 active:scale-95 transition"><p class="text-2xl">🧪</p><p class="text-[9px] font-black text-emerald-400 mt-1 truncate">Senku</p></div>`;
+            shelfWatching.innerHTML = ''; shelfQueue.innerHTML = ''; shelfCompleted.innerHTML = ''; Object.values(tierGrids).forEach(tg => tg.innerHTML = '');
+            characterGuild.innerHTML = `<div onclick="speakCharacter('senku')" class="mi-card p-2 rounded-xl text-center min-w-[76px] cursor-pointer border-emerald-500/20 active:scale-95 transition-all"><p class="text-xl">🧪</p><p class="text-[9px] font-black text-emerald-400 mt-0.5 truncate">Senku</p></div>`;
             
-            let trackingKeywords = {
+            let unlockedMap = {
                 "slayer": "demon", "demon": "demon", "kimetsu": "demon",
                 "gojo": "gojo", "jujutsu": "gojo", "jjk": "gojo",
                 "naruto": "naruto", "shippuden": "naruto",
                 "luffy": "luffy", "piece": "luffy"
             };
-            let unlockedCompanions = new Set();
+            let companionKeys = new Set();
 
-            dbList.forEach(item => {
+            animeStorage.forEach(item => {
                 counts[item.status]++;
-                const titleLower = item.title.toLowerCase();
-                Object.keys(trackingKeywords).forEach(k => { if(titleLower.includes(k)) unlockedCompanions.add(trackingKeywords[k]); });
+                const lowTitle = item.title.toLowerCase();
+                Object.keys(unlockedMap).forEach(k => { if(lowTitle.includes(k)) companionKeys.add(unlockedMap[k]); });
 
                 if (item.status === 'watching') {
-                    const block = document.createElement('div'); block.className = "otaku-card p-3 rounded-xl flex gap-3 items-center position-relative";
-                    let actionSelect = !isViewOnly ? `<select onchange="changeItemStatus(${item.id}, this.value)" class="text-[10px] bg-slate-950 border border-slate-800 rounded px-1 text-slate-400 py-0.5"><option value="watching" selected>Streaming</option><option value="completed">Complete</option></select>` : '';
-                    block.innerHTML = `<img src="${item.image}" class="w-10 h-14 object-cover rounded border border-slate-900 shadow"><div class="flex-1 min-w-0"><p class="text-xs font-black text-slate-200 truncate">${item.title}</p><p class="text-[9px] text-slate-500 mt-0.5 truncate">${item.metadata}</p><p class="text-[10px] text-cyan-400 font-mono italic mt-1">${item.notes || 'No active notes saved'}</p></div><div class="flex flex-col items-end gap-2">${actionSelect}</div>`; watchBox.appendChild(block);
+                    const block = document.createElement('div');
+                    block.className = "mi-card p-3 rounded-2xl flex gap-3 items-center bg-slate-900/40 relative border border-white/5 shadow-md group transition-all";
+                    let actionSelect = !isViewOnly ? `
+                        <select onchange="mutateStatus(${item.id}, this.value)" class="text-[10px] bg-slate-950 border border-slate-800 rounded px-1 text-slate-400 py-1 focus:outline-none focus:border-cyan-400 shadow-inner">
+                            <option value="watching" selected>Streaming</option><option value="completed">Complete</option>
+                        </select>` : '';
+                    block.innerHTML = `
+                        <img src="${item.image}" alt="" class="w-12 h-16 object-cover rounded-xl border border-slate-900 shadow bg-slate-950 flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-1.5"><p class="text-xs font-black text-slate-100 truncate">${item.title}</p></div>
+                            <p class="text-[9px] text-slate-500 mt-0.5 font-medium truncate">${item.metadata}</p>
+                            <span class="text-[8px] font-mono bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 px-1.5 py-0.5 rounded mt-2 inline-block font-semibold">Active Rotation</span>
+                        </div>
+                        <div class="flex flex-col items-end justify-between h-full gap-4">${actionSelect}</div>`;
+                    shelfWatching.appendChild(block);
                 } else if (item.status === 'plan-to-watch') {
-                    const block = document.createElement('div'); block.className = "otaku-card p-2 rounded-xl flex items-center justify-between text-xs";
-                    let actionGroup = !isViewOnly ? `<div class="flex gap-2"><button onclick="changeItemStatus(${item.id}, 'completed')" class="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-bold">Done</button><button onclick="purgeItem(${item.id})" class="text-slate-600 hover:text-rose-400 font-bold px-1">×</button></div>` : '';
-                    block.innerHTML = `<div class="flex items-center gap-2 truncate"><img src="${item.image}" class="w-6 h-8 object-cover rounded border border-slate-900"><span class="truncate font-medium text-slate-300">${item.title}</span></div>${actionGroup}`; queueBox.appendChild(block);
+                    const block = document.createElement('div');
+                    block.className = "mi-card p-2 rounded-xl flex items-center justify-between text-xs bg-slate-900/20";
+                    let controls = !isViewOnly ? `
+                        <div class="flex gap-2">
+                            <button onclick="mutateStatus(${item.id}, 'completed')" class="text-[9px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-black cursor-pointer">Done</button>
+                            <button onclick="sliceNode(${item.id})" class="text-slate-600 hover:text-rose-400 font-bold px-1">×</button>
+                        </div>` : '';
+                    block.innerHTML = `<div class="flex items-center gap-2 truncate"><img src="${item.image}" class="w-6 h-8 object-cover rounded-md border border-slate-900 shadow bg-slate-950"><span class="truncate font-semibold text-slate-300">${item.title}</span></div>${controls}`;
+                    shelfQueue.appendChild(block);
                 } else if (item.status === 'completed') {
-                    const block = document.createElement('div'); block.className = "otaku-card p-2 rounded-xl flex items-center justify-between text-xs border-emerald-500/5";
-                    let scoreDisplay = item.rating ? `<span class="text-[9px] font-bold text-amber-400 bg-amber-400/5 px-1 rounded border border-amber-400/10">★ ${item.rating}</span>` : '';
-                    let delAction = !isViewOnly ? `<button onclick="purgeItem(${item.id})" class="text-slate-600 hover:text-rose-400 text-[10px] px-1">🗑️</button>` : '';
-                    block.innerHTML = `<div class="flex items-center gap-2"><img src="${item.image}" class="w-6 h-8 object-cover rounded border border-slate-900"><div><p class="font-bold text-slate-200 text-xs line-clamp-1">${item.title}</p><p class="text-[9px] text-slate-500 mt-0.5">${item.metadata}</p></div></div><div class="flex items-center gap-2">${scoreDisplay}${delAction}</div>`; doneBox.appendChild(block);
+                    const block = document.createElement('div');
+                    block.className = "mi-card p-2 rounded-xl flex items-center justify-between text-xs bg-slate-900/20 border-emerald-500/5";
+                    let actionPurge = !isViewOnly ? `<button onclick="sliceNode(${item.id})" class="text-slate-600 hover:text-rose-400 text-[10px] px-1">🗑️</button>` : '';
+                    block.innerHTML = `<div class="flex items-center gap-2"><img src="${item.image}" class="w-6 h-8 object-cover rounded-md border border-slate-900 shadow bg-slate-950"><div class="min-w-0 max-w-[200px]"><p class="font-black text-slate-200 text-xs truncate">${item.title}</p><p class="text-[8px] text-slate-500 font-medium truncate">${item.metadata} [${item.tier}]</p></div></div>${actionPurge}`;
+                    shelfCompleted.appendChild(block);
                     
-                    const badge = document.createElement('span'); badge.className = "text-[9px] font-black bg-slate-900 border border-slate-800 text-slate-300 px-2 py-0.5 rounded shadow max-w-[95px] truncate"; badge.innerText = item.title;
-                    if(tierGrids[item.tier]) tierGrids[item.tier].appendChild(badge);
+                    const badge = document.createElement('span');
+                    badge.className = "text-[9px] font-black bg-slate-900 border border-slate-800 text-slate-300 px-2 py-0.5 rounded shadow max-w-[96px] truncate animate-fade-in transition-all";
+                    badge.innerText = item.title;
+                    if(tierGrids[item.tier || 'B']) tierGrids[item.tier || 'B'].appendChild(badge);
                 }
             });
 
-            unlockedCompanions.forEach(companionKey => {
-                const companion = masterGuildRegistry[companionKey]; if (!companion) return;
-                const node = document.createElement('div'); node.className = "otaku-card p-2 rounded-xl text-center cursor-pointer border-cyan-500/10 active:scale-95 transition";
-                node.onclick = function() { triggerQuote(companionKey); };
-                node.innerHTML = `<p class="text-2xl">${companion.icon}</p><p class="text-[9px] font-black ${companion.col} mt-1 truncate">${companion.char.split(' ')[0]}</p>`;
+            companionKeys.forEach(key => {
+                const c = universeQuotes[key]; if (!c) return;
+                const node = document.createElement('div');
+                node.className = "mi-card p-2 rounded-xl text-center min-w-[76px] cursor-pointer border-cyan-500/10 active:scale-95 transition-all duration-300";
+                node.onclick = function() { triggerQuote(key); };
+                node.innerHTML = `<p class="text-xl">${c.icon}</p><p class="text-[9px] font-black ${c.color} mt-0.5 truncate">${c.character.split(' ')[0]}</p>`;
                 characterGuild.appendChild(node);
             });
 
-            document.getElementById('count-all').innerText = dbList.length; document.getElementById('count-active').innerText = counts['watching']; document.getElementById('count-done').innerText = counts['completed'];
+            document.getElementById('count-all').innerText = animeStorage.length; document.getElementById('count-active').innerText = counts['watching']; document.getElementById('count-done').innerText = counts['completed'];
             document.getElementById('badge-queue').innerText = counts['plan-to-watch']; document.getElementById('badge-mastered').innerText = counts['completed'];
             
-            if(watchBox.children.length === 0) watchBox.innerHTML = `<div class="text-[10px] text-slate-600 italic p-4 text-center border border-dashed border-slate-800 rounded-xl bg-slate-950/20">Active rotation stream matrix clear. Query items above.</div>`;
-            if(queueBox.children.length === 0) queueBox.innerHTML = `<div class="text-[10px] text-slate-600 italic p-3 text-center border border-dashed border-slate-800 rounded-xl bg-slate-950/20">Target pipeline empty.</div>`;
-            if(doneBox.children.length === 0) doneBox.innerHTML = `<div class="text-[10px] text-slate-600 italic p-3 text-center border border-dashed border-slate-800 rounded-xl bg-slate-950/20">Archive array empty.</div>`;
-            Object.keys(tierGrids).forEach(k => { if(tierGrids[k].children.length === 0) tierGrids[k].innerHTML = `<span class="text-[9px] text-slate-800 italic flex items-center py-0.5">Empty row container</span>`; });
+            if(shelfWatching.children.length === 0) shelfWatching.innerHTML = `<div class="text-[10px] text-slate-600 italic p-6 w-full text-center border border-dashed border-white/5 rounded-2xl bg-slate-950/20">Your Active Rotation matrix is currently clear. Hop over to Discover tab to search and add titles instantly with full high-resolution covers!</div>`;
+            if(shelfQueue.children.length === 0) shelfQueue.innerHTML = `<div class="text-[10px] text-slate-600 italic p-3 text-center border border-dashed border-white/5 rounded-xl bg-slate-950/20">Queue pipeline empty.</div>`;
+            if(shelfCompleted.children.length === 0) shelfCompleted.innerHTML = `<div class="text-[10px] text-slate-600 italic p-3 text-center border border-dashed border-white/5 rounded-xl bg-slate-950/20">Archive database clear.</div>`;
+            Object.keys(tierGrids).forEach(k => { if(tierGrids[k].children.length === 0) tierGrids[k].innerHTML = `<span class="text-[8px] text-slate-700 italic flex items-center py-0.5">Empty Matrix Slat</span>`; });
         }
+        
+        function triggerQuote(key) { const data = universeQuotes[key]; if (data) { fireSystemAlert(`<strong>${data.character}:</strong> "${data.quote}"`); document.getElementById('display-quote').innerText = `"${data.quote}"`; document.getElementById('display-author').innerText = `— ${data.character}`; } }
         window.onload = init;
     </script>
 </body>
