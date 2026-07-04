@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KuroDeck</title>
+    <title>Moctale AniMatrix: Titan Edition</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22KuroDeck%20Ultimate%22%2C%22short_name%22%3A%22KuroDeck%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23040610%22%2C%22theme_color%22%3A%22%2306b6d4%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fneon%2F512%2Fcards.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image/png%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Moctale%20AniMatrix%22%2C%22short_name%22%3A%22AniMatrix%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23040610%22%2C%22theme_color%22%3A%22%2306b6d4%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fneon%2F512%2Fmovie-ticket.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image/png%22%7D%5D%7D">
 
-    <link rel="icon" type="image/png" sizes="512x512" href="https://img.icons8.com/neon/512/cards.png">
-    <link rel="apple-touch-icon" sizes="512x512" href="https://img.icons8.com/neon/512/cards.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://img.icons8.com/neon/512/movie-ticket.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="https://img.icons8.com/neon/512/movie-ticket.png">
     
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        body { background-color: #040610; color: #f3f4f6; min-height: 100vh; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+        body { background-color: #03050d; color: #f3f4f6; min-height: 100vh; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         .page-view { transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
         .page-hidden { opacity: 0; transform: translateY(16px); pointer-events: none; display: none !important; }
-        .matrix-card { background: linear-gradient(180deg, rgba(22,28,54,0.45) 0%, rgba(10,12,28,0.85) 100%); border: 1px solid rgba(255, 255, 255, 0.04); backdrop-filter: blur(12px); box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5); }
+        .matrix-card { background: linear-gradient(180deg, rgba(24,32,60,0.5) 0%, rgba(10,12,28,0.9) 100%); border: 1px solid rgba(255, 255, 255, 0.04); backdrop-filter: blur(16px); box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.6); }
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         canvas#particleCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1; opacity: 0.25; }
@@ -28,60 +28,59 @@
 
     <canvas id="particleCanvas"></canvas>
 
-    <nav class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-[#060812]/90 border-b border-white/5 flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md">
+    <nav class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-[#050710]/95 border-b border-white/5 flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md">
         <span class="text-xs font-black tracking-widest bg-gradient-to-r from-cyan-400 via-purple-400 to-amber-400 text-transparent bg-clip-text uppercase flex items-center gap-1">
-            🎴 KURODECK
+            🎬 ANIMATRIX TITAN
         </span>
         <div class="flex gap-4 text-xs font-bold tracking-tight z-50">
-            <button onclick="navigate('hub')" id="tab-hub" class="text-cyan-400 border-b-2 border-cyan-400 pb-1 active:scale-95 transition-all">Hub</button>
-            <button onclick="navigate('discover')" id="tab-discover" class="text-slate-400 pb-1 active:scale-95 transition-all">Discover</button>
-            <button onclick="navigate('vault')" id="tab-vault" class="text-slate-400 pb-1 active:scale-95 transition-all">Vault</button>
-            <button onclick="navigate('analytics')" id="tab-analytics" class="text-slate-400 pb-1 active:scale-95 transition-all">Analytics</button>
+            <button onclick="navigate('hub')" id="tab-hub" class="text-cyan-400 border-b-2 border-cyan-400 pb-1 transition-all">Hub</button>
+            <button onclick="navigate('discover')" id="tab-discover" class="text-slate-400 pb-1 transition-all">Discover</button>
+            <button onclick="navigate('vault')" id="tab-vault" class="text-slate-400 pb-1 transition-all">Vault</button>
+            <button onclick="navigate('analytics')" id="tab-analytics" class="text-slate-400 pb-1 transition-all">Analytics</button>
         </div>
     </nav>
 
-    <div id="toast" class="hidden fixed top-20 left-4 right-4 max-w-md mx-auto bg-[#0b0f24] border border-cyan-500/30 text-cyan-400 p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all"></div>
+    <div id="toast" class="hidden fixed top-20 left-4 right-4 max-w-md mx-auto bg-[#0a0e26] border border-cyan-500/30 text-cyan-400 p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all"></div>
 
     <div class="max-w-md mx-auto space-y-4 relative z-10">
 
         <div id="view-hub" class="page-view space-y-4">
             <section class="matrix-card p-4 rounded-3xl relative overflow-hidden bg-gradient-to-br from-cyan-950/15 via-transparent to-purple-950/10">
-                <div class="absolute -right-6 -top-6 text-7xl opacity-[0.03] font-serif select-none">“</div>
-                <span class="text-[8px] font-mono tracking-widest text-cyan-400 uppercase font-bold block mb-1">KuroDeck Intelligence Terminal</span>
-                <p id="display-quote" class="text-xs italic text-slate-200 leading-relaxed font-medium">"Welcome to KuroDeck. Head over to the Discover panel to pull live titles and official high-resolution media metrics instantly."</p>
-                <p id="display-author" class="text-[9px] font-bold text-amber-400 mt-2.5 text-right">— System Nexus</p>
+                <span class="text-[8px] font-mono tracking-widest text-cyan-400 uppercase font-bold block mb-1">Live Interface Feed Terminal</span>
+                <p id="display-quote" class="text-xs italic text-slate-200 leading-relaxed font-medium">"Welcome to the heavy offline matrix framework, Akbar. Run queries inside the Discover module to load cover images immediately."</p>
+                <p id="display-author" class="text-[9px] font-bold text-amber-400 mt-2.5 text-right">— System Mainframe</p>
             </section>
 
             <section class="space-y-2">
-                <span class="text-[9px] font-mono tracking-widest text-slate-500 uppercase font-black block">Active Character Guild</span>
+                <span class="text-[9px] font-mono tracking-widest text-slate-500 uppercase font-black block">Companion Universe Deck</span>
                 <div id="guild-deck" class="flex gap-2 overflow-x-auto pb-1 hide-scroll"></div>
             </section>
 
-            <section class="grid grid-cols-3 gap-2 bg-[#080a14] p-2.5 rounded-2xl border border-white/5">
-                <div class="text-center"><p class="text-[9px] uppercase text-slate-500 font-bold">Total Index</p><p id="count-all" class="text-xl font-black text-slate-100">0</p></div>
+            <section class="grid grid-cols-3 gap-2 bg-[#070912] p-2.5 rounded-2xl border border-white/5">
+                <div class="text-center"><p class="text-[9px] uppercase text-slate-500 font-bold">Total Sync</p><p id="count-all" class="text-xl font-black text-slate-100">0</p></div>
                 <div class="text-center border-x border-white/5"><p class="text-[9px] uppercase text-cyan-400 font-bold">Streaming</p><p id="count-active" class="text-xl font-black text-cyan-400">0</p></div>
-                <div class="text-center"><p class="text-[9px] uppercase text-emerald-400 font-bold">Complete</p><p id="count-done" class="text-xl font-black text-emerald-400">0</p></div>
+                <div class="text-center"><p class="text-[9px] uppercase text-emerald-400 font-bold">Mastered</p><p id="count-done" class="text-xl font-black text-emerald-400">0</p></div>
             </section>
 
             <section class="space-y-2">
-                <h3 class="font-black text-xs uppercase text-cyan-400 tracking-wider flex items-center gap-1.5">🎬 Active Stream Shelf</h3>
+                <h3 class="font-black text-xs uppercase text-cyan-400 tracking-wider flex items-center gap-1.5">🎬 Currently Streaming</h3>
                 <div id="shelf-watching" class="space-y-3"></div>
             </section>
         </div>
 
         <div id="view-discover" class="page-view page-hidden space-y-4">
             <section class="matrix-card p-3 rounded-2xl border-cyan-500/10 bg-gradient-to-r from-cyan-950/10 to-transparent">
-                <span class="text-[9px] font-mono tracking-widest text-cyan-400 uppercase font-bold block mb-1.5">🕹️ Quick Action System Guide</span>
-                <div class="grid grid-cols-3 gap-3 text-[10px] text-slate-300 font-medium">
-                    <div class="space-y-0.5"><span class="text-cyan-400 font-black block">💎 + Active</span><span>Instantly drops the show into your main Hub under 'Currently Watching' for daily tracking.</span></div>
-                    <div class="space-y-0.5"><span class="text-purple-400 font-black block">🔮 + Queue</span><span>Saves the entry into your Vault backlog watchlist to feed the Science Roulette selector.</span></div>
-                    <div class="space-y-0.5"><span class="text-emerald-400 font-black block">🌿 + Mastered</span><span>Locks the title as fully completed and immediately plots it onto your visual Tier Matrix.</span></div>
+                <span class="text-[9px] font-mono tracking-widest text-cyan-400 uppercase font-bold block mb-1">🕹️ Operation Controls Manual</span>
+                <div class="grid grid-cols-3 gap-2 text-[9px] text-slate-400 font-medium">
+                    <div><span class="text-cyan-400 font-bold block">💎 + Active</span>Saves title as 'Currently Watching' on Hub.</div>
+                    <div><span class="text-purple-400 font-bold block">🔮 + Queue</span>Saves to backlog queue watchlist loop.</div>
+                    <div><span class="text-emerald-400 font-bold block">🌿 + Mastered</span>Archives item and plots it on Tier list layout.</div>
                 </div>
             </section>
 
             <section class="matrix-card p-3 rounded-2xl">
                 <div class="flex gap-2">
-                    <input type="text" id="input-search" placeholder="Query Global Matrix... (e.g. Naruto, Bleach, JJK)" class="flex-1 bg-slate-950 border border-white/5 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-400">
+                    <input type="text" id="input-search" placeholder="Search... (e.g. Naruto, Demon Slayer, JJK)" class="flex-1 bg-slate-950 border border-white/5 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-cyan-400">
                     <button onclick="runQuery()" class="bg-gradient-to-r from-cyan-500 to-blue-500 text-slate-950 px-5 rounded-xl text-xs font-black active:scale-95 transition-all">Query</button>
                 </div>
                 <div class="flex justify-center gap-6 mt-2.5 pt-2 border-t border-white/5 text-xs text-slate-400">
@@ -96,7 +95,7 @@
         <div id="view-vault" class="page-view page-hidden space-y-4">
             <div class="matrix-card p-3 rounded-2xl">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider">⏳ Backlog Storage Queue</h3>
+                    <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider">⏳ Future Backlog Queue</h3>
                     <div class="flex items-center gap-2">
                         <button onclick="spinRoulette()" class="text-[9px] bg-gradient-to-r from-purple-500 to-cyan-500 text-slate-950 font-black px-2.5 py-0.5 rounded-full shadow active:scale-95 transition-all">Roulette 🎲</button>
                         <span id="badge-queue" class="text-xs text-purple-400 font-bold bg-purple-400/10 px-2 py-0.5 rounded-full">0</span>
@@ -113,4 +112,78 @@
             <section class="matrix-card p-3 rounded-2xl bg-gradient-to-t from-slate-950 to-transparent">
                 <h3 class="font-black text-xs uppercase tracking-wider text-purple-400 mb-2.5">🏆 Structural Grade Alignment Matrix</h3>
                 <div class="space-y-1.5 rounded-xl overflow-hidden bg-slate-950/70 p-2 border border-white/5">
-                    <div class="flex items-center gap-2 p-1 rounded min-h
+                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-rose-500 bg-[#160c12]/40 text-rose-400"><div class="w-8 text-center font-black text-xs">S</div><div id="row-S" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-orange-400 bg-[#16100c]/40 text-orange-400"><div class="w-8 text-center font-black text-xs">A</div><div id="row-A" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-yellow-400 bg-[#16150c]/40 text-yellow-400"><div class="w-8 text-center font-black text-xs">B</div><div id="row-B" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-green-400 bg-[#0c1610]/40 text-green-400"><div class="w-8 text-center font-black text-xs">C</div><div id="row-C" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
+                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-slate-500 bg-[#11131c]/40 text-slate-500"><div class="w-8 text-center font-black text-[9px]">Trash</div><div id="row-Trash" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-analytics" class="page-view page-hidden space-y-4">
+            <section class="matrix-card p-4 rounded-3xl space-y-3">
+                <h3 class="font-black text-xs uppercase text-cyan-400 tracking-wider">📊 Data Visualization Charts</h3>
+                <p class="text-[10px] text-slate-400">Real-time analysis of entry distribution metrics across system storage arrays.</p>
+                <div id="chart-container" class="w-full flex justify-center items-end h-40 gap-4 pt-4 border-b border-white/10 px-2 bg-slate-950/40 rounded-xl"></div>
+                <div class="flex justify-around text-[9px] font-mono text-slate-400">
+                    <span>Active Entries</span><span>Future Queue</span><span>Mastered Logs</span>
+                </div>
+            </section>
+
+            <section class="matrix-card p-4 rounded-3xl space-y-2">
+                <h3 class="font-black text-xs uppercase text-purple-400 tracking-wider">⚙️ Core Matrix Theme Configuration</h3>
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold pt-1">
+                    <button onclick="applyTheme('cyber')" class="p-2 rounded-xl bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 active:scale-95 transition-all">Cyber Neon Blue</button>
+                    <button onclick="applyTheme('sakura')" class="p-2 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-400 active:scale-95 transition-all">Midnight Sakura</button>
+                    <button onclick="applyTheme('cursed')" class="p-2 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-400 active:scale-95 transition-all">Cursed Violet</button>
+                    <button onclick="applyTheme('moctale')" class="p-2 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-400 active:scale-95 transition-all">Moctale Gold</button>
+                </div>
+            </section>
+        </div>
+
+        <button onclick="exportData()" class="w-full bg-[#0c0e22] hover:bg-[#121634] border border-white/5 text-slate-400 text-[10px] tracking-wider uppercase font-black py-2.5 rounded-xl transition-all shadow">✨ Export System Payload Link</button>
+        <a id="back-to-mine" href="?" class="hidden w-full bg-slate-950 text-slate-200 text-xs font-black py-2.5 rounded-xl text-center items-center justify-center border border-white/5 shadow">Back to My Vault</a>
+    </div>
+
+    <script>
+        let vaultStorage = []; let viewOnly = false;
+        
+        // Custom Audio Frequencies Node Synthesizer (Acoustic Web Audio API Layer)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, type, duration) {
+            try {
+                const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
+                osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + duration);
+            } catch (e) { console.log(e); }
+        }
+        function soundClick() { playTone(587.33, 'triangle', 0.08); }
+        function soundSuccess() { playTone(880, 'sine', 0.1); setTimeout(() => playTone(1318.51, 'sine', 0.15), 70); }
+        function soundAlert() { playTone(440, 'sawtooth', 0.12); setTimeout(() => playTone(349.23, 'sawtooth', 0.15), 90); }
+
+        // =========================================================================
+        // 📦 THE HEAVYWEIGHT OFFLINE INTEL ENCYCLOPEDIA DATA MATRIX ENGINE
+        // This huge local data layer scales up the app size and provides offline intelligence
+        // =========================================================================
+        const massiveOfflineDatabase = {
+            anime: [
+                { title: "Jujutsu Kaisen", score: "8.5", meta: "TV • 24 Episodes (2020)", img: "https://cdn.myanimelist.net/images/anime/1171/109222.jpg" },
+                { title: "Jujutsu Kaisen 2nd Season", score: "8.7", meta: "TV • 23 Episodes (2023)", img: "https://cdn.myanimelist.net/images/anime/1792/138022.jpg" },
+                { title: "Demon Slayer: Kimetsu no Yaiba", score: "8.4", meta: "TV • 26 Episodes (2019)", img: "https://cdn.myanimelist.net/images/anime/1286/99889.jpg" },
+                { title: "Naruto Shippuden", score: "8.3", meta: "TV • 500 Episodes (2007)", img: "https://cdn.myanimelist.net/images/anime/1565/111305.jpg" },
+                { title: "One Piece", score: "8.7", meta: "TV • 1100+ Episodes (1999)", img: "https://cdn.myanimelist.net/images/anime/1244/138851.jpg" },
+                { title: "Dr. Stone", score: "8.1", meta: "TV • 24 Episodes (2019)", img: "https://cdn.myanimelist.net/images/anime/1613/102179.jpg" },
+                { title: "Attack on Titan", score: "8.5", meta: "TV • 25 Episodes (2013)", img: "https://cdn.myanimelist.net/images/anime/10/47347.jpg" },
+                { title: "Bleach: Thousand-Year Blood War", score: "9.0", meta: "TV • 13 Episodes (2022)", img: "https://cdn.myanimelist.net/images/anime/1764/126627.jpg" },
+                { title: "Chainsaw Man", score: "8.5", meta: "TV • 12 Episodes (2022)", img: "https://cdn.myanimelist.net/images/anime/1806/126216.jpg" },
+                { title: "My Hero Academia", score: "7.9", meta: "TV • 13 Episodes (2016)", img: "https://cdn.myanimelist.net/images/anime/10/78745.jpg" },
+                { title: "Death Note", score: "8.6", meta: "TV • 37 Episodes (2006)", img: "https://cdn.myanimelist.net/images/anime/9/9453.jpg" },
+                { title: "Hunter x Hunter (2011)", score: "9.0", meta: "TV • 148 Episodes (2011)", img: "https://cdn.myanimelist.net/images/anime/1337/138687.jpg" },
+                { title: "One Punch Man", score: "8.5", meta: "TV • 12 Episodes (2015)", img: "https://cdn.myanimelist.net/images/anime/12/76049.jpg" }
+            ],
+            manga:
+                        
