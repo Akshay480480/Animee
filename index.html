@@ -16,141 +16,155 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        body { background-color: #040610; color: #f3f4f6; min-height: 100vh; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; overflow-x: hidden; transition: background-color 0.4s ease; }
-        .page-view { transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1), transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); }
-        .page-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; display: none !important; }
+        :root {
+            --bg-start: #040610;
+            --bg-end: #0b0f24;
+            --accent-glow: rgba(6, 182, 212, 0.4);
+        }
+        body { 
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+            color: #f3f4f6; 
+            min-height: 100vh; 
+            font-family: system-ui, -apple-system, sans-serif; 
+            -webkit-tap-highlight-color: transparent; 
+            overflow-x: hidden; 
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
         
-        /* High-Contrast Glassmorphism Cards */
-        .matrix-card { background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(16px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
+        /* Blue Box Inspired Breezy Slide and Fade Page Transitions */
+        .page-view { 
+            transition: opacity 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); 
+        }
+        .page-hidden { opacity: 0; transform: translateY(16px) scale(0.98); pointer-events: none; display: none !important; }
+        
+        /* Frosted Glassmorphism Panels with soft internal lighting glows */
+        .matrix-card { 
+            background: rgba(15, 23, 42, 0.45); 
+            border: 1px solid rgba(255, 255, 255, 0.07); 
+            backdrop-filter: blur(20px); 
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255,255,255,0.05);
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+        }
+        .matrix-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.4), 0 0 15px var(--accent-glow);
+        }
+        
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Layout fix to prevent particle click collision faults */
+        /* Fixed Background Canvas Layering to stop click interference completely */
         canvas#particleCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; }
         .main-app-content { position: relative; z-index: 10; pointer-events: auto; }
-        nav#topNav { transition: border-color 0.3s ease, background-color 0.3s ease; }
+        nav#topNav { transition: border-color 0.4s ease, background-color 0.4s ease; }
     </style>
 </head>
 <body class="pb-28 pt-18 px-4">
 
-    <!-- Ambient Dynamic Background Particles -->
+    <!-- Ambient Drifting Particle Canvas Layout -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- Top Fixed Customizable Premium Header Router -->
-    <nav id="topNav" class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-[#040610]/90 border-b border-white/5 flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md">
+    <!-- Top Fixed Premium Desktop/Mobile Navigation Module -->
+    <nav id="topNav" class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-slate-950/70 border-b flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md rounded-b-2xl">
         <span id="navLogo" class="text-xs font-black tracking-widest bg-gradient-to-r uppercase flex items-center gap-1.5 transition-all duration-300">
-            🎬 KURODECK
+            ⚔️ KURODECK
         </span>
         <div class="flex gap-4 text-xs font-bold tracking-tight z-50">
-            <button onclick="navigate('hub')" id="tab-hub" class="pb-1 transition-all text-slate-200 duration-200">Hub</button>
-            <button onclick="navigate('discover')" id="tab-discover" class="text-slate-400 pb-1 transition-all duration-200">Discover</button>
-            <button onclick="navigate('vault')" id="tab-vault" class="text-slate-400 pb-1 transition-all duration-200">Vault</button>
-            <button onclick="navigate('analytics')" id="tab-analytics" class="text-slate-400 pb-1 transition-all duration-200">Analytics</button>
+            <button onclick="navigate('hub')" id="tab-hub" class="pb-1 transition-all cursor-pointer">Hub</button>
+            <button onclick="navigate('discover')" id="tab-discover" class="text-slate-400 pb-1 transition-all cursor-pointer">Discover</button>
+            <button onclick="navigate('vault')" id="tab-vault" class="text-slate-400 pb-1 transition-all cursor-pointer">Vault</button>
+            <button onclick="navigate('analytics')" id="tab-analytics" class="text-slate-400 pb-1 transition-all cursor-pointer">Analytics</button>
         </div>
     </nav>
 
-    <!-- Floating Toast Feedback Overlay Banner -->
-    <div id="toast" class="hidden fixed top-20 left-4 right-4 max-w-md mx-auto bg-[#0a0d1a]/95 border border-white/10 p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all duration-300 text-white"></div>
+    <!-- System Live Dialogue Alert Banner -->
+    <div id="toast" class="hidden fixed top-20 left-4 right-4 max-w-md mx-auto bg-slate-950/90 border p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all"></div>
 
-    <!-- Clickable Interactive System Container Box -->
+    <!-- Main Content click container box -->
     <div class="main-app-content max-w-md mx-auto space-y-4">
 
-        <!-- ================= PAGE 1: DECK COMPANION INDEX ================= -->
+        <!-- ================= VIEW NODE 1: MAIN DECK HUB ================= -->
         <div id="view-hub" class="page-view space-y-4">
-            <!-- Cinematic Author Dialogue Board -->
-            <section class="matrix-card p-4 rounded-2xl relative overflow-hidden bg-gradient-to-br from-white/[0.01] to-transparent">
-                <div class="absolute -right-6 -top-6 text-7xl opacity-[0.02] font-serif select-none text-white">“</div>
-                <span class="text-[8px] font-mono tracking-widest uppercase font-bold block mb-1 text-slate-400 opacity-60">Terminal System Feed</span>
-                <p id="display-quote" class="text-xs italic text-slate-200 leading-relaxed font-medium">"Welcome back, Akbar. Head over to the Discover tab console to search major anime frameworks and load high-resolution posters instantly!"</p>
-                <p id="display-author" class="text-[9px] font-bold text-slate-400 mt-2.5 text-right opacity-80">— Core Controller</p>
+            <!-- Dynamic Crossover Dialogue Board -->
+            <section class="matrix-card p-4 rounded-2xl relative overflow-hidden">
+                <div class="absolute -right-6 -top-6 text-7xl opacity-[0.03] font-serif select-none">“</div>
+                <span class="text-[8px] font-mono tracking-widest uppercase font-bold block mb-1 opacity-50 text-slate-400">KuroDeck Terminal Feed</span>
+                <p id="display-quote" class="text-xs italic text-slate-100 leading-relaxed font-medium">"System layers calibrated, Akshay. Head over to the Discover tab to sync high-resolution posters automatically!"</p>
+                <p id="display-author" class="text-[9px] font-bold mt-2.5 text-right opacity-80 text-slate-400">— AI Terminal Controller</p>
             </section>
 
-            <!-- Dynamic Unlocked Character Companions Row -->
+            <!-- Interactive Character Profile Deck Container -->
             <section class="space-y-2">
                 <span class="text-[9px] font-mono tracking-widest text-slate-500 uppercase font-black block">Active Companion Guild</span>
                 <div id="guild-deck" class="flex gap-2 overflow-x-auto pb-1 hide-scroll"></div>
             </section>
 
-            <!-- Multi-Colored Dashboard Metric Counters (High Contrast Fix) -->
-            <section class="grid grid-cols-3 gap-2 bg-[#020306]/60 p-2 rounded-2xl border border-white/5 shadow-inner">
-                <div class="text-center py-1 bg-white/[0.01] rounded-xl border border-white/5">
-                    <p class="text-[9px] uppercase text-slate-400 font-bold tracking-wider">Total Index</p>
-                    <p id="count-all" class="text-xl font-mono font-black text-white mt-0.5">0</p>
-                </div>
-                <div class="text-center py-1 bg-cyan-950/10 rounded-xl border border-cyan-500/10 shadow-[0_0_15px_rgba(6,182,212,0.03)]">
-                    <p class="text-[9px] uppercase text-cyan-400 font-bold tracking-wider">Streaming</p>
-                    <p id="count-active" class="text-xl font-mono font-black text-cyan-400 mt-0.5">0</p>
-                </div>
-                <div class="text-center py-1 bg-emerald-950/10 rounded-xl border border-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.03)]">
-                    <p class="text-[9px] uppercase text-emerald-400 font-bold tracking-wider">Mastered</p>
-                    <p id="count-done" class="text-xl font-mono font-black text-emerald-400 mt-0.5">0</p>
-                </div>
+            <!-- Simple Metric Dashboard Displays -->
+            <section class="grid grid-cols-3 gap-2 bg-slate-950/40 p-2.5 rounded-2xl border border-white/5 shadow-inner backdrop-blur-md">
+                <div class="text-center"><p class="text-[9px] uppercase text-slate-400 font-bold">Total Vault</p><p id="count-all" class="text-xl font-mono font-black text-slate-100 mt-0.5">0</p></div>
+                <div class="text-center border-x border-white/5"><p class="text-[9px] uppercase font-bold" id="activeCounterLabel">Streaming</p><p id="count-active" class="text-xl font-mono font-black mt-0.5">0</p></div>
+                <div class="text-center"><p class="text-[9px] uppercase font-bold" id="masteredCounterLabel">Mastered</p><p id="count-done" class="text-xl font-mono font-black mt-0.5">0</p></div>
             </section>
 
-            <!-- Active Rotation Streaming Cards Deck Shelf -->
+            <!-- Active Rotation Stream Shelf -->
             <section class="space-y-2">
-                <h3 class="font-black text-xs uppercase tracking-wider text-slate-300 flex items-center gap-1.5" id="watchingShelfHeader">
-                    <span class="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span> Currently Watching
-                </h3>
+                <h3 class="font-black text-xs uppercase tracking-wider flex items-center gap-1.5" id="watchingShelfHeader">🎬 Active Stream Shelf</h3>
                 <div id="shelf-watching" class="space-y-3"></div>
             </section>
         </div>
 
-        <!-- ================= PAGE 2: DISCOVER ARCHIVE SEARCH ================= -->
+        <!-- ================= VIEW NODE 2: DISCOVER SEARCH CATALOG ================= -->
         <div id="view-discover" class="page-view page-hidden space-y-4">
-            <!-- Simplified Bright Tricolor Guide Index Banner for Users -->
-            <section class="matrix-card p-3.5 rounded-2xl bg-gradient-to-r from-white/[0.01] to-transparent">
-                <span class="text-[9px] font-mono tracking-widest uppercase font-bold block mb-2 text-slate-400 opacity-60">🎮 Operations Command Legend</span>
-                <div class="grid grid-cols-3 gap-3 text-[9px] text-slate-300 font-medium leading-relaxed">
-                    <div class="border-t border-cyan-500/20 pt-1.5"><span class="font-black block text-cyan-400 text-xs mb-0.5">💎 + Active</span>Saves title onto your home screen active list.</div>
-                    <div class="border-t border-purple-500/20 pt-1.5"><span class="font-black block text-purple-400 text-xs mb-0.5">🔮 + Queue</span>Adds item to your future backlog checklist.</div>
-                    <div class="border-t border-emerald-500/20 pt-1.5"><span class="font-black block text-emerald-400 text-xs mb-0.5">🌿 + Finished</span>Archives log and stamps it on your Tier Grid.</div>
+            <!-- Simplified User Guide Legend Grid -->
+            <section class="matrix-card p-4 rounded-2xl bg-gradient-to-r from-white/[0.02] to-transparent">
+                <span class="text-[9px] font-mono tracking-widest uppercase font-bold block mb-2 text-slate-400 opacity-60">🎮 Button Quick Guide</span>
+                <div class="grid grid-cols-3 gap-3 text-[9px] text-slate-200 font-medium">
+                    <div class="border-t border-white/10 pt-2"><span class="font-bold block text-xs mb-0.5" id="guideBtnActive">💎 + Active</span>Watching right now!<br>(Adds to Hub home)</div>
+                    <div class="border-t border-white/10 pt-2"><span class="font-bold block text-xs mb-0.5" id="guideBtnQueue">🔮 + Queue</span>Watch later list.<br>(Saves to Vault)</div>
+                    <div class="border-t border-white/10 pt-2"><span class="font-bold block text-xs mb-0.5" id="guideBtnMastered">🌿 + Mastered</span>Completely finished!<br>(Ranks on Tier List)</div>
                 </div>
             </section>
 
-            <!-- Live Core Search Panel Component -->
+            <!-- Main Input Query Matrix Component -->
             <section class="matrix-card p-3 rounded-2xl">
                 <div class="flex gap-2">
-                    <input type="text" id="input-search" placeholder="Type title... (e.g. JJK, Naruto, Demon Slayer)" class="flex-1 bg-[#02040a] border border-white/5 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-slate-700 transition-all">
+                    <input type="text" id="input-search" placeholder="Type title... (e.g. JJK, Demon Slayer, One Piece)" class="flex-1 bg-slate-950/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/20 transition-all">
                     <button onclick="runQuery()" class="text-xs font-black px-5 rounded-xl active:scale-95 transition-all shadow-md cursor-pointer" id="queryBtn">Query</button>
                 </div>
-                <div class="flex justify-center gap-6 mt-2.5 pt-2 border-t border-white/5 text-xs text-slate-400 font-medium">
-                    <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="mode" value="anime" checked class="accent-cyan-400"> Anime Deck</label>
-                    <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="mode" value="manga" class="accent-cyan-400"> Manga Deck</label>
+                <div class="flex justify-center gap-6 mt-2.5 pt-2 border-t border-white/5 text-xs text-slate-400">
+                    <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="mode" value="anime" checked class="accent-cyan-400"> Anime Catalog</label>
+                    <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="mode" value="manga" class="accent-cyan-400"> Manga Catalog</label>
                 </div>
             </section>
 
-            <!-- Dynamic Search Outputs Insertion Grid -->
+            <!-- Dynamic Stream Results Card Grid Canvas -->
             <div id="search-grid" class="grid grid-cols-1 gap-3"></div>
         </div>
 
-        <!-- ================= PAGE 3: VAULT WATCHLIST BACKLOG ================= -->
+        <!-- ================= VIEW NODE 3: VAULT & GRADE RANK MATRIX ================= -->
         <div id="view-vault" class="page-view page-hidden space-y-4">
-            <!-- Watch Later Backlog Box Container -->
+            <!-- Watchlist Section Queue -->
             <div class="matrix-card p-3 rounded-2xl">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-black text-xs uppercase tracking-wider text-purple-400" id="backlogHeader">⏳ Backlog Storage Queue</h3>
+                    <h3 class="font-black text-xs uppercase tracking-wider" id="backlogHeader">⏳ Backlog Storage Queue</h3>
                     <div class="flex items-center gap-2">
                         <button onclick="spinRoulette()" class="text-[9px] font-black px-2.5 py-0.5 rounded-full shadow active:scale-95 transition-all cursor-pointer" id="rouletteBtn">Roulette 🎲</button>
-                        <span id="badge-queue" class="text-xs font-mono font-bold bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full text-purple-400">0</span>
+                        <span id="badge-queue" class="text-xs font-bold bg-white/10 px-2 py-0.5 rounded-full">0</span>
                     </div>
                 </div>
                 <div id="shelf-queue" class="space-y-2"></div>
             </div>
 
-            <!-- Finished Archives Collection Module -->
+            <!-- Master Finished Log Library -->
             <div class="matrix-card p-3 rounded-2xl">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-black text-xs uppercase tracking-wider text-emerald-400" id="libraryHeader">✅ Finished Library Logs</h3>
-                    <span id="badge-mastered" class="text-xs font-mono font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full text-emerald-400">0</span>
-                </div>
+                <div class="flex items-center justify-between mb-2"><h3 class="font-black text-xs uppercase tracking-wider" id="libraryHeader">✅ Finished Library Logs</h3><span id="badge-mastered" class="text-xs font-bold bg-white/10 px-2 py-0.5 rounded-full">0</span></div>
                 <div id="shelf-completed" class="space-y-2"></div>
             </div>
 
-            <!-- High Contrast Tier Rankings Matrix Display -->
-            <section class="matrix-card p-3 rounded-2xl bg-gradient-to-t from-[#020306] to-transparent">
-                <h3 class="font-black text-xs uppercase tracking-wider text-slate-300 mb-2.5" id="matrixHeader">🏆 Quality Grade Rankings Matrix</h3>
-                <div class="space-y-1.5 rounded-xl overflow-hidden bg-[#030409]/90 p-2 border border-white/5">
+            <!-- Interactive Tier Standings Alignment Grid -->
+            <section class="matrix-card p-3 rounded-2xl bg-gradient-to-t from-slate-950/40 to-transparent">
+                <h3 class="font-black text-xs uppercase tracking-wider mb-2.5" id="matrixHeader">🏆 Structural Grade Alignment Matrix</h3>
+                <div class="space-y-1.5 rounded-xl overflow-hidden bg-slate-950/80 p-2 border border-white/5">
                     <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-rose-500 bg-[#160c12]/40 text-rose-400"><div class="w-8 text-center font-black text-xs">S</div><div id="row-S" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
                     <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-orange-400 bg-[#16100c]/40 text-orange-400"><div class="w-8 text-center font-black text-xs">A</div><div id="row-A" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
                     <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-yellow-400 bg-[#16150c]/40 text-yellow-400"><div class="w-8 text-center font-black text-xs">B</div><div id="row-B" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
@@ -160,42 +174,43 @@
             </section>
         </div>
 
-        <!-- ================= PAGE 4: PREMIUM REACTIVE ANALYTICS & TUNING ================= -->
+        <!-- ================= VIEW NODE 4: ADVANCED DATA ANALYTICS & SKINS ================= -->
         <div id="view-analytics" class="page-view page-hidden space-y-4">
-            <!-- Interactive Analytics Chart Blocks -->
+            <!-- Live Generated SVG Dynamic Data Graph Columns -->
             <section class="matrix-card p-4 rounded-3xl space-y-3">
-                <h3 class="font-black text-xs uppercase tracking-wider text-slate-200 animate-pulse" id="analyticsHeader">📊 Real-Time Analytics Dashboard</h3>
-                <p class="text-[10px] text-slate-400 leading-relaxed">Algorithmic analysis of database entry distribution balances mapped inside the core memory loop.</p>
-                <div id="chart-container" class="w-full flex justify-center items-end h-36 gap-4 pt-4 border-b border-white/5 px-2 bg-[#020306]/70 rounded-xl shadow-inner"></div>
-                <div class="flex justify-around text-[9px] font-mono font-bold text-slate-500 px-1">
+                <h3 class="font-black text-xs uppercase tracking-wider" id="analyticsHeader">📊 Real-Time Analytics Dashboard</h3>
+                <p class="text-[10px] text-slate-400">Algorithmic analysis of database entry distribution balances mapped inside the core memory loop.</p>
+                <div id="chart-container" class="w-full flex justify-center items-end h-36 gap-4 pt-4 border-b border-white/10 px-2 bg-slate-950/40 rounded-xl shadow-inner"></div>
+                <div class="flex justify-around text-[9px] font-mono font-bold text-slate-400 px-1">
                     <span>Active Rotation</span><span>Watchlist Queue</span><span>Mastered Deck</span>
                 </div>
             </section>
 
-            <!-- Fully Coordinated 8-Way Skin Tuning Terminal Options Module -->
-            <section class="matrix-card p-4 rounded-3xl space-y-2.5">
-                <h3 class="font-black text-xs uppercase tracking-wider text-slate-200" id="themeConfigHeader">⚙️ Custom App Theme Settings</h3>
+            <!-- Theme Configuration Management Console Panel -->
+            <section class="matrix-card p-4 rounded-3xl space-y-2">
+                <h3 class="font-black text-xs uppercase tracking-wider" id="themeConfigHeader">⚙️ System Core Theme Settings</h3>
                 <div class="grid grid-cols-2 gap-2 text-xs font-bold pt-1">
-                    <button onclick="applyTheme('cyber')" class="p-2.5 rounded-xl bg-slate-900/30 border border-white/5 hover:bg-white/[0.02] text-[#00f5d4] transition-all cursor-pointer">Miruro Ice</button>
-                    <button onclick="applyTheme('moctale')" class="p-2.5 rounded-xl bg-slate-900/30 border border-white/5 hover:bg-white/[0.02] text-[#ffb703] transition-all cursor-pointer">HiAnime Sunrise</button>
-                    <button onclick="applyTheme('void')" class="p-2.5 rounded-xl bg-slate-900/30 border border-white/5 hover:bg-white/[0.02] text-[#3b82f6] transition-all cursor-pointer">AniList Slate</button>
-                    <button onclick="applyTheme('shinobi')" class="p-2.5 rounded-xl bg-slate-900/30 border border-white/5 hover:bg-white/[0.02] text-[#10b850] transition-all cursor-pointer">Zoro Neon</button>
-                    <button onclick="applyTheme('cursed')" class="p-2.5 rounded-xl bg-slate-900/30 border border-white/5 hover:bg-white/[0.02] text-[#a855f7] transition-all cursor-pointer">Cursed Energy</button>
-                    <button onclick="applyTheme('crimson')" class="p-2.5 rounded-xl bg-slate-900/30 border border-white/5 hover:bg-white/[0.02] text-[#ef4444] transition-all cursor-pointer">Crimson Monarch</button>
-                    <button onclick="applyTheme('sakura')" class="p-2.5 rounded-xl bg-slate-900/30 border border-white/5 hover:bg-white/[0.02] text-[#f43f5e] transition-all cursor-pointer">Cyber Tokyo</button>
-                    <button onclick="applyTheme('electric')" class="p-2.5 rounded-xl bg-slate-900/30 border border-white/5 hover:bg-white/[0.02] text-[#eab308] transition-all cursor-pointer">Lightning Yellow</button>
+                    <button onclick="applyTheme('cyber')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-cyan-400 active:scale-95 transition-all cursor-pointer">Blue Box Spring</button>
+                    <button onclick="applyTheme('sakura')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-rose-400 active:scale-95 transition-all cursor-pointer">Sakura Morning</button>
+                    <button onclick="applyTheme('cursed')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-purple-400 active:scale-95 transition-all cursor-pointer">Jujutsu Twilight</button>
+                    <button onclick="applyTheme('shinobi')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-emerald-400 active:scale-95 transition-all cursor-pointer">Zoro Neon</button>
+                    <button onclick="applyTheme('crimson')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-red-400 active:scale-95 transition-all cursor-pointer">Crimson Monarch</button>
+                    <button onclick="applyTheme('moctale')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-amber-400 active:scale-95 transition-all cursor-pointer">Shinobi Forest</button>
+                    <button onclick="applyTheme('void')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-indigo-400 active:scale-95 transition-all cursor-pointer">Tokyo Cyberpunk</button>
+                    <button onclick="applyTheme('electric')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-yellow-400 active:scale-95 transition-all cursor-pointer">Lightning Volt</button>
                 </div>
             </section>
         </div>
 
-        <button onclick="exportData()" class="w-full bg-[#0a0c16] hover:bg-[#121528] border border-white/5 text-slate-400 text-[10px] tracking-widest uppercase font-black py-2.5 rounded-xl transition-all shadow cursor-pointer">✨ Export Global Network Architecture Payload</button>
+        <!-- System Payload Controller Transmitters -->
+        <button onclick="exportData()" class="w-full bg-slate-900/60 border border-white/5 text-slate-400 text-[10px] tracking-wider uppercase font-black py-2.5 rounded-xl transition-all shadow cursor-pointer">✨ Export Global Network Architecture Payload</button>
         <a id="back-to-mine" href="?" class="hidden w-full bg-slate-950 text-slate-200 text-xs font-black py-2.5 rounded-xl text-center items-center justify-center border border-white/5 shadow-md">Back to My Vault</a>
     </div>
 
     <script>
-        let vaultStorage = []; let viewOnly = false; let currentParticleColor = 'rgba(0, 245, 212, 0.12)';
+        let vaultStorage = []; let viewOnly = false; let currentParticleColor = 'rgba(6, 182, 212, 0.18)';
         
-        // Scientific Acoustic Wave Synthesizer (Web Audio API Architecture Engine)
+        // Web Audio API Acoustic Wave Synthesizer Engine 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playTone(freq, type, duration) {
             try {
@@ -209,15 +224,15 @@
         }
         function soundClick() { playTone(659.25, 'triangle', 0.06); }
         function soundSuccess() { playTone(987.77, 'sine', 0.08); setTimeout(() => playTone(1318.51, 'sine', 0.12), 60); }
-        function soundAlert() { playTone(392, 'sawtooth', 0.1); setTimeout(() => playTone(311.13, 'sawtooth', 0.14), 80); }
+        function soundAlert() { playTone(440, 'sawtooth', 0.1); setTimeout(() => playTone(349.23, 'sawtooth', 0.14), 80); }
 
-        // Core Dialogue Module Repositories Engine Matrix
+        // Anime Character Grid Modules Database
         const dynamicUniverseData = {
-            senku: { character: "Senku Ishigami", icon: "🧪", quote: "KuroDeck parameters are ten billion percent responsive. Theme color alignment locks in instantly!", color: "text-emerald-400" },
-            demon: { character: "Tanjiro Kamado", icon: "🎴", quote: "Look straight ahead! Sharpen your blade and record your anime journey with clear, high-contrast honor.", color: "text-orange-400" },
-            gojo: { character: "Gojo Satoru", icon: "👁️", quote: "Relax, my custom database tracking layers are literally the strongest. Color styling hierarchy is fixed.", color: "text-purple-400" },
-            naruto: { character: "Naruto Uzumaki", icon: "🦊", quote: "I never go back on my logging parameters, that is my custom ninja tracking method, believe it!", color: "text-yellow-400" },
-            luffy: { character: "Monkey D. Luffy", icon: "🍖", quote: "We are tracking the absolute greatest pirate index profile fleet across the infinite oceans!", color: "text-rose-500" }
+            senku: { character: "Senku Ishigami", icon: "🧪", quote: "This database structure is ten billion percent operational! Search titles under Discover.", color: "text-emerald-400" },
+            demon: { character: "Tanjiro Kamado", icon: "🎴", quote: "Look straight ahead. No matter how painful it gets, sharpen your blade and record your path!", color: "text-orange-400" },
+            gojo: { character: "Gojo Satoru", icon: "👁️", quote: "Don't sweat it, your custom database tracking layers are literally the strongest.", color: "text-purple-400" },
+            naruto: { character: "Naruto Uzumaki", icon: "🦊", quote: "I never go back on my records. That's my custom tracking methodology, believe it!", color: "text-yellow-400" },
+            luffy: { character: "Monkey D. Luffy", icon: "🍖", quote: "If you don't take cataloging risks, you can't build a legendary media profile fleet!", color: "text-rose-500" }
         };
 
         const staticFallbackDatabase = [
@@ -228,17 +243,17 @@
             { c: "Roronoa Zoro", q: "If I die here, then I'm a man who could only go this far.", a: "⚔️" }
         ];
 
-        // Background Particles Physics Mesh Render
+        // Blue Box Style Drifting Particle Generator Engine 
         const canvas = document.getElementById('particleCanvas'); const ctx = canvas.getContext('2d');
         let particles = [];
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas); resizeCanvas();
         class Particle {
-            constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.size = Math.random()*2+0.5; this.speedX = Math.random()*0.22-0.11; this.speedY = Math.random()*0.22-0.11; }
+            constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.size = Math.random()*2.5+0.5; this.speedX = Math.random()*0.15-0.075; this.speedY = Math.random()*0.2-0.1; }
             update() { this.x += this.speedX; this.y += this.speedY; if(this.x>canvas.width||this.x<0) this.speedX *= -1; if(this.y>canvas.height||this.y<0) this.speedY *= -1; }
             draw() { ctx.fillStyle = currentParticleColor; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
         }
-        for(let i=0; i<35; i++) { particles.push(new Particle()); }
+        for(let i=0; i<45; i++) { particles.push(new Particle()); }
         function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{ p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
         animateParticles();
 
@@ -247,37 +262,37 @@
         function makeViewOnlyMode() { document.getElementById('tab-discover')?.remove(); document.getElementById('tab-analytics')?.remove(); document.getElementById('back-to-mine').style.display = 'flex'; navigate('hub'); }
         function syncLocal() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v8', JSON.stringify(vaultStorage)); }
 
-        // Highly Curated Otaku Multi-Tone Color Presets Map Matrix (Visual Balance Fix)
+        // Highly Curated Dynamic Theme Matrix (Vibrant Color Flow Engine)
         const themes = {
-            cyber: { bg: '#03050c', cardBg: 'rgba(6,182,212,0.01)', border: 'rgba(6,182,212,0.12)', text: 'text-cyan-400', barCol: 'bg-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.5)]', primary: 'from-cyan-400 via-teal-400 to-blue-500', particle: 'rgba(6,182,212,0.14)', hex: '#06b6d4' },
-            moctale: { bg: '#060402', cardBg: 'rgba(245,158,11,0.01)', border: 'rgba(245,158,11,0.12)', text: 'text-amber-400', barCol: 'bg-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.5)]', primary: 'from-amber-400 via-orange-500 to-yellow-500', particle: 'rgba(245,158,11,0.14)', hex: '#f59e0b' },
-            void: { bg: '#04060f', cardBg: 'rgba(59,130,246,0.01)', border: 'rgba(59,130,246,0.12)', text: 'text-blue-400', barCol: 'bg-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.5)]', primary: 'from-blue-500 via-indigo-400 to-slate-400', particle: 'rgba(59,130,246,0.14)', hex: '#3b82f6' },
-            shinobi: { bg: '#010402', cardBg: 'rgba(16,185,129,0.01)', border: 'rgba(16,185,129,0.12)', text: 'text-emerald-400', barCol: 'bg-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.5)]', primary: 'from-emerald-400 via-green-500 to-teal-400', particle: 'rgba(16,185,129,0.14)', hex: '#10b850' },
-            cursed: { bg: '#040208', cardBg: 'rgba(168,85,247,0.01)', border: 'rgba(168,85,247,0.12)', text: 'text-purple-400', barCol: 'bg-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.5)]', primary: 'from-purple-500 via-violet-600 to-indigo-500', particle: 'rgba(168,85,247,0.14)', hex: '#a855f7' },
-            crimson: { bg: '#050102', cardBg: 'rgba(239,68,68,0.01)', border: 'rgba(239,68,68,0.12)', text: 'text-red-400', barCol: 'bg-red-400 shadow-[0_0_15px_rgba(239,68,68,0.5)]', primary: 'from-red-500 via-rose-600 to-orange-500', particle: 'rgba(239,68,68,0.14)', hex: '#ef4444' },
-            sakura: { bg: '#040205', cardBg: 'rgba(244,63,94,0.01)', border: 'rgba(244,63,94,0.12)', text: 'text-rose-400', barCol: 'bg-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.5)]', primary: 'from-rose-400 via-pink-500 to-purple-400', particle: 'rgba(244,63,94,0.14)', hex: '#f43f5e' },
-            electric: { bg: '#030301', cardBg: 'rgba(234,179,8,0.01)', border: 'rgba(234,179,8,0.10)', text: 'text-yellow-400', barCol: 'bg-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.5)]', primary: 'from-yellow-400 via-amber-400 to-orange-400', particle: 'rgba(234,179,8,0.12)', hex: '#eab308' }
+            cyber: { start: '#020514', end: '#0a1128', text: 'text-cyan-400', glow: 'rgba(6,182,212,0.4)', primary: 'from-cyan-400 via-sky-400 to-indigo-500', particle: 'rgba(6, 182, 212, 0.22)', hex: '#06b6d4' },
+            sakura: { start: '#12050b', end: '#240a18', text: 'text-rose-400', glow: 'rgba(244,63,94,0.4)', primary: 'from-rose-400 via-pink-400 to-amber-400', particle: 'rgba(244, 63, 94, 0.22)', hex: '#f43f5e' },
+            cursed: { start: '#070214', end: '#14052e', text: 'text-purple-400', glow: 'rgba(168,85,247,0.4)', primary: 'from-purple-500 via-indigo-500 to-fuchsia-500', particle: 'rgba(168, 85, 247, 0.22)', hex: '#a855f7' },
+            shinobi: { start: '#010905', end: '#041e12', text: 'text-emerald-400', glow: 'rgba(16,185,129,0.4)', primary: 'from-emerald-400 via-green-400 to-teal-500', particle: 'rgba(16, 185, 129, 0.22)', hex: '#10b850' },
+            crimson: { start: '#140204', end: '#2e0509', text: 'text-red-400', glow: 'rgba(239,68,68,0.4)', primary: 'from-red-500 via-rose-600 to-orange-500', particle: 'rgba(239, 68, 68, 0.22)', hex: '#ef4444' },
+            moctale: { start: '#010707', end: '#041a1e', text: 'text-teal-400', glow: 'rgba(20,184,166,0.4)', primary: 'from-teal-400 via-emerald-400 to-cyan-500', particle: 'rgba(20, 184, 166, 0.22)', hex: '#14b8a6' },
+            void: { start: '#0b0214', end: '#1d042b', text: 'text-indigo-400', glow: 'rgba(99,102,241,0.4)', primary: 'from-fuchsia-500 via-pink-500 to-cyan-400', particle: 'rgba(99, 102, 241, 0.22)', hex: '#6366f1' },
+            electric: { start: '#0a0801', end: '#1a1403', text: 'text-yellow-400', glow: 'rgba(234,179,8,0.4)', primary: 'from-yellow-400 via-amber-400 to-orange-500', particle: 'rgba(234, 179, 8, 0.22)', hex: '#eab308' }
         };
 
         function applyTheme(themeKey) {
             const t = themes[themeKey]; if(!t) return;
             localStorage.setItem('nexusThemeKey', themeKey); currentParticleColor = t.particle;
             
-            // Apply balanced site-wide branding colors
-            document.body.style.backgroundColor = t.bg;
-            const nav = document.getElementById('topNav'); if (nav) { nav.style.backgroundColor = t.bg + 'f2'; nav.style.borderColor = t.hex + '22'; }
-            document.getElementById('navLogo').className = `text-xs font-black tracking-widest bg-gradient-to-r ${t.primary} text-transparent bg-clip-text uppercase flex items-center gap-1.5`;
+            // Programmatically update the CSS Root Variables for beautiful transitions
+            document.documentElement.style.setProperty('--bg-start', t.start);
+            document.documentElement.style.setProperty('--bg-end', t.end);
+            document.documentElement.style.setProperty('--accent-glow', t.glow);
             
-            // Adjust card glass backdrops gently without crushing metric text readability
-            document.querySelectorAll('.matrix-card').forEach(card => { card.style.background = t.cardBg; card.style.borderColor = t.border; });
+            const nav = document.getElementById('topNav'); if (nav) { nav.style.borderColor = t.hex + '33'; }
+            document.getElementById('navLogo').className = `text-xs font-black tracking-widest bg-gradient-to-r ${t.primary} text-transparent bg-clip-text uppercase flex items-center gap-1.5`;
             
             const activeTab = document.querySelector('nav div .font-bold');
             if (activeTab) { activeTab.className = `${t.text} border-b-2 pb-1 font-bold transition-all duration-300`; activeTab.style.borderColor = t.hex; }
             
-            // High-Contrast Adjustment Fix: Explicitly link only specific navigational accents to theme toggles
-            ['navLogo', 'queryBtn', 'rouletteBtn'].forEach(id => { const el = document.getElementById(id); if(el) { if(id.includes('Btn')) { el.className = `bg-gradient-to-r ${t.primary} text-slate-950 px-5 rounded-xl text-xs font-black active:scale-95 transition-all shadow-md cursor-pointer`; } } });
+            // Coordinate heading locks safely
+            ['count-active', 'count-done', 'watchingShelfHeader', 'analyticsHeader', 'themeConfigHeader', 'guideBtnActive', 'guideBtnQueue', 'guideBtnMastered', 'backlogHeader', 'matrixHeader', 'libraryHeader'].forEach(id => { const el = document.getElementById(id); if(el) { el.className = el.className.replace(/text-\w+-\d+/g, '').replace(/text-slate-300/g, '') + ' ' + t.text; } });
+            ['badge-queue', 'badge-mastered', 'count-all', 'queryBtn', 'rouletteBtn'].forEach(id => { const el = document.getElementById(id); if(el) { if(id.includes('Btn')) { el.className = `bg-gradient-to-r ${t.primary} text-slate-950 px-5 rounded-xl text-xs font-black active:scale-95 transition-all shadow-md cursor-pointer`; } else { el.className = `text-xs font-bold bg-white/5 border border-white/10 px-2 py-0.5 rounded-full ${t.text}`; } } });
             
-            // Redraw branding indicators inside mobile setups
             updateDynamicIcons(t.hex); renderAnalyticsCharts();
         }
 
@@ -285,7 +300,6 @@
             const encodedHex = encodeURIComponent(colorHex);
             const svgMarkup = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M90 422 L150 362' stroke='%23ffffff' stroke-width='24' stroke-linecap='round'/><circle cx='150' cy='362' r='20' fill='${encodedHex}'/><path d='M150 362 L410 102' stroke='${encodedHex}' stroke-width='16' stroke-linecap='round' style='filter:drop-shadow(0 0 12px ${encodedHex})'/><path d='M155 357 L405 107' stroke='%23ffffff' stroke-width='6' stroke-linecap='round'/></svg>`;
             const finalDataURI = "data:image/svg+xml;utf8," + svgMarkup;
-            
             document.getElementById('favicon').href = finalDataURI; document.getElementById('appleIcon').href = finalDataURI;
             
             const manifestBlueprint = { name: "KuroDeck", short_name: "KuroDeck", start_url: ".", display: "standalone", background_color: "#040610", theme_color: colorHex, icons: [{ src: finalDataURI, sizes: "512x512", type: "image/svg+xml" }] };
@@ -306,17 +320,17 @@
         }
 
         function triggerCompanionSaying(id) { const c = dynamicUniverseData[id]; if (c) { soundSuccess(); toastAlert(`<strong>${c.character}:</strong> "${c.quote}"`); document.getElementById('display-quote').innerText = `"${c.quote}"`; document.getElementById('display-author').innerText = `— ${c.character}`; } }
-        function toastAlert(msg) { const t = document.getElementById('toast'); t.className = `fixed top-24 left-4 right-4 max-w-md mx-auto bg-[#0a0d1a]/95 border p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all duration-300 text-white border-white/10`; t.innerHTML = msg; t.classList.remove('hidden'); setTimeout(() => { t.classList.add('hidden'); }, 3500); }
+        function toastAlert(msg) { const t = document.getElementById('toast'); t.className = `fixed top-24 left-4 right-4 max-w-md mx-auto bg-slate-950/95 border p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all duration-300 text-white border-white/10`; t.innerHTML = msg; t.classList.remove('hidden'); setTimeout(() => { t.classList.add('hidden'); }, 3500); }
 
         async function runQuery() {
             const val = document.getElementById('input-search').value.trim(); const grid = document.getElementById('search-grid');
             if(val.length < 2) { soundAlert(); toastAlert("❌ Enter at least 2 characters to engage search array."); return; }
-            grid.innerHTML = `<div class="text-xs text-slate-500 font-mono italic p-8 text-center animate-pulse">📡 Fetching data vectors from international library indexes...</div>`;
+            grid.innerHTML = `<div class="text-xs text-slate-400 font-mono italic p-8 text-center animate-pulse">📡 Synchronizing live catalog frames...</div>`;
             const mode = document.querySelector('input[name="mode"]:checked').value;
             try {
                 const res = await fetch(`https://api.jikan.moe/v4/${mode}?q=${encodeURIComponent(val)}&limit=5`);
                 const json = await res.json(); renderSearchCards(json.data, mode);
-            } catch (e) { soundAlert(); grid.innerHTML = `<div class="text-xs text-rose-500 font-mono p-8 text-center">❌ Synchronizer communication lag. Query button again.</div>`; }
+            } catch (e) { soundAlert(); grid.innerHTML = `<div class="text-xs text-rose-400 font-mono p-8 text-center">❌ Synchronizer communication error. Query button again.</div>`; }
         }
 
         function renderSearchCards(data, mode) {
@@ -439,8 +453,8 @@
 
                 if (item.status === 'watching') {
                     const block = document.createElement('div'); block.className = "matrix-card p-3 rounded-2xl flex gap-3 items-center bg-slate-900/30 border border-white/5 shadow relative animate-fade-in";
-                    let select = !viewOnly ? `<select onchange="updateStatus(${item.id}, this.value)" class="text-[10px] bg-[#05070f] border border-white/5 rounded px-1.5 text-slate-300 py-1 focus:outline-none shadow-inner"><option value="watching" selected>Streaming</option><option value="completed">Complete</option></select>` : '';
-                    block.innerHTML = `<img src="${item.image}" class="w-12 h-16 object-cover rounded-xl border border-slate-900 shadow bg-slate-950 flex-shrink-0"><div class="flex-1 min-w-0"><p class="text-xs font-black text-slate-100 truncate">${item.title}</p><p class="text-[9px] text-slate-500 mt-0.5 font-medium truncate">${item.metadata}</p><span class="text-[8px] font-mono bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-0.5 rounded mt-2 inline-block font-semibold text-cyan-400">Active Rotation</span></div><div class="flex flex-col items-end gap-4">${select}</div>`; sw.appendChild(block);
+                    let select = !viewOnly ? `<select onchange="updateStatus(${item.id}, this.value)" class="text-[10px] bg-slate-900 border border-white/10 rounded px-1.5 text-slate-200 py-1 focus:outline-none shadow-inner"><option value="watching" selected>Streaming</option><option value="completed">Complete</option></select>` : '';
+                    block.innerHTML = `<img src="${item.image}" class="w-12 h-16 object-cover rounded-xl border border-slate-900 shadow bg-slate-950 flex-shrink-0"><div class="flex-1 min-w-0"><p class="text-xs font-black text-slate-100 truncate">${item.title}</p><p class="text-[9px] text-slate-400 font-medium truncate">${item.metadata}</p><span class="text-[8px] font-mono bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-0.5 rounded mt-2 inline-block font-semibold text-cyan-400">Active Rotation</span></div><div class="flex flex-col items-end gap-4">${select}</div>`; sw.appendChild(block);
                 } else if (item.status === 'plan-to-watch') {
                     const block = document.createElement('div'); block.className = "matrix-card p-2 rounded-xl flex items-center justify-between text-xs bg-slate-900/20 border-white/5";
                     let ctrl = !viewOnly ? `<div class="flex gap-2"><button onclick="updateStatus(${item.id}, 'completed')" class="text-[9px] bg-purple-500/10 border border-purple-500/30 px-2 py-0.5 rounded font-black cursor-pointer text-purple-400">Done</button><button onclick="purgeNode(${item.id})" class="text-slate-600 hover:text-rose-400 font-bold px-1 cursor-pointer">×</button></div>` : '';
@@ -448,7 +462,7 @@
                 } else if (item.status === 'completed') {
                     const block = document.createElement('div'); block.className = "matrix-card p-2 rounded-xl flex items-center justify-between text-xs bg-slate-900/20 border-white/5";
                     let action = !viewOnly ? `<button onclick="purgeNode(${item.id})" class="text-slate-600 hover:text-rose-400 text-[10px] px-1 cursor-pointer">🗑️</button>` : '';
-                    block.innerHTML = `<div class="flex items-center gap-2"><img src="${item.image}" class="w-6 h-8 object-cover rounded-md border border-slate-900 bg-slate-950 shadow"><div class="min-w-0 max-w-[200px]"><p class="font-black text-slate-200 text-xs truncate">${item.title}</p><p class="text-[8px] text-slate-400 font-medium truncate">${item.metadata} <span class="text-emerald-400 font-mono font-bold ml-1">[${item.tier}]</span></p></div></div>${action}`; sc.appendChild(block);
+                    block.innerHTML = `<div class="flex items-center gap-2"><img src="${item.image}" class="w-6 h-8 object-cover rounded-md border border-slate-900 bg-slate-950 shadow"><div class="min-w-0 max-w-[200px]"><p class="font-black text-slate-200 text-xs truncate">${item.title}</p><p class="text-[8px] text-slate-300 font-medium truncate">${item.metadata} <span class="text-emerald-400 font-mono font-bold ml-1">[${item.tier}]</span></p></div></div>${action}`; sc.appendChild(block);
                     
                     const badge = document.createElement('span'); badge.className = "text-[9px] font-black bg-[#020408] border border-white/10 text-slate-300 px-2 py-0.5 rounded shadow max-w-[96px] truncate"; badge.innerText = item.title;
                     if(rows[item.tier || 'B']) rows[item.tier || 'B'].appendChild(badge);
@@ -462,14 +476,14 @@
                 n.innerHTML = `<p class="text-xl">${companion.icon}</p><p class="text-[9px] font-black ${companion.color} mt-0.5 truncate">${companion.character.split(' ')[0]}</p>`; deck.appendChild(n);
             });
 
-            if(deck.children.length === 0) deck.innerHTML = `<div class="text-[10px] text-slate-600 italic py-2 pl-1">Discover titles to unlock dynamic companion avatars.</div>`;
+            if(deck.children.length === 0) deck.innerHTML = `<div class="text-[10px] text-slate-400 italic py-2 pl-1">Discover titles to unlock dynamic companion avatars.</div>`;
             document.getElementById('count-all').innerText = vaultStorage.length; document.getElementById('count-active').innerText = counts['watching']; document.getElementById('count-done').innerText = counts['completed'];
             document.getElementById('badge-queue').innerText = counts['plan-to-watch']; document.getElementById('badge-mastered').innerText = counts['completed'];
             
-            if(sw.children.length === 0) sw.innerHTML = `<div class="text-[10px] text-slate-600 italic p-6 w-full text-center border border-dashed border-white/5 rounded-2xl bg-[#090b14]/10">Your active logs are clear. Shift to Discover to query and sync high-res titles instantly!</div>`;
-            if(sq.children.length === 0) sq.innerHTML = `<div class="text-[10px] text-slate-600 italic p-3 text-center border border-dashed border-white/5 rounded-xl bg-[#090b14]/10">Watchlist queue parameters empty.</div>`;
-            if(sc.children.length === 0) sc.innerHTML = `<div class="text-[10px] text-slate-600 italic p-3 text-center border border-dashed border-white/5 rounded-xl bg-[#090b14]/10">Vault archives collection clear.</div>`;
-            Object.keys(rows).forEach(k => { if(rows[k].children.length === 0) rows[k].innerHTML = `<span class="text-[8px] text-slate-700 italic flex items-center py-0.5">Empty Row Slat</span>`; });
+            if(sw.children.length === 0) sw.innerHTML = `<div class="text-[10px] text-slate-400 italic p-6 w-full text-center border border-dashed border-white/10 rounded-2xl bg-[#090b14]/10">Your active logs are clear. Shift to Discover to query and sync high-res titles instantly!</div>`;
+            if(sq.children.length === 0) sq.innerHTML = `<div class="text-[10px] text-slate-400 italic p-3 text-center border border-dashed border-white/10 rounded-xl bg-[#090b14]/10">Watchlist queue parameters empty.</div>`;
+            if(sc.children.length === 0) sc.innerHTML = `<div class="text-[10px] text-slate-400 italic p-3 text-center border border-dashed border-white/10 rounded-xl bg-[#090b14]/10">Vault archives collection clear.</div>`;
+            Object.keys(rows).forEach(k => { if(rows[k].children.length === 0) rows[k].innerHTML = `<span class="text-[8px] text-slate-600 italic flex items-center py-0.5">Empty Row Slat</span>`; });
         }
         window.onload = init;
     </script>
