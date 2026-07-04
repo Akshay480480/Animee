@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Ishigami Science Codex</title>
     
-    <!-- Premium Glowing Neon Custom Icons -->
+    <!-- Real App Mode (Hides browser bars and tabs) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22The%20Ishigami%20Science%20Codex%22%2C%22short_name%22%3A%22Science%20Codex%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23030605%22%2C%22theme_color%22%3A%22%2334d399%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fneon%2F512%2Ftest-tube.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image/png%22%7D%5D%7D">
+
+    <!-- Premium Glowing Neon Icon Links -->
     <link rel="icon" type="image/png" sizes="512x512" href="https://img.icons8.com/neon/512/test-tube.png">
     <link rel="apple-touch-icon" sizes="512x512" href="https://img.icons8.com/neon/512/test-tube.png">
     
@@ -18,7 +24,7 @@
 <body class="p-4">
     <div class="max-w-5xl mx-auto">
         
-        <!-- The Ishigami Science Codex Header -->
+        <!-- Header -->
         <header class="mb-6 pb-4 border-b border-emerald-900/40">
             <div class="flex items-center gap-1.5 mb-1">
                 <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -33,7 +39,7 @@
             </div>
         </header>
 
-        <!-- Simple Stats Counters -->
+        <!-- Stats Scoreboard -->
         <section class="grid grid-cols-2 gap-2 mb-6">
             <div class="science-card p-3 rounded-xl text-center"><p class="text-[10px] uppercase text-slate-400">Total Shows</p><p id="stat-total" class="text-lg font-bold mt-0.5 text-slate-100">0</p></div>
             <div class="science-card p-3 rounded-xl text-center"><p class="text-[10px] uppercase text-amber-400">Watching Now</p><p id="stat-watching" class="text-lg font-bold mt-0.5 text-amber-400">0</p></div>
@@ -43,7 +49,7 @@
 
         <div id="toast" class="hidden fixed bottom-6 right-6 left-6 bg-slate-900 border border-emerald-500/30 text-emerald-400 p-4 rounded-xl text-xs z-50 text-center">🚀 Link copied! Send it to your friends.</div>
 
-        <!-- Easy Input Panel -->
+        <!-- Input Panel -->
         <section id="controls-section" class="science-card p-4 rounded-xl mb-6">
             <div class="flex flex-col gap-3">
                 <input type="text" id="anime-title" placeholder="Type Anime Name Here..." class="w-full bg-slate-950 border border-emerald-900/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
@@ -59,7 +65,7 @@
             </div>
         </section>
 
-        <!-- Easy Lists -->
+        <!-- Lists -->
         <main class="space-y-6">
             <div>
                 <div class="flex items-center justify-between mb-2"><h3 class="font-bold text-xs uppercase text-amber-400">🍿 Watching Now</h3><span id="badge-watching" class="text-xs text-amber-400 font-bold bg-amber-400/5 px-2 py-0.5 rounded">0</span></div>
@@ -94,7 +100,7 @@
                 let scorePill = anime.rating ? `<span class="text-[10px] font-mono bg-emerald-400/10 text-emerald-400 border border-emerald-400/20 px-2 py-0.5 rounded">★ ${anime.rating.toFixed(1)}</span>` : '';
                 let progressLayout = '';
                 if (anime.status === 'watching') {
-                    progressLayout = `<div class="flex justify-between items-center bg-slate-950/50 p-2 rounded-lg text-xs font-mono"><span class="text-slate-500">Episode Tracker</span><div class="flex items-center gap-2">${!isViewOnlyMode?`<button onclick="incrementEp(${anime.id},-1)" class="w-5 h-5 bg-slate-800 hover:bg-slate-700 rounded text-emerald-400 flex items-center justify-center font-bold">-</button>`:''}<span class="text-slate-200">Ep ${anime.currentEp}</span>${!isViewOnlyMode?`<button onclick="incrementEp(${anime.id},1)" class="w-5 h-5 bg-slate-800 hover:bg-slate-700 rounded text-emerald-400 flex items-center justify-center font-bold">+</button>`:''}</div></div>`;
+                    progressLayout = `<div class="flex justify-between items-center bg-slate-950/50 p-2 rounded-lg text-xs font-mono"><span class="text-slate-500">Episode Tracker</span><div class="flex items-center gap-2">${!isViewOnlyMode?`<button onclick="incrementEp(${anime.id},-1)" class="w-5 h-5 bg-slate-800 hover:bg-slate-700 rounded text-emerald-400 flex items-center justify-center font-bold">-</button>`:''}<span class="text-slate-200">Ep ${anime.currentEp}</span>${!isViewMode?`<button onclick="incrementEp(${anime.id},1)" class="w-5 h-5 bg-slate-800 hover:bg-slate-700 rounded text-emerald-400 flex items-center justify-center font-bold">+</button>`:''}</div></div>`;
                 } else if (anime.status === 'completed') { progressLayout = `<div class="text-xs text-emerald-400 font-mono flex items-center gap-1">✓ Log Completed</div>`; }
                 let controls = !isViewOnlyMode ? `<div class="flex justify-between items-center pt-2 border-t border-slate-800/50"><select onchange="updateStatus(${anime.id}, this.value)" class="text-xs bg-slate-950 border border-slate-900 rounded px-2 py-1 text-slate-400"><option value="watching" ${anime.status==='watching'?'selected':''}>Watching</option><option value="plan-to-watch" ${anime.status==='plan-to-watch'?'selected':''}>To Watch</option><option value="completed" ${anime.status==='completed'?'selected':''}>Completed</option></select><button onclick="deleteAnime(${anime.id})" class="text-xs text-slate-600 hover:text-rose-400">Delete</button></div>` : '';
                 card.innerHTML = `<div class="flex items-start justify-between gap-2"><div class="font-bold text-sm text-slate-200">${anime.title}</div>${scorePill}</div>${progressLayout}${controls}`; containers[anime.status].appendChild(card);
@@ -105,5 +111,5 @@
         window.onload = init;
     </script>
 </body>
-    </html>
-    
+                                                                        </html>
+                                                                        
