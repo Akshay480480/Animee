@@ -26,7 +26,7 @@
         <header class="mb-6 pb-4 border-b border-emerald-900/40">
             <div class="flex items-center gap-1.5 mb-1">
                 <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span class="text-[10px] font-mono tracking-widest text-emerald-400 uppercase">Global Search Matrix</span>
+                <span class="text-[10px] font-mono tracking-widest text-emerald-400 uppercase">Global Database Sync</span>
             </div>
             <h1 id="site-title" class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300">
                 The Ishigami Science Codex 🧪
@@ -53,9 +53,12 @@
                     <button id="type-manga" onclick="setMediaType('manga')" class="text-xs font-bold py-2 rounded-lg text-slate-400 transition">📚 Manga Mode</button>
                 </div>
 
-                <div class="relative">
-                    <input type="text" id="anime-title" oninput="searchMedia()" autocomplete="off" placeholder="Start typing anime name... (e.g. Naruto, Bleach)" class="w-full bg-slate-950 border border-emerald-900/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
-                    <div id="search-results" class="hidden absolute left-0 right-0 top-full mt-1 bg-slate-950 border border-emerald-500/40 rounded-xl max-h-60 overflow-y-auto z-50 shadow-2xl divide-y divide-slate-900/60"></div>
+                <div class="relative flex flex-col gap-1.5">
+                    <div class="flex gap-2">
+                        <input type="text" id="anime-title" placeholder="Type anime name here..." class="flex-1 bg-slate-950 border border-emerald-900/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+                        <button onclick="searchMedia()" class="bg-slate-800 hover:bg-slate-700 border border-emerald-500/20 px-4 rounded-xl text-xs font-bold transition whitespace-nowrap text-emerald-400">Search 🔍</button>
+                    </div>
+                    <div id="search-results" class="hidden absolute left-0 right-0 top-full mt-1.5 bg-slate-950 border border-emerald-500/40 rounded-xl max-h-60 overflow-y-auto z-50 shadow-2xl divide-y divide-slate-900/60"></div>
                 </div>
                 
                 <div class="grid grid-cols-12 gap-2">
@@ -117,12 +120,12 @@
     </div>
 
     <script>
-        let animeList = []; let isViewOnlyMode = false; let currentFormType = 'anime'; let tempImgUrl = ''; let searchTimeout;
+        let animeList = []; let isViewOnlyMode = false; let currentFormType = 'anime'; let tempImgUrl = '';
         
-        function init() { const urlParams = new URLSearchParams(window.location.search); const sharedData = urlParams.get('vault'); if (sharedData) { try { animeList = JSON.parse(atob(sharedData)); isViewOnlyMode = true; setupViewOnlyUI(); } catch (e) { loadFromLocalStorage(); } } else { loadFromLocalStorage(); } renderList(); document.addEventListener('click', (e) => { if (e.target.id !== 'anime-title') document.getElementById('search-results').classList.add('hidden'); }); }
-        function loadFromLocalStorage() { const localData = localStorage.getItem('ishigamiScienceCodexV3'); animeList = localData ? JSON.parse(localData) : []; }
+        function init() { const urlParams = new URLSearchParams(window.location.search); const sharedData = urlParams.get('vault'); if (sharedData) { try { animeList = JSON.parse(atob(sharedData)); isViewOnlyMode = true; setupViewOnlyUI(); } catch (e) { loadFromLocalStorage(); } } else { loadFromLocalStorage(); } renderList(); document.addEventListener('click', (e) => { if (e.target.id !== 'anime-title') { const resBox = document.getElementById('search-results'); if (resBox) resBox.classList.add('hidden'); } }); }
+        function loadFromLocalStorage() { const localData = localStorage.getItem('ishigamiScienceCodexV4'); animeList = localData ? JSON.parse(localData) : []; }
         function setupViewOnlyUI() { const ctrl = document.getElementById('controls-section'); if (ctrl) ctrl.remove(); document.getElementById('share-btn').remove(); document.getElementById('site-title').innerText = "Shared Science Codex"; document.getElementById('back-to-mine').style.display = 'flex'; }
-        function saveToStorage() { if (!isViewOnlyMode) localStorage.setItem('ishigamiScienceCodexV3', JSON.stringify(animeList)); }
+        function saveToStorage() { if (!isViewOnlyMode) localStorage.setItem('ishigamiScienceCodexV4', JSON.stringify(animeList)); }
         
         function setMediaType(type) {
             currentFormType = type; tempImgUrl = ''; document.getElementById('anime-title').value = '';
@@ -136,25 +139,27 @@
             }
         }
 
-        // Live API Search Mechanics
-        function searchMedia() {
-            clearTimeout(searchTimeout);
+        // Triggered only when the manual click happens
+        async function searchMedia() {
             const query = document.getElementById('anime-title').value.trim();
             const resultsBox = document.getElementById('search-results');
-            if (query.length < 3) { resultsBox.classList.add('hidden'); return; }
+            if (query.length < 2) { showToast("🧪 Enter at least 2 characters to track mapping."); return; }
             
-            searchTimeout = setTimeout(async () => {
-                try {
-                    const res = await fetch(`https://api.jikan.moe/v4/${currentFormType}?q=${encodeURIComponent(query)}&limit=5`);
-                    const json = await res.json();
-                    renderSearchResults(json.data);
-                } catch (e) { console.error("Data tracking node failed:", e); }
-            }, 400);
+            showToast("🔬 Searching global database records...");
+            try {
+                const res = await fetch(`https://api.jikan.moe/v4/${currentFormType}?q=${encodeURIComponent(query)}&limit=5`);
+                const json = await res.json();
+                document.getElementById('toast').classList.add('hidden');
+                renderSearchResults(json.data);
+            } catch (e) { 
+                showToast("❌ Synchronization node failed. Try again."); 
+                console.error(e);
+            }
         }
 
         function renderSearchResults(data) {
             const box = document.getElementById('search-results'); box.innerHTML = '';
-            if (!data || data.length === 0) { box.classList.add('hidden'); return; }
+            if (!data || data.length === 0) { showToast("❌ No matches located inside matrix."); box.classList.add('hidden'); return; }
             
             data.forEach(item => {
                 const row = document.createElement('div');
@@ -189,13 +194,13 @@
         
         function runScienceRoulette() {
             const planQueue = animeList.filter(item => item.status === 'plan-to-watch'); const alertBox = document.getElementById('toast');
-            if (planQueue.length === 0) { showToast("❌ Target queue is empty! Add selections to run algorithm."); return; }
+            if (planQueue.length === 0) { showToast("❌ Queue targets empty. Populate lists first."); return; }
             let counter = 0;
             let interval = setInterval(() => {
                 const randomShow = planQueue[Math.floor(Math.random() * planQueue.length)]; showToast(`🔬 Calculating matrix... [${randomShow.title}]`); counter++;
                 if (counter > 8) {
                     clearInterval(interval); const finalChoice = planQueue[Math.floor(Math.random() * planQueue.length)];
-                    alertBox.innerHTML = `⚡ <strong>Senku's Choice Decision:</strong><br>Go watch/read <strong>${finalChoice.title}</strong> right now! 🚀`; setTimeout(() => alertBox.classList.add('hidden'), 6000);
+                    alertBox.innerHTML = `⚡ <strong>Senku's Choice Decision:</strong><br>Go watch/read <strong>${finalChoice.title}</strong> right now! 🚀`;
                 }
             }, 150);
         }
@@ -215,9 +220,4 @@
                 const card = document.createElement('div'); card.className = "science-card p-3 rounded-xl flex gap-3 items-start border border-emerald-900/15";
                 let typeBadge = `<span class="text-[9px] uppercase px-1.5 py-0.5 rounded ${isAnime?'bg-emerald-500/10 text-emerald-400 border border-emerald-400/20':'bg-blue-500/10 text-blue-400 border border-blue-500/20'}">${anime.type || 'Anime'}</span>`;
                 let scorePill = anime.rating ? `<span class="text-[10px] font-mono bg-amber-400/10 text-amber-400 border border-amber-400/20 px-2 py-0.5 rounded">★ ${anime.rating} [${anime.tier}]</span>` : '';
-                let noteLayout = anime.notes ? `<div class="text-[11px] text-slate-400 italic bg-slate-950/40 px-2 py-1 rounded-md border border-slate-900/40">🧬 Notes: ${anime.notes}</div>` : '';
-                let imgArt = anime.image || 'https://img.icons8.com/neon/512/test-tube.png';
-                
-                let progressLayout = '';
-                if (anime.status === 'watching') {
-                    progressLayout = `<div class="flex justify-between items-center bg-slate-950/50 p-2 rounded-lg text-xs font-mono"><span class="text-slate
+                let noteLayout = anime.notes ? `<div class="text-[11px] text-slate-400 italic bg-slate-950/40 px-2 py-1 rounded-md border border-slate-900/40">🧬 Notes: ${a
