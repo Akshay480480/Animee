@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KuroDeck</title>
     
-    <!-- PWA Standalone Mobile App Configurations -->
+    <!-- PWA Real Standalone Mobile App Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -17,9 +17,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         :root {
-            --bg-start: #040610;
-            --bg-end: #0b0f24;
-            --accent-glow: rgba(6, 182, 212, 0.4);
+            --bg-start: #020514;
+            --bg-end: #0a1128;
+            --accent-glow: rgba(6, 182, 212, 0.3);
         }
         body { 
             background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
@@ -31,43 +31,37 @@
             transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
         
-        /* Blue Box Inspired Breezy Slide and Fade Page Transitions */
+        /* Blue Box Style Smooth Fluid Page Transitions */
         .page-view { 
-            transition: opacity 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
         }
-        .page-hidden { opacity: 0; transform: translateY(16px) scale(0.98); pointer-events: none; display: none !important; }
+        .page-hidden { opacity: 0; transform: translateY(12px) scale(0.99); pointer-events: none; display: none !important; }
         
-        /* Frosted Glassmorphism Panels with soft internal lighting glows */
+        /* Glassmorphism Panels with high contrast visibility */
         .matrix-card { 
-            background: rgba(15, 23, 42, 0.45); 
-            border: 1px solid rgba(255, 255, 255, 0.07); 
+            background: rgba(10, 15, 35, 0.6); 
+            border: 1px solid rgba(255, 255, 255, 0.06); 
             backdrop-filter: blur(20px); 
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255,255,255,0.05);
-            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
-        }
-        .matrix-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.4), 0 0 15px var(--accent-glow);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
         
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Fixed Background Canvas Layering to stop click interference completely */
         canvas#particleCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; }
         .main-app-content { position: relative; z-index: 10; pointer-events: auto; }
-        nav#topNav { transition: border-color 0.4s ease, background-color 0.4s ease; }
     </style>
 </head>
-<body class="pb-28 pt-18 px-4">
+<body class="pb-28 pt-20 px-4">
 
-    <!-- Ambient Drifting Particle Canvas Layout -->
+    <!-- Ambient Floating Light Canvas Engine -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- Top Fixed Premium Desktop/Mobile Navigation Module -->
-    <nav id="topNav" class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-slate-950/70 border-b flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md rounded-b-2xl">
-        <span id="navLogo" class="text-xs font-black tracking-widest bg-gradient-to-r uppercase flex items-center gap-1.5 transition-all duration-300">
-            ⚔️ KURODECK
+    <!-- Navigation Header Bar Router Module -->
+    <nav id="topNav" class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-slate-950/80 border-b flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md rounded-b-2xl">
+        <span id="navLogo" class="text-xs font-black tracking-widest uppercase flex items-center gap-1.5 transition-all duration-300">
+            🎬 KURODECK
         </span>
         <div class="flex gap-4 text-xs font-bold tracking-tight z-50">
             <button onclick="navigate('hub')" id="tab-hub" class="pb-1 transition-all cursor-pointer">Hub</button>
@@ -77,59 +71,70 @@
         </div>
     </nav>
 
-    <!-- System Live Dialogue Alert Banner -->
-    <div id="toast" class="hidden fixed top-20 left-4 right-4 max-w-md mx-auto bg-slate-950/90 border p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all"></div>
+    <!-- Global Floating Alerts Pop-up Window -->
+    <div id="toast" class="hidden fixed top-24 left-4 right-4 max-w-md mx-auto bg-slate-950/95 border border-white/10 p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all duration-300 text-white"></div>
 
-    <!-- Main Content click container box -->
+    <!-- Active Clicks Layout Frame -->
     <div class="main-app-content max-w-md mx-auto space-y-4">
 
-        <!-- ================= VIEW NODE 1: MAIN DECK HUB ================= -->
+        <!-- ================= PAGE 1: DECK HUB ================= -->
         <div id="view-hub" class="page-view space-y-4">
-            <!-- Dynamic Crossover Dialogue Board -->
+            <!-- Cinematic Dialogue Terminal Board -->
             <section class="matrix-card p-4 rounded-2xl relative overflow-hidden">
                 <div class="absolute -right-6 -top-6 text-7xl opacity-[0.03] font-serif select-none">“</div>
-                <span class="text-[8px] font-mono tracking-widest uppercase font-bold block mb-1 opacity-50 text-slate-400">KuroDeck Terminal Feed</span>
-                <p id="display-quote" class="text-xs italic text-slate-100 leading-relaxed font-medium">"System layers calibrated, Akshay. Head over to the Discover tab to sync high-resolution posters automatically!"</p>
-                <p id="display-author" class="text-[9px] font-bold mt-2.5 text-right opacity-80 text-slate-400">— AI Terminal Controller</p>
+                <span class="text-[8px] font-mono tracking-widest uppercase font-bold block mb-1 text-slate-400 opacity-60">Terminal Live Broadcast</span>
+                <p id="display-quote" class="text-xs italic text-slate-200 leading-relaxed font-medium">"Welcome to KuroDeck, Akshay. Open up the Discover tab to search major anime catalogs and sync live artwork covers instantly!"</p>
+                <p id="display-author" class="text-[9px] font-bold mt-2.5 text-right opacity-60 text-slate-400">— System Controller</p>
             </section>
 
-            <!-- Interactive Character Profile Deck Container -->
+            <!-- Dynamic Character Companion Deck Layout -->
             <section class="space-y-2">
                 <span class="text-[9px] font-mono tracking-widest text-slate-500 uppercase font-black block">Active Companion Guild</span>
                 <div id="guild-deck" class="flex gap-2 overflow-x-auto pb-1 hide-scroll"></div>
             </section>
 
-            <!-- Simple Metric Dashboard Displays -->
-            <section class="grid grid-cols-3 gap-2 bg-slate-950/40 p-2.5 rounded-2xl border border-white/5 shadow-inner backdrop-blur-md">
-                <div class="text-center"><p class="text-[9px] uppercase text-slate-400 font-bold">Total Vault</p><p id="count-all" class="text-xl font-mono font-black text-slate-100 mt-0.5">0</p></div>
-                <div class="text-center border-x border-white/5"><p class="text-[9px] uppercase font-bold" id="activeCounterLabel">Streaming</p><p id="count-active" class="text-xl font-mono font-black mt-0.5">0</p></div>
-                <div class="text-center"><p class="text-[9px] uppercase font-bold" id="masteredCounterLabel">Mastered</p><p id="count-done" class="text-xl font-mono font-black mt-0.5">0</p></div>
+            <!-- Permanently Multi-Colored Metric Tally Grid -->
+            <section class="grid grid-cols-3 gap-2 bg-slate-950/50 p-2.5 rounded-2xl border border-white/5 shadow-inner backdrop-blur-md">
+                <div class="text-center py-1">
+                    <p class="text-[9px] uppercase text-slate-500 font-bold tracking-wider">Total Vault</p>
+                    <p id="count-all" class="text-xl font-mono font-black text-slate-100 mt-0.5">0</p>
+                </div>
+                <div class="text-center py-1 bg-cyan-950/20 rounded-xl border border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.05)]">
+                    <p class="text-[9px] uppercase text-cyan-400 font-bold tracking-wider">Streaming</p>
+                    <p id="count-active" class="text-xl font-mono font-black text-cyan-400 mt-0.5">0</p>
+                </div>
+                <div class="text-center py-1 bg-emerald-950/20 rounded-xl border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.05)]">
+                    <p class="text-[9px] uppercase text-emerald-400 font-bold tracking-wider">Mastered</p>
+                    <p id="count-done" class="text-xl font-mono font-black text-emerald-400 mt-0.5">0</p>
+                </div>
             </section>
 
             <!-- Active Rotation Stream Shelf -->
             <section class="space-y-2">
-                <h3 class="font-black text-xs uppercase tracking-wider flex items-center gap-1.5" id="watchingShelfHeader">🎬 Active Stream Shelf</h3>
+                <h3 class="font-black text-xs uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span> Currently Tracking
+                </h3>
                 <div id="shelf-watching" class="space-y-3"></div>
             </section>
         </div>
 
-        <!-- ================= VIEW NODE 2: DISCOVER SEARCH CATALOG ================= -->
+        <!-- ================= PAGE 2: DISCOVER SEARCH CATALOG ================= -->
         <div id="view-discover" class="page-view page-hidden space-y-4">
-            <!-- Simplified User Guide Legend Grid -->
+            <!-- Simplified Permanent Multi-Colored Guide Panel Layout -->
             <section class="matrix-card p-4 rounded-2xl bg-gradient-to-r from-white/[0.02] to-transparent">
-                <span class="text-[9px] font-mono tracking-widest uppercase font-bold block mb-2 text-slate-400 opacity-60">🎮 Button Quick Guide</span>
-                <div class="grid grid-cols-3 gap-3 text-[9px] text-slate-200 font-medium">
-                    <div class="border-t border-white/10 pt-2"><span class="font-bold block text-xs mb-0.5" id="guideBtnActive">💎 + Active</span>Watching right now!<br>(Adds to Hub home)</div>
-                    <div class="border-t border-white/10 pt-2"><span class="font-bold block text-xs mb-0.5" id="guideBtnQueue">🔮 + Queue</span>Watch later list.<br>(Saves to Vault)</div>
-                    <div class="border-t border-white/10 pt-2"><span class="font-bold block text-xs mb-0.5" id="guideBtnMastered">🌿 + Mastered</span>Completely finished!<br>(Ranks on Tier List)</div>
+                <span class="text-[9px] font-mono tracking-widest uppercase font-bold block mb-2 text-slate-400 opacity-60">🎮 Operations Command Legend</span>
+                <div class="grid grid-cols-3 gap-3 text-[9px] text-slate-200 font-medium leading-relaxed">
+                    <div class="border-t border-cyan-500/20 pt-2"><span class="font-black block text-cyan-400 text-xs mb-0.5">💎 + Active</span>Watching right now!<br>(Adds to Hub shelf)</div>
+                    <div class="border-t border-purple-500/20 pt-2"><span class="font-black block text-purple-400 text-xs mb-0.5">🔮 + Queue</span>Watch later list.<br>(Saves to Vault backlog)</div>
+                    <div class="border-t border-emerald-500/20 pt-2"><span class="font-black block text-emerald-400 text-xs mb-0.5">🌿 + Mastered</span>Completely finished!<br>(Stamps onto Tier List)</div>
                 </div>
             </section>
 
-            <!-- Main Input Query Matrix Component -->
+            <!-- Search Console Input Container -->
             <section class="matrix-card p-3 rounded-2xl">
                 <div class="flex gap-2">
-                    <input type="text" id="input-search" placeholder="Type title... (e.g. JJK, Demon Slayer, One Piece)" class="flex-1 bg-slate-950/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/20 transition-all">
-                    <button onclick="runQuery()" class="text-xs font-black px-5 rounded-xl active:scale-95 transition-all shadow-md cursor-pointer" id="queryBtn">Query</button>
+                    <input type="text" id="input-search" placeholder="Type title... (e.g. JJK, Naruto, One Piece)" class="flex-1 bg-slate-950/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/20 transition-all">
+                    <button onclick="runQuery()" class="text-xs font-black px-5 rounded-xl active:scale-95 transition-all shadow-md cursor-pointer text-slate-950" id="queryBtn">Query</button>
                 </div>
                 <div class="flex justify-center gap-6 mt-2.5 pt-2 border-t border-white/5 text-xs text-slate-400">
                     <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="mode" value="anime" checked class="accent-cyan-400"> Anime Catalog</label>
@@ -137,34 +142,37 @@
                 </div>
             </section>
 
-            <!-- Dynamic Stream Results Card Grid Canvas -->
+            <!-- Results Dynamic Catalog Grid Canvas -->
             <div id="search-grid" class="grid grid-cols-1 gap-3"></div>
         </div>
 
-        <!-- ================= VIEW NODE 3: VAULT & GRADE RANK MATRIX ================= -->
+        <!-- ================= PAGE 3: VAULT DECK STORAGE & RANKINGS ================= -->
         <div id="view-vault" class="page-view page-hidden space-y-4">
-            <!-- Watchlist Section Queue -->
+            <!-- Backlog Stack Queue Container -->
             <div class="matrix-card p-3 rounded-2xl">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-black text-xs uppercase tracking-wider" id="backlogHeader">⏳ Backlog Storage Queue</h3>
+                    <h3 class="font-black text-xs uppercase tracking-wider text-purple-400">⏳ Backlog Storage Queue</h3>
                     <div class="flex items-center gap-2">
-                        <button onclick="spinRoulette()" class="text-[9px] font-black px-2.5 py-0.5 rounded-full shadow active:scale-95 transition-all cursor-pointer" id="rouletteBtn">Roulette 🎲</button>
-                        <span id="badge-queue" class="text-xs font-bold bg-white/10 px-2 py-0.5 rounded-full">0</span>
+                        <button onclick="spinRoulette()" class="text-[9px] font-black px-2.5 py-0.5 rounded-full shadow active:scale-95 transition-all cursor-pointer text-slate-950" id="rouletteBtn">Roulette 🎲</button>
+                        <span id="badge-queue" class="text-xs font-mono font-bold bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full text-purple-400">0</span>
                     </div>
                 </div>
                 <div id="shelf-queue" class="space-y-2"></div>
             </div>
 
-            <!-- Master Finished Log Library -->
+            <!-- Finished Log Section -->
             <div class="matrix-card p-3 rounded-2xl">
-                <div class="flex items-center justify-between mb-2"><h3 class="font-black text-xs uppercase tracking-wider" id="libraryHeader">✅ Finished Library Logs</h3><span id="badge-mastered" class="text-xs font-bold bg-white/10 px-2 py-0.5 rounded-full">0</span></div>
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="font-black text-xs uppercase tracking-wider text-emerald-400">✅ Finished Library Logs</h3>
+                    <span id="badge-mastered" class="text-xs font-mono font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full text-emerald-400">0</span>
+                </div>
                 <div id="shelf-completed" class="space-y-2"></div>
             </div>
 
-            <!-- Interactive Tier Standings Alignment Grid -->
+            <!-- Grade Alignment Matrix Tier Display -->
             <section class="matrix-card p-3 rounded-2xl bg-gradient-to-t from-slate-950/40 to-transparent">
-                <h3 class="font-black text-xs uppercase tracking-wider mb-2.5" id="matrixHeader">🏆 Structural Grade Alignment Matrix</h3>
-                <div class="space-y-1.5 rounded-xl overflow-hidden bg-slate-950/80 p-2 border border-white/5">
+                <h3 class="font-black text-xs uppercase tracking-wider text-slate-300 mb-2.5">🏆 Quality Grade Rankings Matrix</h3>
+                <div class="space-y-1.5 rounded-xl overflow-hidden bg-slate-950/90 p-2 border border-white/5">
                     <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-rose-500 bg-[#160c12]/40 text-rose-400"><div class="w-8 text-center font-black text-xs">S</div><div id="row-S" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
                     <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-orange-400 bg-[#16100c]/40 text-orange-400"><div class="w-8 text-center font-black text-xs">A</div><div id="row-A" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
                     <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-yellow-400 bg-[#16150c]/40 text-yellow-400"><div class="w-8 text-center font-black text-xs">B</div><div id="row-B" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
@@ -174,43 +182,42 @@
             </section>
         </div>
 
-        <!-- ================= VIEW NODE 4: ADVANCED DATA ANALYTICS & SKINS ================= -->
+        <!-- ================= PAGE 4: SYSTEM ANALYTICS & TUNING ================= -->
         <div id="view-analytics" class="page-view page-hidden space-y-4">
-            <!-- Live Generated SVG Dynamic Data Graph Columns -->
+            <!-- Native SVG Analytics Dashboard Graph Component -->
             <section class="matrix-card p-4 rounded-3xl space-y-3">
-                <h3 class="font-black text-xs uppercase tracking-wider" id="analyticsHeader">📊 Real-Time Analytics Dashboard</h3>
+                <h3 class="font-black text-xs uppercase tracking-wider text-slate-100">📊 Real-Time Analytics Dashboard</h3>
                 <p class="text-[10px] text-slate-400">Algorithmic analysis of database entry distribution balances mapped inside the core memory loop.</p>
-                <div id="chart-container" class="w-full flex justify-center items-end h-36 gap-4 pt-4 border-b border-white/10 px-2 bg-slate-950/40 rounded-xl shadow-inner"></div>
-                <div class="flex justify-around text-[9px] font-mono font-bold text-slate-400 px-1">
+                <div id="chart-container" class="w-full flex justify-center items-end h-36 gap-4 pt-4 border-b border-white/5 px-2 bg-slate-950/50 rounded-xl shadow-inner"></div>
+                <div class="flex justify-around text-[9px] font-mono font-bold text-slate-500 px-1">
                     <span>Active Rotation</span><span>Watchlist Queue</span><span>Mastered Deck</span>
                 </div>
             </section>
 
-            <!-- Theme Configuration Management Console Panel -->
-            <section class="matrix-card p-4 rounded-3xl space-y-2">
-                <h3 class="font-black text-xs uppercase tracking-wider" id="themeConfigHeader">⚙️ System Core Theme Settings</h3>
+            <!-- Fully Dynamic 8-Way Animated Mesh Preset Controllers -->
+            <section class="matrix-card p-4 rounded-3xl space-y-2.5">
+                <h3 class="font-black text-xs uppercase tracking-wider text-slate-200">⚙️ Dynamic Background Mesh Presets</h3>
                 <div class="grid grid-cols-2 gap-2 text-xs font-bold pt-1">
                     <button onclick="applyTheme('cyber')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-cyan-400 active:scale-95 transition-all cursor-pointer">Blue Box Spring</button>
                     <button onclick="applyTheme('sakura')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-rose-400 active:scale-95 transition-all cursor-pointer">Sakura Morning</button>
                     <button onclick="applyTheme('cursed')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-purple-400 active:scale-95 transition-all cursor-pointer">Jujutsu Twilight</button>
                     <button onclick="applyTheme('shinobi')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-emerald-400 active:scale-95 transition-all cursor-pointer">Zoro Neon</button>
                     <button onclick="applyTheme('crimson')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-red-400 active:scale-95 transition-all cursor-pointer">Crimson Monarch</button>
-                    <button onclick="applyTheme('moctale')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-amber-400 active:scale-95 transition-all cursor-pointer">Shinobi Forest</button>
+                    <button onclick="applyTheme('moctale')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-teal-400 active:scale-95 transition-all cursor-pointer">Shinobi Forest</button>
                     <button onclick="applyTheme('void')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-indigo-400 active:scale-95 transition-all cursor-pointer">Tokyo Cyberpunk</button>
                     <button onclick="applyTheme('electric')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-yellow-400 active:scale-95 transition-all cursor-pointer">Lightning Volt</button>
                 </div>
             </section>
         </div>
 
-        <!-- System Payload Controller Transmitters -->
-        <button onclick="exportData()" class="w-full bg-slate-900/60 border border-white/5 text-slate-400 text-[10px] tracking-wider uppercase font-black py-2.5 rounded-xl transition-all shadow cursor-pointer">✨ Export Global Network Architecture Payload</button>
+        <button onclick="exportData()" class="w-full bg-slate-950/60 border border-white/5 text-slate-400 text-[10px] tracking-widest uppercase font-black py-2.5 rounded-xl transition-all shadow cursor-pointer">✨ Export Global Network Architecture Payload</button>
         <a id="back-to-mine" href="?" class="hidden w-full bg-slate-950 text-slate-200 text-xs font-black py-2.5 rounded-xl text-center items-center justify-center border border-white/5 shadow-md">Back to My Vault</a>
     </div>
 
     <script>
         let vaultStorage = []; let viewOnly = false; let currentParticleColor = 'rgba(6, 182, 212, 0.18)';
         
-        // Web Audio API Acoustic Wave Synthesizer Engine 
+        // High-Fidelity Tone Synthesizer Engine
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playTone(freq, type, duration) {
             try {
@@ -226,13 +233,13 @@
         function soundSuccess() { playTone(987.77, 'sine', 0.08); setTimeout(() => playTone(1318.51, 'sine', 0.12), 60); }
         function soundAlert() { playTone(440, 'sawtooth', 0.1); setTimeout(() => playTone(349.23, 'sawtooth', 0.14), 80); }
 
-        // Anime Character Grid Modules Database
+        // Dialogue Registry Engine Matrix
         const dynamicUniverseData = {
-            senku: { character: "Senku Ishigami", icon: "🧪", quote: "This database structure is ten billion percent operational! Search titles under Discover.", color: "text-emerald-400" },
-            demon: { character: "Tanjiro Kamado", icon: "🎴", quote: "Look straight ahead. No matter how painful it gets, sharpen your blade and record your path!", color: "text-orange-400" },
-            gojo: { character: "Gojo Satoru", icon: "👁️", quote: "Don't sweat it, your custom database tracking layers are literally the strongest.", color: "text-purple-400" },
-            naruto: { character: "Naruto Uzumaki", icon: "🦊", quote: "I never go back on my records. That's my custom tracking methodology, believe it!", color: "text-yellow-400" },
-            luffy: { character: "Monkey D. Luffy", icon: "🍖", quote: "If you don't take cataloging risks, you can't build a legendary media profile fleet!", color: "text-rose-500" }
+            senku: { character: "Senku Ishigami", icon: "🧪", quote: "KuroDeck parameters are ten billion percent responsive. Background color meshes flowing safely.", color: "text-emerald-400" },
+            demon: { character: "Tanjiro Kamado", icon: "🎴", quote: "Look straight ahead! Sharpen your blade and record your anime journey with clean, high-contrast honor.", color: "text-orange-400" },
+            gojo: { character: "Gojo Satoru", icon: "👁️", quote: "Relax, my custom database tracking layers are literally the strongest. Color styling hierarchy is fixed.", color: "text-purple-400" },
+            naruto: { character: "Naruto Uzumaki", icon: "🦊", quote: "I never go back on my logging parameters, that is my custom ninja tracking method, believe it!", color: "text-yellow-400" },
+            luffy: { character: "Monkey D. Luffy", icon: "🍖", quote: "We are tracking the absolute greatest pirate index profile fleet across the infinite oceans!", color: "text-rose-500" }
         };
 
         const staticFallbackDatabase = [
@@ -249,11 +256,11 @@
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas); resizeCanvas();
         class Particle {
-            constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.size = Math.random()*2.5+0.5; this.speedX = Math.random()*0.15-0.075; this.speedY = Math.random()*0.2-0.1; }
+            constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.size = Math.random()*2.2+0.5; this.speedX = Math.random()*0.12-0.06; this.speedY = Math.random()*0.16-0.08; }
             update() { this.x += this.speedX; this.y += this.speedY; if(this.x>canvas.width||this.x<0) this.speedX *= -1; if(this.y>canvas.height||this.y<0) this.speedY *= -1; }
             draw() { ctx.fillStyle = currentParticleColor; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
         }
-        for(let i=0; i<45; i++) { particles.push(new Particle()); }
+        for(let i=0; i<40; i++) { particles.push(new Particle()); }
         function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{ p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
         animateParticles();
 
@@ -262,7 +269,7 @@
         function makeViewOnlyMode() { document.getElementById('tab-discover')?.remove(); document.getElementById('tab-analytics')?.remove(); document.getElementById('back-to-mine').style.display = 'flex'; navigate('hub'); }
         function syncLocal() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v8', JSON.stringify(vaultStorage)); }
 
-        // Highly Curated Dynamic Theme Matrix (Vibrant Color Flow Engine)
+        // Premium Color Presets Config (Dynamic Gradient Mesh)
         const themes = {
             cyber: { start: '#020514', end: '#0a1128', text: 'text-cyan-400', glow: 'rgba(6,182,212,0.4)', primary: 'from-cyan-400 via-sky-400 to-indigo-500', particle: 'rgba(6, 182, 212, 0.22)', hex: '#06b6d4' },
             sakura: { start: '#12050b', end: '#240a18', text: 'text-rose-400', glow: 'rgba(244,63,94,0.4)', primary: 'from-rose-400 via-pink-400 to-amber-400', particle: 'rgba(244, 63, 94, 0.22)', hex: '#f43f5e' },
@@ -278,20 +285,19 @@
             const t = themes[themeKey]; if(!t) return;
             localStorage.setItem('nexusThemeKey', themeKey); currentParticleColor = t.particle;
             
-            // Programmatically update the CSS Root Variables for beautiful transitions
+            // Mutate document CSS variables for animated background transitions
             document.documentElement.style.setProperty('--bg-start', t.start);
             document.documentElement.style.setProperty('--bg-end', t.end);
             document.documentElement.style.setProperty('--accent-glow', t.glow);
             
-            const nav = document.getElementById('topNav'); if (nav) { nav.style.borderColor = t.hex + '33'; }
+            const nav = document.getElementById('topNav'); if (nav) { nav.style.borderColor = t.hex + '22'; }
             document.getElementById('navLogo').className = `text-xs font-black tracking-widest bg-gradient-to-r ${t.primary} text-transparent bg-clip-text uppercase flex items-center gap-1.5`;
             
             const activeTab = document.querySelector('nav div .font-bold');
             if (activeTab) { activeTab.className = `${t.text} border-b-2 pb-1 font-bold transition-all duration-300`; activeTab.style.borderColor = t.hex; }
             
-            // Coordinate heading locks safely
-            ['count-active', 'count-done', 'watchingShelfHeader', 'analyticsHeader', 'themeConfigHeader', 'guideBtnActive', 'guideBtnQueue', 'guideBtnMastered', 'backlogHeader', 'matrixHeader', 'libraryHeader'].forEach(id => { const el = document.getElementById(id); if(el) { el.className = el.className.replace(/text-\w+-\d+/g, '').replace(/text-slate-300/g, '') + ' ' + t.text; } });
-            ['badge-queue', 'badge-mastered', 'count-all', 'queryBtn', 'rouletteBtn'].forEach(id => { const el = document.getElementById(id); if(el) { if(id.includes('Btn')) { el.className = `bg-gradient-to-r ${t.primary} text-slate-950 px-5 rounded-xl text-xs font-black active:scale-95 transition-all shadow-md cursor-pointer`; } else { el.className = `text-xs font-bold bg-white/5 border border-white/10 px-2 py-0.5 rounded-full ${t.text}`; } } });
+            // Only update buttons targeted for design theme shifts
+            ['queryBtn', 'rouletteBtn'].forEach(id => { const el = document.getElementById(id); if(el) el.className = `bg-gradient-to-r ${t.primary} text-slate-950 px-5 rounded-xl text-xs font-black active:scale-95 transition-all shadow-md cursor-pointer`; });
             
             updateDynamicIcons(t.hex); renderAnalyticsCharts();
         }
@@ -325,7 +331,7 @@
         async function runQuery() {
             const val = document.getElementById('input-search').value.trim(); const grid = document.getElementById('search-grid');
             if(val.length < 2) { soundAlert(); toastAlert("❌ Enter at least 2 characters to engage search array."); return; }
-            grid.innerHTML = `<div class="text-xs text-slate-400 font-mono italic p-8 text-center animate-pulse">📡 Synchronizing live catalog frames...</div>`;
+            grid.innerHTML = `<div class="text-xs text-slate-400 font-mono italic p-8 text-center animate-pulse">📡 Fetching data vectors from global network indexes...</div>`;
             const mode = document.querySelector('input[name="mode"]:checked').value;
             try {
                 const res = await fetch(`https://api.jikan.moe/v4/${mode}?q=${encodeURIComponent(val)}&limit=5`);
@@ -336,8 +342,6 @@
         function renderSearchCards(data, mode) {
             const grid = document.getElementById('search-grid'); grid.innerHTML = '';
             if(!data || data.length === 0) { grid.innerHTML = `<div class="text-xs text-slate-500 italic p-8 text-center">Zero matches synchronized inside server array.</div>`; return; }
-            const tk = localStorage.getItem('nexusThemeKey') || 'cyber'; const t = themes[tk];
-            
             data.forEach(item => {
                 const title = item.title; const img = item.images?.jpg?.large_image_url || item.images?.jpg?.image_url || '';
                 const typeStr = item.type || (mode === 'anime' ? 'TV' : 'Manga');
@@ -402,7 +406,7 @@
 
         function updateStatus(id, ns) { soundClick(); vaultStorage = vaultStorage.map(i=>i.id===id?{...i, status:ns}:i); syncLocal(); renderAppFramework(); }
         function purgeNode(id) { soundAlert(); vaultStorage = vaultStorage.filter(i=>i.id!==id); syncStorage(); renderAppFramework(); }
-        function syncStorage() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v7', JSON.stringify(vaultStorage)); }
+        function syncStorage() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v8', JSON.stringify(vaultStorage)); }
 
         function spinRoulette() {
             const targets = vaultStorage.filter(i => i.status === 'plan-to-watch');
@@ -452,15 +456,15 @@
                 Object.keys(keyMap).forEach(k => { if(lowTitle.includes(k)) unlocked.add(keyMap[k]); });
 
                 if (item.status === 'watching') {
-                    const block = document.createElement('div'); block.className = "matrix-card p-3 rounded-2xl flex gap-3 items-center bg-slate-900/30 border border-white/5 shadow relative animate-fade-in";
+                    const block = document.createElement('div'); block.className = "matrix-card p-3 rounded-xl flex gap-3 items-center relative shadow animate-fade-in";
                     let select = !viewOnly ? `<select onchange="updateStatus(${item.id}, this.value)" class="text-[10px] bg-slate-900 border border-white/10 rounded px-1.5 text-slate-200 py-1 focus:outline-none shadow-inner"><option value="watching" selected>Streaming</option><option value="completed">Complete</option></select>` : '';
                     block.innerHTML = `<img src="${item.image}" class="w-12 h-16 object-cover rounded-xl border border-slate-900 shadow bg-slate-950 flex-shrink-0"><div class="flex-1 min-w-0"><p class="text-xs font-black text-slate-100 truncate">${item.title}</p><p class="text-[9px] text-slate-400 font-medium truncate">${item.metadata}</p><span class="text-[8px] font-mono bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-0.5 rounded mt-2 inline-block font-semibold text-cyan-400">Active Rotation</span></div><div class="flex flex-col items-end gap-4">${select}</div>`; sw.appendChild(block);
                 } else if (item.status === 'plan-to-watch') {
-                    const block = document.createElement('div'); block.className = "matrix-card p-2 rounded-xl flex items-center justify-between text-xs bg-slate-900/20 border-white/5";
+                    const block = document.createElement('div'); block.className = "matrix-card p-2 rounded-xl flex items-center justify-between text-xs border-white/5";
                     let ctrl = !viewOnly ? `<div class="flex gap-2"><button onclick="updateStatus(${item.id}, 'completed')" class="text-[9px] bg-purple-500/10 border border-purple-500/30 px-2 py-0.5 rounded font-black cursor-pointer text-purple-400">Done</button><button onclick="purgeNode(${item.id})" class="text-slate-600 hover:text-rose-400 font-bold px-1 cursor-pointer">×</button></div>` : '';
                     block.innerHTML = `<div class="flex items-center gap-2 truncate"><img src="${item.image}" class="w-6 h-8 object-cover rounded-md border border-slate-900 bg-slate-950 shadow"><span class="truncate font-semibold text-slate-300">${item.title}</span></div>${ctrl}`; sq.appendChild(block);
                 } else if (item.status === 'completed') {
-                    const block = document.createElement('div'); block.className = "matrix-card p-2 rounded-xl flex items-center justify-between text-xs bg-slate-900/20 border-white/5";
+                    const block = document.createElement('div'); block.className = "matrix-card p-2 rounded-xl flex items-center justify-between text-xs border-white/5";
                     let action = !viewOnly ? `<button onclick="purgeNode(${item.id})" class="text-slate-600 hover:text-rose-400 text-[10px] px-1 cursor-pointer">🗑️</button>` : '';
                     block.innerHTML = `<div class="flex items-center gap-2"><img src="${item.image}" class="w-6 h-8 object-cover rounded-md border border-slate-900 bg-slate-950 shadow"><div class="min-w-0 max-w-[200px]"><p class="font-black text-slate-200 text-xs truncate">${item.title}</p><p class="text-[8px] text-slate-300 font-medium truncate">${item.metadata} <span class="text-emerald-400 font-mono font-bold ml-1">[${item.tier}]</span></p></div></div>${action}`; sc.appendChild(block);
                     
