@@ -493,3 +493,50 @@
     </script>
 </body>
 </html>
+<!-- Add this to your KuroDeck index.html -->
+<script>
+    // 1. IMPROVED DATA STRUCTURE
+    // Each entry now tracks parent ID (to group seasons) and rewatch counts
+    let vaultStorage = JSON.parse(localStorage.getItem('kuroDeck_v9')) || [];
+
+    function saveNode(animeData, status) {
+        const entry = {
+            id: animeData.mal_id, 
+            parentId: animeData.main_title_id, // Grouping logic
+            title: animeData.title,
+            status: status,
+            rewatchCount: 0,
+            warnings: animeData.warnings || [],
+            rating: animeData.score,
+            lastUpdated: new Date().toISOString()
+        };
+        vaultStorage.push(entry);
+        syncLocal();
+    }
+
+    // 2. OFFLINE BACKUP (Download/Restore)
+    function downloadBackup() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(vaultStorage));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", "kurodeck_backup.json");
+        dlAnchor.click();
+    }
+
+    // 3. UNIQUE TITLES CALCULATION (Fixes the "many seasons" confusion)
+    function getUniqueWatchedCount() {
+        const uniqueTitles = new Set(vaultStorage.filter(i => i.status === 'completed').map(i => i.parentId));
+        return uniqueTitles.size; // Only counts unique show IDs
+    }
+</script>
+
+<!-- Add this UI block to your Analytics/Vault page -->
+<div class="matrix-card p-4 rounded-2xl">
+    <h3 class="font-black text-xs uppercase text-slate-300">⚙️ Data Management</h3>
+    <button onclick="downloadBackup()" class="mt-2 text-[10px] bg-slate-800 p-2 rounded-lg text-white">Download Offline Backup</button>
+</div>
+function getWarnings(ratingString) {
+    if(ratingString.includes('violence')) return "⚔️ Violence";
+    // ... add logic for other warnings
+}
+
