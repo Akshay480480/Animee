@@ -6,94 +6,56 @@
     <title>KuroDeck Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        :root { --bg-start: #020514; --bg-end: #0a1128; }
-        body { background: linear-gradient(135deg, var(--bg-start), var(--bg-end)); color: #f3f4f6; min-height: 100vh; font-family: system-ui, sans-serif; }
-        .page-view { transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
-        .page-hidden { opacity: 0; transform: translateY(12px) scale(0.99); pointer-events: none; display: none !important; }
-        .matrix-card { background: rgba(10, 15, 35, 0.6); border: 1px solid rgba(255, 255, 255, 0.06); backdrop-filter: blur(20px); box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4); }
-        .hide-scroll::-webkit-scrollbar { display: none; }
+        body { background: #040610; color: #f3f4f6; font-family: sans-serif; }
+        .matrix-card { background: rgba(15, 23, 42, 0.45); border: 1px solid rgba(255, 255, 255, 0.06); backdrop-filter: blur(20px); }
+        .page-hidden { display: none !important; }
         canvas#particleCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; }
         .main-app-content { position: relative; z-index: 10; }
     </style>
 </head>
 <body class="pb-28 pt-20 px-4">
-
     <canvas id="particleCanvas"></canvas>
 
-    <nav id="topNav" class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-slate-950/80 border-b border-white/5 flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md rounded-b-2xl">
-        <span id="navLogo" class="text-xs font-black tracking-widest uppercase flex items-center gap-1.5 transition-all">⚔️ KURODECK</span>
-        <div class="flex gap-4 text-xs font-bold">
-            <button onclick="navigate('hub')">Hub</button>
+    <!-- Navigation -->
+    <nav id="topNav" class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-slate-950/90 border-b border-white/10 flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md rounded-b-2xl">
+        <span id="navLogo" class="text-xs font-black tracking-widest uppercase flex items-center gap-1.5 text-cyan-400">🎬 KURODECK</span>
+        <div class="flex gap-4 text-xs font-bold text-slate-400">
+            <button onclick="navigate('hub')" class="text-white">Hub</button>
             <button onclick="navigate('discover')">Discover</button>
             <button onclick="navigate('vault')">Vault</button>
             <button onclick="navigate('analytics')">Analytics</button>
         </div>
     </nav>
 
-    <div class="main-app-content max-w-md mx-auto space-y-6">
-        <!-- HUB: News & Status -->
-        <div id="view-hub" class="page-view space-y-4">
-            <section class="matrix-card p-4 rounded-2xl">
-                <span class="text-[8px] uppercase font-bold text-slate-400">Terminal Live Broadcast</span>
-                <p id="display-quote" class="text-xs mt-1">"Welcome back, Akshay. Check the community feed for updates."</p>
-            </section>
-            
-            <h2 class="text-xs font-black uppercase text-slate-400">Latest Anime News</h2>
-            <div id="news-feed" class="matrix-card p-3 rounded-xl text-[10px] text-slate-300">Loading live news...</div>
-        </div>
+    <div class="main-app-content max-w-md mx-auto space-y-4">
+        <!-- Dashboard Metrics -->
+        <section class="grid grid-cols-3 gap-2 bg-slate-950/50 p-2.5 rounded-2xl border border-white/5">
+            <div class="text-center"><p class="text-[9px] uppercase text-slate-400 font-bold">Vault</p><p id="count-all" class="text-xl font-black">0</p></div>
+            <div class="text-center border-x border-white/5"><p class="text-[9px] uppercase text-cyan-400 font-bold">Active</p><p id="count-active" class="text-xl font-black text-cyan-400">0</p></div>
+            <div class="text-center"><p class="text-[9px] uppercase text-emerald-400 font-bold">Done</p><p id="count-done" class="text-xl font-black text-emerald-400">0</p></div>
+        </section>
 
-        <!-- DISCOVER -->
-        <div id="view-discover" class="page-view page-hidden space-y-4">
-            <input type="text" id="input-search" class="w-full bg-slate-950 border border-white/10 p-3 rounded-xl text-sm" placeholder="Search titles...">
-            <div id="search-grid" class="space-y-3"></div>
-        </div>
-
-        <!-- VAULT -->
-        <div id="view-vault" class="page-view page-hidden space-y-4">
-            <div class="matrix-card p-4 rounded-xl">
-                <h3 class="font-black text-xs mb-2">💾 Data Management</h3>
-                <div class="flex gap-2">
-                    <button onclick="downloadBackup()" class="bg-blue-600 p-2 rounded text-[10px] w-full font-bold">Backup Data</button>
-                    <button onclick="document.getElementById('fileInput').click()" class="bg-green-600 p-2 rounded text-[10px] w-full font-bold">Restore Data</button>
-                    <input type="file" id="fileInput" class="hidden" onchange="restoreBackup(event)">
-                </div>
-            </div>
-            <div id="my-list" class="space-y-2"></div>
-        </div>
+        <!-- Dynamic Content -->
+        <div id="view-hub" class="page"><div id="shelf-watching" class="space-y-3"></div></div>
         
-        <!-- COMMUNITY (Discord-like feed) -->
-        <div id="view-community" class="page-view page-hidden">
-            <div class="matrix-card p-4 rounded-xl h-64 overflow-y-scroll space-y-3" id="chat-feed">
-                <div class="text-[10px] text-slate-500 border-b border-white/5 pb-2">#anime-discussion</div>
-                <div class="flex gap-2 items-center"><div class="w-6 h-6 rounded-full bg-indigo-500"></div><p class="text-xs font-bold">User1: Anyone watching JJK?</p></div>
-                <div class="flex gap-2 items-center"><div class="w-6 h-6 rounded-full bg-rose-500"></div><p class="text-xs font-bold">User2: Yes, the animation is fire!</p></div>
+        <!-- Offline Backup UI -->
+        <section class="matrix-card p-4 rounded-2xl">
+            <h3 class="font-black text-xs uppercase mb-2">💾 Data Management</h3>
+            <div class="flex gap-2">
+                <button onclick="downloadBackup()" class="w-full bg-slate-800 p-2 rounded text-[10px] font-bold">Backup</button>
+                <button onclick="document.getElementById('fileInput').click()" class="w-full bg-slate-800 p-2 rounded text-[10px] font-bold">Restore</button>
+                <input type="file" id="fileInput" class="hidden" onchange="restoreBackup(event)">
             </div>
-        </div>
-
-        <!-- ANALYTICS -->
-        <div id="view-analytics" class="page-view page-hidden space-y-4">
-            <div class="matrix-card p-4 rounded-2xl text-center">
-                <h3 class="font-black text-xs mb-2">📊 Analytics</h3>
-                <p class="text-2xl font-black" id="total-watched">0</p>
-                <p class="text-[10px] text-slate-400">Unique Titles Mastered</p>
-            </div>
-        </div>
+        </section>
     </div>
 
     <script>
-        // Data Handling
         let vaultStorage = JSON.parse(localStorage.getItem('kuroDeck_v9')) || [];
 
-        function navigate(id) {
-            document.querySelectorAll('.page-view').forEach(p => p.classList.add('page-hidden'));
-            document.getElementById('view-' + id).classList.remove('page-hidden');
-        }
-
-        // --- NEW FEATURES LOGIC ---
+        // Backup System
         function downloadBackup() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(vaultStorage));
-            const dl = document.createElement('a');
-            dl.setAttribute("href", dataStr); dl.setAttribute("download", "kurodeck_backup.json"); dl.click();
+            const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "kurodeck_backup.json"); dl.click();
         }
 
         function restoreBackup(e) {
@@ -102,39 +64,31 @@
             reader.readAsText(e.target.files[0]);
         }
 
-        function updateProgress(index, change) {
-            vaultStorage[index].episode = Math.max(0, (vaultStorage[index].episode || 0) + change);
-            localStorage.setItem('kuroDeck_v9', JSON.stringify(vaultStorage));
-            renderList();
+        // One-tap Progress
+        function updateProgress(id, change) {
+            const entry = vaultStorage.find(i => i.id === id);
+            if(entry) { entry.episode = Math.max(0, (entry.episode || 0) + change); localStorage.setItem('kuroDeck_v9', JSON.stringify(vaultStorage)); renderApp(); }
         }
 
-        // --- FETCH NEWS (RSS via API) ---
-        fetch('https://api.rss2json.com/v1/api.json?rss_url=https://myanimelist.net/rss/news.xml')
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('news-feed').innerHTML = data.items.slice(0,3).map(i => `<p class="mb-2 border-b border-white/5 pb-1">${i.title}</p>`).join('');
-            });
-
-        function renderList() {
-            const list = document.getElementById('my-list');
-            list.innerHTML = vaultStorage.map((item, index) => `
-                <div class="matrix-card p-3 rounded-lg flex justify-between items-center text-xs">
-                    <span>${item.title}</span>
-                    <div class="flex items-center gap-2">
-                        <button onclick="updateProgress(${index}, -1)" class="px-2 bg-slate-800 rounded">-</button>
-                        <span>Ep: ${item.episode || 0}</span>
-                        <button onclick="updateProgress(${index}, 1)" class="px-2 bg-slate-800 rounded">+</button>
+        function renderApp() {
+            const sw = document.getElementById('shelf-watching');
+            sw.innerHTML = vaultStorage.filter(i => i.status === 'watching').map((item, idx) => `
+                <div class="matrix-card p-3 rounded-xl flex items-center justify-between">
+                    <span class="text-xs font-bold">${item.title}</span>
+                    <div class="flex items-center gap-3">
+                        <button onclick="updateProgress('${item.id}', -1)" class="bg-slate-800 px-2 rounded">-</button>
+                        <span class="text-xs font-mono">Ep ${item.episode || 0}</span>
+                        <button onclick="updateProgress('${item.id}', 1)" class="bg-slate-800 px-2 rounded">+</button>
                     </div>
                 </div>
             `).join('');
-            document.getElementById('total-watched').innerText = vaultStorage.length;
         }
-        renderList();
-        
-        // --- BACKGROUND ANIMATION ---
-        const canvas = document.getElementById('particleCanvas'); const ctx = canvas.getContext('2d');
-        function draw() { /* Full particle logic would go here */ }
-        window.onload = () => { renderList(); };
+        renderApp();
+
+        function navigate(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('page-hidden'));
+            document.getElementById('view-'+id).classList.remove('page-hidden');
+        }
     </script>
 </body>
 </html>
