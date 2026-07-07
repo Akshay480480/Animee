@@ -3,636 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KuroDeck</title>
-    
-    <!-- PWA Real Standalone Mobile App Configuration -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <link id="manifestLink" rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22KuroDeck%22%2C%22short_name%22%3A%22KuroDeck%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23040610%22%2C%22theme_color%22%3A%22%2306b6d4%22%7D">
-    <link id="favicon" rel="icon" type="image/svg+xml" href="">
-    <link id="appleIcon" rel="apple-touch-icon" href="">
-    
+    <title>KuroDeck Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        :root {
-            --bg-start: #020514;
-            --bg-end: #0a1128;
-            --accent-glow: rgba(6, 182, 212, 0.3);
-        }
-        body { 
-            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
-            color: #f3f4f6; 
-            min-height: 100vh; 
-            font-family: system-ui, -apple-system, sans-serif; 
-            -webkit-tap-highlight-color: transparent; 
-            overflow-x: hidden; 
-            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        
-        /* Blue Box Style Smooth Fluid Page Transitions */
-        .page-view { 
-            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
-        }
+        :root { --bg-start: #020514; --bg-end: #0a1128; }
+        body { background: linear-gradient(135deg, var(--bg-start), var(--bg-end)); color: #f3f4f6; min-height: 100vh; font-family: system-ui, sans-serif; }
+        .page-view { transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
         .page-hidden { opacity: 0; transform: translateY(12px) scale(0.99); pointer-events: none; display: none !important; }
-        
-        /* Glassmorphism Panels with high contrast visibility */
-        .matrix-card { 
-            background: rgba(10, 15, 35, 0.6); 
-            border: 1px solid rgba(255, 255, 255, 0.06); 
-            backdrop-filter: blur(20px); 
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
-            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        
+        .matrix-card { background: rgba(10, 15, 35, 0.6); border: 1px solid rgba(255, 255, 255, 0.06); backdrop-filter: blur(20px); box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4); }
         .hide-scroll::-webkit-scrollbar { display: none; }
-        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-        
         canvas#particleCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; }
-        .main-app-content { position: relative; z-index: 10; pointer-events: auto; }
+        .main-app-content { position: relative; z-index: 10; }
     </style>
 </head>
 <body class="pb-28 pt-20 px-4">
 
-    <!-- Ambient Floating Light Canvas Engine -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- Navigation Header Bar Router Module -->
-    <nav id="topNav" class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-slate-950/80 border-b flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md rounded-b-2xl">
-        <span id="navLogo" class="text-xs font-black tracking-widest uppercase flex items-center gap-1.5 transition-all duration-300">
-            🎬 KURODECK
-        </span>
-        <div class="flex gap-4 text-xs font-bold tracking-tight z-50">
-            <button onclick="navigate('hub')" id="tab-hub" class="pb-1 transition-all cursor-pointer">Hub</button>
-            <button onclick="navigate('discover')" id="tab-discover" class="text-slate-400 pb-1 transition-all cursor-pointer">Discover</button>
-            <button onclick="navigate('vault')" id="tab-vault" class="text-slate-400 pb-1 transition-all cursor-pointer">Vault</button>
-            <button onclick="navigate('analytics')" id="tab-analytics" class="text-slate-400 pb-1 transition-all cursor-pointer">Analytics</button>
+    <nav id="topNav" class="fixed top-0 left-0 right-0 max-w-md mx-auto bg-slate-950/80 border-b border-white/5 flex justify-between items-center px-4 py-3.5 z-50 backdrop-blur-md rounded-b-2xl">
+        <span id="navLogo" class="text-xs font-black tracking-widest uppercase flex items-center gap-1.5 transition-all">⚔️ KURODECK</span>
+        <div class="flex gap-4 text-xs font-bold">
+            <button onclick="navigate('hub')">Hub</button>
+            <button onclick="navigate('discover')">Discover</button>
+            <button onclick="navigate('vault')">Vault</button>
+            <button onclick="navigate('analytics')">Analytics</button>
         </div>
     </nav>
 
-    <!-- Global Floating Alerts Pop-up Window -->
-    <div id="toast" class="hidden fixed top-24 left-4 right-4 max-w-md mx-auto bg-slate-950/95 border border-white/10 p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all duration-300 text-white"></div>
-
-    <!-- Active Clicks Layout Frame -->
-    <div class="main-app-content max-w-md mx-auto space-y-4">
-
-        <!-- ================= PAGE 1: DECK HUB ================= -->
+    <div class="main-app-content max-w-md mx-auto space-y-6">
+        <!-- HUB: News & Status -->
         <div id="view-hub" class="page-view space-y-4">
-            <!-- Cinematic Dialogue Terminal Board -->
-            <section class="matrix-card p-4 rounded-2xl relative overflow-hidden">
-                <div class="absolute -right-6 -top-6 text-7xl opacity-[0.03] font-serif select-none">“</div>
-                <span class="text-[8px] font-mono tracking-widest uppercase font-bold block mb-1 text-slate-400 opacity-60">Terminal Live Broadcast</span>
-                <p id="display-quote" class="text-xs italic text-slate-200 leading-relaxed font-medium">"Welcome to KuroDeck, Akshay. Open up the Discover tab to search major anime catalogs and sync live artwork covers instantly!"</p>
-                <p id="display-author" class="text-[9px] font-bold mt-2.5 text-right opacity-60 text-slate-400">— System Controller</p>
+            <section class="matrix-card p-4 rounded-2xl">
+                <span class="text-[8px] uppercase font-bold text-slate-400">Terminal Live Broadcast</span>
+                <p id="display-quote" class="text-xs mt-1">"Welcome back, Akshay. Check the community feed for updates."</p>
             </section>
-
-            <!-- Dynamic Character Companion Deck Layout -->
-            <section class="space-y-2">
-                <span class="text-[9px] font-mono tracking-widest text-slate-500 uppercase font-black block">Active Companion Guild</span>
-                <div id="guild-deck" class="flex gap-2 overflow-x-auto pb-1 hide-scroll"></div>
-            </section>
-
-            <!-- Permanently Multi-Colored Metric Tally Grid -->
-            <section class="grid grid-cols-3 gap-2 bg-slate-950/50 p-2.5 rounded-2xl border border-white/5 shadow-inner backdrop-blur-md">
-                <div class="text-center py-1">
-                    <p class="text-[9px] uppercase text-slate-500 font-bold tracking-wider">Total Vault</p>
-                    <p id="count-all" class="text-xl font-mono font-black text-slate-100 mt-0.5">0</p>
-                </div>
-                <div class="text-center py-1 bg-cyan-950/20 rounded-xl border border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.05)]">
-                    <p class="text-[9px] uppercase text-cyan-400 font-bold tracking-wider">Streaming</p>
-                    <p id="count-active" class="text-xl font-mono font-black text-cyan-400 mt-0.5">0</p>
-                </div>
-                <div class="text-center py-1 bg-emerald-950/20 rounded-xl border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.05)]">
-                    <p class="text-[9px] uppercase text-emerald-400 font-bold tracking-wider">Mastered</p>
-                    <p id="count-done" class="text-xl font-mono font-black text-emerald-400 mt-0.5">0</p>
-                </div>
-            </section>
-
-            <!-- Active Rotation Stream Shelf -->
-            <section class="space-y-2">
-                <h3 class="font-black text-xs uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                    <span class="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span> Currently Tracking
-                </h3>
-                <div id="shelf-watching" class="space-y-3"></div>
-            </section>
+            
+            <h2 class="text-xs font-black uppercase text-slate-400">Latest Anime News</h2>
+            <div id="news-feed" class="matrix-card p-3 rounded-xl text-[10px] text-slate-300">Loading live news...</div>
         </div>
 
-        <!-- ================= PAGE 2: DISCOVER SEARCH CATALOG ================= -->
+        <!-- DISCOVER -->
         <div id="view-discover" class="page-view page-hidden space-y-4">
-            <!-- Simplified Permanent Multi-Colored Guide Panel Layout -->
-            <section class="matrix-card p-4 rounded-2xl bg-gradient-to-r from-white/[0.02] to-transparent">
-                <span class="text-[9px] font-mono tracking-widest uppercase font-bold block mb-2 text-slate-400 opacity-60">🎮 Operations Command Legend</span>
-                <div class="grid grid-cols-3 gap-3 text-[9px] text-slate-200 font-medium leading-relaxed">
-                    <div class="border-t border-cyan-500/20 pt-2"><span class="font-black block text-cyan-400 text-xs mb-0.5">💎 + Active</span>Watching right now!<br>(Adds to Hub shelf)</div>
-                    <div class="border-t border-purple-500/20 pt-2"><span class="font-black block text-purple-400 text-xs mb-0.5">🔮 + Queue</span>Watch later list.<br>(Saves to Vault backlog)</div>
-                    <div class="border-t border-emerald-500/20 pt-2"><span class="font-black block text-emerald-400 text-xs mb-0.5">🌿 + Mastered</span>Completely finished!<br>(Stamps onto Tier List)</div>
-                </div>
-            </section>
-
-            <!-- Search Console Input Container -->
-            <section class="matrix-card p-3 rounded-2xl">
-                <div class="flex gap-2">
-                    <input type="text" id="input-search" placeholder="Type title... (e.g. JJK, Naruto, One Piece)" class="flex-1 bg-slate-950/80 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/20 transition-all">
-                    <button onclick="runQuery()" class="text-xs font-black px-5 rounded-xl active:scale-95 transition-all shadow-md cursor-pointer text-slate-950" id="queryBtn">Query</button>
-                </div>
-                <div class="flex justify-center gap-6 mt-2.5 pt-2 border-t border-white/5 text-xs text-slate-400">
-                    <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="mode" value="anime" checked class="accent-cyan-400"> Anime Catalog</label>
-                    <label class="flex items-center gap-1.5 cursor-pointer"><input type="radio" name="mode" value="manga" class="accent-cyan-400"> Manga Catalog</label>
-                </div>
-            </section>
-
-            <!-- Results Dynamic Catalog Grid Canvas -->
-            <div id="search-grid" class="grid grid-cols-1 gap-3"></div>
+            <input type="text" id="input-search" class="w-full bg-slate-950 border border-white/10 p-3 rounded-xl text-sm" placeholder="Search titles...">
+            <div id="search-grid" class="space-y-3"></div>
         </div>
 
-        <!-- ================= PAGE 3: VAULT DECK STORAGE & RANKINGS ================= -->
+        <!-- VAULT -->
         <div id="view-vault" class="page-view page-hidden space-y-4">
-            <!-- Backlog Stack Queue Container -->
-            <div class="matrix-card p-3 rounded-2xl">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-black text-xs uppercase tracking-wider text-purple-400">⏳ Backlog Storage Queue</h3>
-                    <div class="flex items-center gap-2">
-                        <button onclick="spinRoulette()" class="text-[9px] font-black px-2.5 py-0.5 rounded-full shadow active:scale-95 transition-all cursor-pointer text-slate-950" id="rouletteBtn">Roulette 🎲</button>
-                        <span id="badge-queue" class="text-xs font-mono font-bold bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full text-purple-400">0</span>
-                    </div>
+            <div class="matrix-card p-4 rounded-xl">
+                <h3 class="font-black text-xs mb-2">💾 Data Management</h3>
+                <div class="flex gap-2">
+                    <button onclick="downloadBackup()" class="bg-blue-600 p-2 rounded text-[10px] w-full font-bold">Backup Data</button>
+                    <button onclick="document.getElementById('fileInput').click()" class="bg-green-600 p-2 rounded text-[10px] w-full font-bold">Restore Data</button>
+                    <input type="file" id="fileInput" class="hidden" onchange="restoreBackup(event)">
                 </div>
-                <div id="shelf-queue" class="space-y-2"></div>
             </div>
-
-            <!-- Finished Log Section -->
-            <div class="matrix-card p-3 rounded-2xl">
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="font-black text-xs uppercase tracking-wider text-emerald-400">✅ Finished Library Logs</h3>
-                    <span id="badge-mastered" class="text-xs font-mono font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full text-emerald-400">0</span>
-                </div>
-                <div id="shelf-completed" class="space-y-2"></div>
+            <div id="my-list" class="space-y-2"></div>
+        </div>
+        
+        <!-- COMMUNITY (Discord-like feed) -->
+        <div id="view-community" class="page-view page-hidden">
+            <div class="matrix-card p-4 rounded-xl h-64 overflow-y-scroll space-y-3" id="chat-feed">
+                <div class="text-[10px] text-slate-500 border-b border-white/5 pb-2">#anime-discussion</div>
+                <div class="flex gap-2 items-center"><div class="w-6 h-6 rounded-full bg-indigo-500"></div><p class="text-xs font-bold">User1: Anyone watching JJK?</p></div>
+                <div class="flex gap-2 items-center"><div class="w-6 h-6 rounded-full bg-rose-500"></div><p class="text-xs font-bold">User2: Yes, the animation is fire!</p></div>
             </div>
-
-            <!-- Grade Alignment Matrix Tier Display -->
-            <section class="matrix-card p-3 rounded-2xl bg-gradient-to-t from-slate-950/40 to-transparent">
-                <h3 class="font-black text-xs uppercase tracking-wider text-slate-300 mb-2.5">🏆 Quality Grade Rankings Matrix</h3>
-                <div class="space-y-1.5 rounded-xl overflow-hidden bg-slate-950/90 p-2 border border-white/5">
-                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-rose-500 bg-[#160c12]/40 text-rose-400"><div class="w-8 text-center font-black text-xs">S</div><div id="row-S" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
-                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-orange-400 bg-[#16100c]/40 text-orange-400"><div class="w-8 text-center font-black text-xs">A</div><div id="row-A" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
-                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-yellow-400 bg-[#16150c]/40 text-yellow-400"><div class="w-8 text-center font-black text-xs">B</div><div id="row-B" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
-                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-green-400 bg-[#0c1610]/40 text-green-400"><div class="w-8 text-center font-black text-xs">C</div><div id="row-C" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
-                    <div class="flex items-center gap-2 p-1 rounded min-h-[32px] border-l-4 border-slate-500 bg-[#11131c]/40 text-slate-500"><div class="w-8 text-center font-black text-[9px]">Trash</div><div id="row-Trash" class="flex flex-wrap gap-1 p-1 flex-1"></div></div>
-                </div>
-            </section>
         </div>
 
-        <!-- ================= PAGE 4: SYSTEM ANALYTICS & TUNING ================= -->
+        <!-- ANALYTICS -->
         <div id="view-analytics" class="page-view page-hidden space-y-4">
-            <!-- Native SVG Analytics Dashboard Graph Component -->
-            <section class="matrix-card p-4 rounded-3xl space-y-3">
-                <h3 class="font-black text-xs uppercase tracking-wider text-slate-100">📊 Real-Time Analytics Dashboard</h3>
-                <p class="text-[10px] text-slate-400">Algorithmic analysis of database entry distribution balances mapped inside the core memory loop.</p>
-                <div id="chart-container" class="w-full flex justify-center items-end h-36 gap-4 pt-4 border-b border-white/5 px-2 bg-slate-950/50 rounded-xl shadow-inner"></div>
-                <div class="flex justify-around text-[9px] font-mono font-bold text-slate-500 px-1">
-                    <span>Active Rotation</span><span>Watchlist Queue</span><span>Mastered Deck</span>
-                </div>
-            </section>
-
-            <!-- Fully Dynamic 8-Way Animated Mesh Preset Controllers -->
-            <section class="matrix-card p-4 rounded-3xl space-y-2.5">
-                <h3 class="font-black text-xs uppercase tracking-wider text-slate-200">⚙️ Dynamic Background Mesh Presets</h3>
-                <div class="grid grid-cols-2 gap-2 text-xs font-bold pt-1">
-                    <button onclick="applyTheme('cyber')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-cyan-400 active:scale-95 transition-all cursor-pointer">Blue Box Spring</button>
-                    <button onclick="applyTheme('sakura')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-rose-400 active:scale-95 transition-all cursor-pointer">Sakura Morning</button>
-                    <button onclick="applyTheme('cursed')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-purple-400 active:scale-95 transition-all cursor-pointer">Jujutsu Twilight</button>
-                    <button onclick="applyTheme('shinobi')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-emerald-400 active:scale-95 transition-all cursor-pointer">Zoro Neon</button>
-                    <button onclick="applyTheme('crimson')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-red-400 active:scale-95 transition-all cursor-pointer">Crimson Monarch</button>
-                    <button onclick="applyTheme('moctale')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-teal-400 active:scale-95 transition-all cursor-pointer">Shinobi Forest</button>
-                    <button onclick="applyTheme('void')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-indigo-400 active:scale-95 transition-all cursor-pointer">Tokyo Cyberpunk</button>
-                    <button onclick="applyTheme('electric')" class="p-2.5 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-white/[0.03] text-yellow-400 active:scale-95 transition-all cursor-pointer">Lightning Volt</button>
-                </div>
-            </section>
+            <div class="matrix-card p-4 rounded-2xl text-center">
+                <h3 class="font-black text-xs mb-2">📊 Analytics</h3>
+                <p class="text-2xl font-black" id="total-watched">0</p>
+                <p class="text-[10px] text-slate-400">Unique Titles Mastered</p>
+            </div>
         </div>
-
-        <button onclick="exportData()" class="w-full bg-slate-950/60 border border-white/5 text-slate-400 text-[10px] tracking-widest uppercase font-black py-2.5 rounded-xl transition-all shadow cursor-pointer">✨ Export Global Network Architecture Payload</button>
-        <a id="back-to-mine" href="?" class="hidden w-full bg-slate-950 text-slate-200 text-xs font-black py-2.5 rounded-xl text-center items-center justify-center border border-white/5 shadow-md">Back to My Vault</a>
     </div>
 
     <script>
-        let vaultStorage = []; let viewOnly = false; let currentParticleColor = 'rgba(6, 182, 212, 0.18)';
-        
-        // High-Fidelity Tone Synthesizer Engine
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playTone(freq, type, duration) {
-            try {
-                const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
-                osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
-                osc.connect(gainNode); gainNode.connect(audioCtx.destination);
-                osc.start(); osc.stop(audioCtx.currentTime + duration);
-            } catch (e) { console.log(e); }
-        }
-        function soundClick() { playTone(659.25, 'triangle', 0.06); }
-        function soundSuccess() { playTone(987.77, 'sine', 0.08); setTimeout(() => playTone(1318.51, 'sine', 0.12), 60); }
-        function soundAlert() { playTone(440, 'sawtooth', 0.1); setTimeout(() => playTone(349.23, 'sawtooth', 0.14), 80); }
+        // Data Handling
+        let vaultStorage = JSON.parse(localStorage.getItem('kuroDeck_v9')) || [];
 
-        // Dialogue Registry Engine Matrix
-        const dynamicUniverseData = {
-            senku: { character: "Senku Ishigami", icon: "🧪", quote: "KuroDeck parameters are ten billion percent responsive. Background color meshes flowing safely.", color: "text-emerald-400" },
-            demon: { character: "Tanjiro Kamado", icon: "🎴", quote: "Look straight ahead! Sharpen your blade and record your anime journey with clean, high-contrast honor.", color: "text-orange-400" },
-            gojo: { character: "Gojo Satoru", icon: "👁️", quote: "Relax, my custom database tracking layers are literally the strongest. Color styling hierarchy is fixed.", color: "text-purple-400" },
-            naruto: { character: "Naruto Uzumaki", icon: "🦊", quote: "I never go back on my logging parameters, that is my custom ninja tracking method, believe it!", color: "text-yellow-400" },
-            luffy: { character: "Monkey D. Luffy", icon: "🍖", quote: "We are tracking the absolute greatest pirate index profile fleet across the infinite oceans!", color: "text-rose-500" }
-        };
-
-        const staticFallbackDatabase = [
-            { c: "Gojo Satoru", q: "Don't worry, I'm the absolute strongest.", a: "👁️" },
-            { c: "Tanjiro Kamado", q: "Look straight ahead. Sharpen your blade.", a: "🎴" },
-            { c: "Naruto Uzumaki", q: "I never go back on my word. That's my ninja way!", a: "🦊" },
-            { c: "Senku Ishigami", q: "This is ten billion percent exhilarating!", a: "🧪" },
-            { c: "Roronoa Zoro", q: "If I die here, then I'm a man who could only go this far.", a: "⚔️" }
-        ];
-
-        // Blue Box Style Drifting Particle Generator Engine 
-        const canvas = document.getElementById('particleCanvas'); const ctx = canvas.getContext('2d');
-        let particles = [];
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeCanvas); resizeCanvas();
-        class Particle {
-            constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.size = Math.random()*2.2+0.5; this.speedX = Math.random()*0.12-0.06; this.speedY = Math.random()*0.16-0.08; }
-            update() { this.x += this.speedX; this.y += this.speedY; if(this.x>canvas.width||this.x<0) this.speedX *= -1; if(this.y>canvas.height||this.y<0) this.speedY *= -1; }
-            draw() { ctx.fillStyle = currentParticleColor; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
-        }
-        for(let i=0; i<40; i++) { particles.push(new Particle()); }
-        function animateParticles() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{ p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
-        animateParticles();
-
-        function init() { const urlParams = new URLSearchParams(window.location.search); const shared = urlParams.get('vault'); if (shared) { try { vaultStorage = JSON.parse(shared); viewOnly = true; makeViewOnlyMode(); } catch (e) { loadLocal(); } } else { loadLocal(); } renderAppFramework(); document.getElementById('input-search').addEventListener('keypress', (e) => { if (e.key === 'Enter') runQuery(); }); const savedTheme = localStorage.getItem('nexusThemeKey') || 'cyber'; applyTheme(savedTheme); }
-        function loadLocal() { const data = localStorage.getItem('kuroDeckStorage_v8'); vaultStorage = data ? JSON.parse(data) : []; }
-        function makeViewOnlyMode() { document.getElementById('tab-discover')?.remove(); document.getElementById('tab-analytics')?.remove(); document.getElementById('back-to-mine').style.display = 'flex'; navigate('hub'); }
-        function syncLocal() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v8', JSON.stringify(vaultStorage)); }
-
-        // Premium Color Presets Config (Dynamic Gradient Mesh)
-        const themes = {
-            cyber: { start: '#020514', end: '#0a1128', text: 'text-cyan-400', glow: 'rgba(6,182,212,0.4)', primary: 'from-cyan-400 via-sky-400 to-indigo-500', particle: 'rgba(6, 182, 212, 0.22)', hex: '#06b6d4' },
-            sakura: { start: '#12050b', end: '#240a18', text: 'text-rose-400', glow: 'rgba(244,63,94,0.4)', primary: 'from-rose-400 via-pink-400 to-amber-400', particle: 'rgba(244, 63, 94, 0.22)', hex: '#f43f5e' },
-            cursed: { start: '#070214', end: '#14052e', text: 'text-purple-400', glow: 'rgba(168,85,247,0.4)', primary: 'from-purple-500 via-indigo-500 to-fuchsia-500', particle: 'rgba(168, 85, 247, 0.22)', hex: '#a855f7' },
-            shinobi: { start: '#010905', end: '#041e12', text: 'text-emerald-400', glow: 'rgba(16,185,129,0.4)', primary: 'from-emerald-400 via-green-400 to-teal-500', particle: 'rgba(16, 185, 129, 0.22)', hex: '#10b850' },
-            crimson: { start: '#140204', end: '#2e0509', text: 'text-red-400', glow: 'rgba(239,68,68,0.4)', primary: 'from-red-500 via-rose-600 to-orange-500', particle: 'rgba(239, 68, 68, 0.22)', hex: '#ef4444' },
-            moctale: { start: '#010707', end: '#041a1e', text: 'text-teal-400', glow: 'rgba(20,184,166,0.4)', primary: 'from-teal-400 via-emerald-400 to-cyan-500', particle: 'rgba(20, 184, 166, 0.22)', hex: '#14b8a6' },
-            void: { start: '#0b0214', end: '#1d042b', text: 'text-indigo-400', glow: 'rgba(99,102,241,0.4)', primary: 'from-fuchsia-500 via-pink-500 to-cyan-400', particle: 'rgba(99, 102, 241, 0.22)', hex: '#6366f1' },
-            electric: { start: '#0a0801', end: '#1a1403', text: 'text-yellow-400', glow: 'rgba(234,179,8,0.4)', primary: 'from-yellow-400 via-amber-400 to-orange-500', particle: 'rgba(234, 179, 8, 0.22)', hex: '#eab308' }
-        };
-
-        function applyTheme(themeKey) {
-            const t = themes[themeKey]; if(!t) return;
-            localStorage.setItem('nexusThemeKey', themeKey); currentParticleColor = t.particle;
-            
-            // Mutate document CSS variables for animated background transitions
-            document.documentElement.style.setProperty('--bg-start', t.start);
-            document.documentElement.style.setProperty('--bg-end', t.end);
-            document.documentElement.style.setProperty('--accent-glow', t.glow);
-            
-            const nav = document.getElementById('topNav'); if (nav) { nav.style.borderColor = t.hex + '22'; }
-            document.getElementById('navLogo').className = `text-xs font-black tracking-widest bg-gradient-to-r ${t.primary} text-transparent bg-clip-text uppercase flex items-center gap-1.5`;
-            
-            const activeTab = document.querySelector('nav div .font-bold');
-            if (activeTab) { activeTab.className = `${t.text} border-b-2 pb-1 font-bold transition-all duration-300`; activeTab.style.borderColor = t.hex; }
-            
-            // Only update buttons targeted for design theme shifts
-            ['queryBtn', 'rouletteBtn'].forEach(id => { const el = document.getElementById(id); if(el) el.className = `bg-gradient-to-r ${t.primary} text-slate-950 px-5 rounded-xl text-xs font-black active:scale-95 transition-all shadow-md cursor-pointer`; });
-            
-            updateDynamicIcons(t.hex); renderAnalyticsCharts();
+        function navigate(id) {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.add('page-hidden'));
+            document.getElementById('view-' + id).classList.remove('page-hidden');
         }
 
-        function updateDynamicIcons(colorHex) {
-            const encodedHex = encodeURIComponent(colorHex);
-            const svgMarkup = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path d='M90 422 L150 362' stroke='%23ffffff' stroke-width='24' stroke-linecap='round'/><circle cx='150' cy='362' r='20' fill='${encodedHex}'/><path d='M150 362 L410 102' stroke='${encodedHex}' stroke-width='16' stroke-linecap='round' style='filter:drop-shadow(0 0 12px ${encodedHex})'/><path d='M155 357 L405 107' stroke='%23ffffff' stroke-width='6' stroke-linecap='round'/></svg>`;
-            const finalDataURI = "data:image/svg+xml;utf8," + svgMarkup;
-            document.getElementById('favicon').href = finalDataURI; document.getElementById('appleIcon').href = finalDataURI;
-            
-            const manifestBlueprint = { name: "KuroDeck", short_name: "KuroDeck", start_url: ".", display: "standalone", background_color: "#040610", theme_color: colorHex, icons: [{ src: finalDataURI, sizes: "512x512", type: "image/svg+xml" }] };
-            document.getElementById('manifestLink').href = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifestBlueprint));
-        }
-
-        function navigate(pageId) {
-            soundClick();
-            ['hub', 'discover', 'vault', 'analytics'].forEach(p => {
-                document.getElementById(`view-${p}`).classList.add('page-hidden');
-                const btn = document.getElementById(`tab-${p}`); if (btn) btn.className = "text-slate-400 pb-1 transition-all duration-300";
-            });
-            document.getElementById(`view-${pageId}`).classList.remove('page-hidden');
-            const tk = localStorage.getItem('nexusThemeKey') || 'cyber';
-            const activeBtn = document.getElementById(`tab-${pageId}`);
-            activeBtn.className = `${themes[tk].text} border-b-2 pb-1 font-bold transition-all duration-300`; activeBtn.style.borderColor = themes[tk].hex;
-            if(pageId === 'analytics') renderAnalyticsCharts();
-        }
-
-        function triggerCompanionSaying(id) { const c = dynamicUniverseData[id]; if (c) { soundSuccess(); toastAlert(`<strong>${c.character}:</strong> "${c.quote}"`); document.getElementById('display-quote').innerText = `"${c.quote}"`; document.getElementById('display-author').innerText = `— ${c.character}`; } }
-        function toastAlert(msg) { const t = document.getElementById('toast'); t.className = `fixed top-24 left-4 right-4 max-w-md mx-auto bg-slate-950/95 border p-3 rounded-xl text-xs text-center font-bold shadow-2xl z-50 transition-all duration-300 text-white border-white/10`; t.innerHTML = msg; t.classList.remove('hidden'); setTimeout(() => { t.classList.add('hidden'); }, 3500); }
-
-        async function runQuery() {
-            const val = document.getElementById('input-search').value.trim(); const grid = document.getElementById('search-grid');
-            if(val.length < 2) { soundAlert(); toastAlert("❌ Enter at least 2 characters to engage search array."); return; }
-            grid.innerHTML = `<div class="text-xs text-slate-400 font-mono italic p-8 text-center animate-pulse">📡 Fetching data vectors from global network indexes...</div>`;
-            const mode = document.querySelector('input[name="mode"]:checked').value;
-            try {
-                const res = await fetch(`https://api.jikan.moe/v4/${mode}?q=${encodeURIComponent(val)}&limit=5`);
-                const json = await res.json(); renderSearchCards(json.data, mode);
-            } catch (e) { soundAlert(); grid.innerHTML = `<div class="text-xs text-rose-400 font-mono p-8 text-center">❌ Synchronizer communication error. Query button again.</div>`; }
-        }
-
-        function renderSearchCards(data, mode) {
-            const grid = document.getElementById('search-grid'); grid.innerHTML = '';
-            if(!data || data.length === 0) { grid.innerHTML = `<div class="text-xs text-slate-500 italic p-8 text-center">Zero matches synchronized inside server array.</div>`; return; }
-            data.forEach(item => {
-                const title = item.title; const img = item.images?.jpg?.large_image_url || item.images?.jpg?.image_url || '';
-                const typeStr = item.type || (mode === 'anime' ? 'TV' : 'Manga');
-                const meta = `${typeStr} • ${item.episodes || item.chapters || 'Ongoing Structure'} (${item.score ? '★ ' + item.score : 'MAL Unrated'})`;
-                
-                const card = document.createElement('div'); card.className = "matrix-card p-3 rounded-2xl flex gap-3 items-start relative border shadow transition-all duration-300 bg-slate-900/40 border-white/5";
-                
-                let controls = !viewOnly ? `
-                    <div class="flex items-center gap-1.5 mt-2 flex-wrap z-30">
-                        <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'watching', 'B')" class="text-[9px] bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-black px-2.5 py-1 rounded-md active:scale-90 transition-all cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.05)]">💎 Active</button>
-                        <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'plan-to-watch', 'B')" class="text-[9px] bg-purple-500/10 border border-purple-500/30 text-purple-400 font-black px-2.5 py-1 rounded-md active:scale-90 transition-all cursor-pointer shadow-[0_0_10px_rgba(168,85,247,0.05)]">🔮 Queue</button>
-                        <div class="relative inline-block">
-                            <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="text-[9px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-black px-2.5 py-1 rounded-md active:scale-90 transition-all cursor-pointer shadow-[0_0_10px_rgba(16,185,129,0.05)]">🌿 Mastered</button>
-                            <div class="hidden absolute right-0 bottom-full mb-1 bg-[#090a14] border border-white/10 rounded-xl p-1.5 z-50 flex flex-col gap-1 shadow-2xl min-w-[85px]">
-                                <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'completed', 'S')" class="text-[8px] bg-rose-500/20 text-rose-400 font-black p-1.5 rounded-lg hover:bg-rose-500/30">S-Tier</button>
-                                <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'completed', 'A')" class="text-[8px] bg-orange-500/20 text-orange-400 font-black p-1.5 rounded-lg hover:bg-orange-500/30">A-Tier</button>
-                                <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'completed', 'B')" class="text-[8px] bg-yellow-500/20 text-yellow-400 font-black p-1.5 rounded-lg hover:bg-yellow-500/30">B-Tier</button>
-                                <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'completed', 'C')" class="text-[8px] bg-green-500/20 text-green-400 font-black p-1.5 rounded-lg hover:bg-green-500/30">C-Tier</button>
-                                <button onclick="saveNode('${btoa(unescape(encodeURIComponent(title)))}', '${img}', '${meta}', 'completed', 'Trash')" class="text-[8px] bg-slate-800 text-slate-400 font-bold p-1.5 rounded-lg hover:bg-slate-700">Trash</button>
-                            </div>
-                        </div>
-                    </div>` : '';
-
-                card.innerHTML = `
-                    <img src="${img}" class="w-14 h-20 object-cover rounded-xl border border-white/5 shadow flex-shrink-0 bg-slate-950">
-                    <div class="flex-1 min-w-0 flex flex-col justify-between h-full">
-                        <div>
-                            <div class="flex justify-between items-start gap-1">
-                                <h4 class="font-black text-xs text-slate-100 truncate flex-1">${title}</h4>
-                                <span class="text-[8px] font-mono bg-amber-500/10 border border-amber-500/20 px-1.5 rounded text-amber-400 font-black">${item.score?'★ '+item.score:'Unrated'}</span>
-                            </div>
-                            <p class="text-[10px] text-slate-500 font-medium mt-0.5">${meta}</p>
-                        </div>
-                        ${controls}
-                    </div>`;
-                grid.appendChild(card);
-            });
-        }
-
-        function saveNode(encodedTitle, img, meta, status, tier) {
-            soundSuccess(); const title = decodeURIComponent(escape(atob(encodedTitle)));
-            vaultStorage.push({ id: Date.now(), title: title, status: status, type: meta.includes('Chapters')?'manga':'anime', metadata: meta, rating: null, tier: tier, image: img });
-            processDynamicQuote(title); syncLocal(); renderAppFramework();
-            document.getElementById('input-search').value = ''; document.getElementById('search-grid').innerHTML = '';
-            toastAlert(`✅ Synced "${title}" directly to KuroDeck.`); setTimeout(() => navigate('hub'), 400);
-        }
-
-        function processDynamicQuote(title) {
-            const low = title.toLowerCase(); let k = null;
-            if(low.includes('stone') || low.includes('ishigami')) k = 'senku';
-            else if(low.includes('demon') || low.includes('slayer') || low.includes('tanjiro') || low.includes('kimetsu')) k = 'demon';
-            else if(low.includes('jujutsu') || low.includes('jjk') || low.includes('kaisen') || low.includes('gojo')) k = 'gojo';
-            else if(low.includes('naruto') || low.includes('uzumaki') || low.includes('shippuden')) k = 'naruto';
-            else if(low.includes('piece') || low.includes('luffy')) k = 'luffy';
-            
-            if(k && dynamicUniverseData[k]) {
-                const d = dynamicUniverseData[k]; document.getElementById('display-quote').innerText = `"${d.quote}"`; document.getElementById('display-author').innerText = `— ${d.character}`;
-            } else {
-                const f = staticFallbackDatabase[Math.floor(Math.random()*staticFallbackDatabase.length)]; document.getElementById('display-quote').innerText = `"${f.q}"`; document.getElementById('display-author').innerText = `— ${f.c}`;
-            }
-        }
-
-        function updateStatus(id, ns) { soundClick(); vaultStorage = vaultStorage.map(i=>i.id===id?{...i, status:ns}:i); syncLocal(); renderAppFramework(); }
-        function purgeNode(id) { soundAlert(); vaultStorage = vaultStorage.filter(i=>i.id!==id); syncStorage(); renderAppFramework(); }
-        function syncStorage() { if (!viewOnly) localStorage.setItem('kuroDeckStorage_v8', JSON.stringify(vaultStorage)); }
-
-        function spinRoulette() {
-            const targets = vaultStorage.filter(i => i.status === 'plan-to-watch');
-            if (targets.length === 0) { soundAlert(); toastAlert("❌ Backlog watchlists empty. Add items first!"); return; }
-            let cycles = 0; navigate('hub');
-            let spin = setInterval(() => {
-                const pick = targets[Math.floor(Math.random() * targets.length)];
-                playTone(440 + (cycles * 45), 'sine', 0.05); toastAlert(`🔬 Scanning matrix parameters... [${pick.title}]`); cycles++;
-                if (cycles > 8) {
-                    clearInterval(spin); const choice = targets[Math.floor(Math.random() * targets.length)];
-                    soundSuccess(); document.getElementById('toast').classList.add('hidden');
-                    document.getElementById('display-quote').innerHTML = `⚡ <strong>Roulette Sweep Complete:</strong> Track and stream <strong>${choice.title}</strong> next! 🚀`;
-                    document.getElementById('display-author').innerText = `— System Analytics Node`; processDynamicQuote(choice.title);
-                }
-            }, 120);
-        }
-
-        function renderAnalyticsCharts() {
-            const counts = { 'watching': 0, 'plan-to-watch': 0, 'completed': 0 }; vaultStorage.forEach(i => { counts[i.status]++; });
-            const max = Math.max(counts['watching'], counts['plan-to-watch'], counts['completed'], 1);
-            const container = document.getElementById('chart-container'); if(!container) return; container.innerHTML = '';
-            
-            const statuses = ['watching', 'plan-to-watch', 'completed']; const tk = localStorage.getItem('nexusThemeKey') || 'cyber';
-            statuses.forEach((s) => {
-                const pct = (counts[s] / max) * 100; const barWrapper = document.createElement('div');
-                barWrapper.className = "flex-1 flex flex-col items-center justify-end h-full gap-2";
-                barWrapper.innerHTML = `<span class="text-[10px] font-mono font-black text-slate-200">${counts[s]}</span><div class="w-8 ${themes[tk].barCol} rounded-t-lg transition-all duration-700" style="height: ${Math.max(pct, 10)}%"></div>`;
-                container.appendChild(barWrapper);
-            });
-        }
-
-        function exportData() { const b64 = btoa(JSON.stringify(vaultStorage)); navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?vault=${b64}`).then(() => { soundSuccess(); toastAlert("🚀 Link copied successfully!"); }); }
-
-        function renderAppFramework() {
-            const sw = document.getElementById('shelf-watching'); const sq = document.getElementById('shelf-queue'); const sc = document.getElementById('shelf-completed');
-            const counts = { 'watching': 0, 'plan-to-watch': 0, 'completed': 0 }; const rows = { 'S': document.getElementById('row-S'), 'A': document.getElementById('row-A'), 'B': document.getElementById('row-B'), 'C': document.getElementById('row-C'), 'Trash': document.getElementById('row-Trash') };
-            const deck = document.getElementById('guild-deck'); if(!sw) return;
-            
-            sw.innerHTML = ''; sq.innerHTML = ''; sc.innerHTML = ''; Object.values(rows).forEach(r => r.innerHTML = ''); deck.innerHTML = '';
-            const tk = localStorage.getItem('nexusThemeKey') || 'cyber'; const t = themes[tk];
-            
-            let keyMap = { "stone": "senku", "ishigami": "senku", "slayer": "demon", "demon": "demon", "kimetsu": "demon", "gojo": "gojo", "jujutsu": "gojo", "jjk": "gojo", "naruto": "naruto", "shippuden": "naruto", "luffy": "luffy", "piece": "luffy" };
-            let unlocked = new Set();
-
-            vaultStorage.forEach(item => {
-                counts[item.status]++; const lowTitle = item.title.toLowerCase();
-                Object.keys(keyMap).forEach(k => { if(lowTitle.includes(k)) unlocked.add(keyMap[k]); });
-
-                if (item.status === 'watching') {
-                    const block = document.createElement('div'); block.className = "matrix-card p-3 rounded-xl flex gap-3 items-center relative shadow animate-fade-in";
-                    let select = !viewOnly ? `<select onchange="updateStatus(${item.id}, this.value)" class="text-[10px] bg-slate-900 border border-white/10 rounded px-1.5 text-slate-200 py-1 focus:outline-none shadow-inner"><option value="watching" selected>Streaming</option><option value="completed">Complete</option></select>` : '';
-                    block.innerHTML = `<img src="${item.image}" class="w-12 h-16 object-cover rounded-xl border border-slate-900 shadow bg-slate-950 flex-shrink-0"><div class="flex-1 min-w-0"><p class="text-xs font-black text-slate-100 truncate">${item.title}</p><p class="text-[9px] text-slate-400 font-medium truncate">${item.metadata}</p><span class="text-[8px] font-mono bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-0.5 rounded mt-2 inline-block font-semibold text-cyan-400">Active Rotation</span></div><div class="flex flex-col items-end gap-4">${select}</div>`; sw.appendChild(block);
-                } else if (item.status === 'plan-to-watch') {
-                    const block = document.createElement('div'); block.className = "matrix-card p-2 rounded-xl flex items-center justify-between text-xs border-white/5";
-                    let ctrl = !viewOnly ? `<div class="flex gap-2"><button onclick="updateStatus(${item.id}, 'completed')" class="text-[9px] bg-purple-500/10 border border-purple-500/30 px-2 py-0.5 rounded font-black cursor-pointer text-purple-400">Done</button><button onclick="purgeNode(${item.id})" class="text-slate-600 hover:text-rose-400 font-bold px-1 cursor-pointer">×</button></div>` : '';
-                    block.innerHTML = `<div class="flex items-center gap-2 truncate"><img src="${item.image}" class="w-6 h-8 object-cover rounded-md border border-slate-900 bg-slate-950 shadow"><span class="truncate font-semibold text-slate-300">${item.title}</span></div>${ctrl}`; sq.appendChild(block);
-                } else if (item.status === 'completed') {
-                    const block = document.createElement('div'); block.className = "matrix-card p-2 rounded-xl flex items-center justify-between text-xs border-white/5";
-                    let action = !viewOnly ? `<button onclick="purgeNode(${item.id})" class="text-slate-600 hover:text-rose-400 text-[10px] px-1 cursor-pointer">🗑️</button>` : '';
-                    block.innerHTML = `<div class="flex items-center gap-2"><img src="${item.image}" class="w-6 h-8 object-cover rounded-md border border-slate-900 bg-slate-950 shadow"><div class="min-w-0 max-w-[200px]"><p class="font-black text-slate-200 text-xs truncate">${item.title}</p><p class="text-[8px] text-slate-300 font-medium truncate">${item.metadata} <span class="text-emerald-400 font-mono font-bold ml-1">[${item.tier}]</span></p></div></div>${action}`; sc.appendChild(block);
-                    
-                    const badge = document.createElement('span'); badge.className = "text-[9px] font-black bg-[#020408] border border-white/10 text-slate-300 px-2 py-0.5 rounded shadow max-w-[96px] truncate"; badge.innerText = item.title;
-                    if(rows[item.tier || 'B']) rows[item.tier || 'B'].appendChild(badge);
-                }
-            });
-
-            unlocked.forEach(k => {
-                const companion = dynamicUniverseData[k]; if(!companion) return;
-                const n = document.createElement('div'); n.className = "matrix-card p-2 rounded-xl text-center min-w-[76px] cursor-pointer active:scale-95 transition-all duration-300 border-white/5";
-                n.onclick = function() { triggerCompanionSaying(k); };
-                n.innerHTML = `<p class="text-xl">${companion.icon}</p><p class="text-[9px] font-black ${companion.color} mt-0.5 truncate">${companion.character.split(' ')[0]}</p>`; deck.appendChild(n);
-            });
-
-            if(deck.children.length === 0) deck.innerHTML = `<div class="text-[10px] text-slate-400 italic py-2 pl-1">Discover titles to unlock dynamic companion avatars.</div>`;
-            document.getElementById('count-all').innerText = vaultStorage.length; document.getElementById('count-active').innerText = counts['watching']; document.getElementById('count-done').innerText = counts['completed'];
-            document.getElementById('badge-queue').innerText = counts['plan-to-watch']; document.getElementById('badge-mastered').innerText = counts['completed'];
-            
-            if(sw.children.length === 0) sw.innerHTML = `<div class="text-[10px] text-slate-400 italic p-6 w-full text-center border border-dashed border-white/10 rounded-2xl bg-[#090b14]/10">Your active logs are clear. Shift to Discover to query and sync high-res titles instantly!</div>`;
-            if(sq.children.length === 0) sq.innerHTML = `<div class="text-[10px] text-slate-400 italic p-3 text-center border border-dashed border-white/10 rounded-xl bg-[#090b14]/10">Watchlist queue parameters empty.</div>`;
-            if(sc.children.length === 0) sc.innerHTML = `<div class="text-[10px] text-slate-400 italic p-3 text-center border border-dashed border-white/10 rounded-xl bg-[#090b14]/10">Vault archives collection clear.</div>`;
-            Object.keys(rows).forEach(k => { if(rows[k].children.length === 0) rows[k].innerHTML = `<span class="text-[8px] text-slate-600 italic flex items-center py-0.5">Empty Row Slat</span>`; });
-        }
-        window.onload = init;
-    </script>
-</body>
-</html>
-<!-- Add this to your KuroDeck index.html -->
-<script>
-    // 1. IMPROVED DATA STRUCTURE
-    // Each entry now tracks parent ID (to group seasons) and rewatch counts
-    let vaultStorage = JSON.parse(localStorage.getItem('kuroDeck_v9')) || [];
-
-    function saveNode(animeData, status) {
-        const entry = {
-            id: animeData.mal_id, 
-            parentId: animeData.main_title_id, // Grouping logic
-            title: animeData.title,
-            status: status,
-            rewatchCount: 0,
-            warnings: animeData.warnings || [],
-            rating: animeData.score,
-            lastUpdated: new Date().toISOString()
-        };
-        vaultStorage.push(entry);
-        syncLocal();
-    }
-
-    // 2. OFFLINE BACKUP (Download/Restore)
-    function downloadBackup() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(vaultStorage));
-        const dlAnchor = document.createElement('a');
-        dlAnchor.setAttribute("href", dataStr);
-        dlAnchor.setAttribute("download", "kurodeck_backup.json");
-        dlAnchor.click();
-    }
-
-    // 3. UNIQUE TITLES CALCULATION (Fixes the "many seasons" confusion)
-    function getUniqueWatchedCount() {
-        const uniqueTitles = new Set(vaultStorage.filter(i => i.status === 'completed').map(i => i.parentId));
-        return uniqueTitles.size; // Only counts unique show IDs
-    }
-</script>
-
-<!-- Add this UI block to your Analytics/Vault page -->
-<div class="matrix-card p-4 rounded-2xl">
-    <h3 class="font-black text-xs uppercase text-slate-300">⚙️ Data Management</h3>
-    <button onclick="downloadBackup()" class="mt-2 text-[10px] bg-slate-800 p-2 rounded-lg text-white">Download Offline Backup</button>
-</div>
-function getWarnings(ratingString) {
-    if(ratingString.includes('violence')) return "⚔️ Violence";
-    // ... add logic for other warnings
-}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KuroDeck Pro</title>
-    <!-- Tailwind and styles remain as previous for performance -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-        /* [Previous Styles Maintained] */
-    </style>
-</head>
-<body class="bg-[#040610] text-white">
-
-    <!-- [Navigation Remains the Same] -->
-
-    <div class="main-app-content max-w-md mx-auto space-y-4 pt-20 px-4">
-        
-        <!-- ================= NEW: OFFLINE BACKUP & SOCIAL ================= -->
-        <section class="matrix-card p-4 rounded-2xl">
-            <h3 class="font-black text-xs uppercase mb-2">💾 Data & Community</h3>
-            <div class="flex gap-2">
-                <button onclick="downloadBackup()" class="flex-1 bg-slate-800 p-2 rounded-lg text-[9px] font-bold">Backup Data</button>
-                <input type="file" id="restoreFile" class="hidden" onchange="restoreBackup(event)">
-                <button onclick="document.getElementById('restoreFile').click()" class="flex-1 bg-slate-800 p-2 rounded-lg text-[9px] font-bold">Restore Data</button>
-            </div>
-            <!-- Embedded Community Widget Placeholder -->
-            <div id="community-feed" class="mt-4 border-t border-white/10 pt-4">
-                <p class="text-[9px] text-slate-500">KuroDeck Community Updates loading...</p>
-            </div>
-        </section>
-
-        <!-- ================= UPDATED: WATCHING SHELF (ONE-TAP SYNC) ================= -->
-        <div id="shelf-watching"></div>
-    </div>
-
-    <script>
-        // --- 1. DATA MODEL WITH TAGS & PROGRESS ---
-        function saveNode(animeData, status) {
-            const entry = {
-                id: animeData.mal_id,
-                title: animeData.title,
-                status: status,
-                episode: 0, // Added Progress
-                tags: animeData.tags || ["New"], // Added Tags
-                warnings: animeData.warnings || [], // Added Warnings
-                tier: 'B'
-            };
-            vaultStorage.push(entry);
-            syncLocal();
-            renderAppFramework();
-        }
-
-        // --- 2. ONE-TAP SYNC LOGIC ---
-        function updateProgress(id, change) {
-            const entry = vaultStorage.find(i => i.id === id);
-            entry.episode = Math.max(0, entry.episode + change);
-            syncLocal();
-            renderAppFramework();
-        }
-
-        // --- 3. OFFLINE BACKUP ENGINE ---
+        // --- NEW FEATURES LOGIC ---
         function downloadBackup() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(vaultStorage));
             const dl = document.createElement('a');
-            dl.setAttribute("href", dataStr);
-            dl.setAttribute("download", "kurodeck_backup.json");
-            dl.click();
+            dl.setAttribute("href", dataStr); dl.setAttribute("download", "kurodeck_backup.json"); dl.click();
         }
 
-        function restoreBackup(event) {
-            const file = event.target.files[0];
+        function restoreBackup(e) {
             const reader = new FileReader();
-            reader.onload = (e) => {
-                vaultStorage = JSON.parse(e.target.result);
-                syncLocal();
-                renderAppFramework();
-            };
-            reader.readAsText(file);
+            reader.onload = (event) => { vaultStorage = JSON.parse(event.target.result); localStorage.setItem('kuroDeck_v9', JSON.stringify(vaultStorage)); location.reload(); };
+            reader.readAsText(e.target.files[0]);
         }
 
-        // --- 4. RENDER UI WITH TAGS & CONTROLS ---
-        function renderAppFramework() {
-            // ... (Your existing rendering logic)
-            // For the watching shelf, add these controls:
-            /*
-            <div class="flex items-center gap-2">
-                <button onclick="updateProgress(${item.id}, -1)">-</button>
-                <span>Ep ${item.episode}</span>
-                <button onclick="updateProgress(${item.id}, 1)">+</button>
-            </div>
-            */
+        function updateProgress(index, change) {
+            vaultStorage[index].episode = Math.max(0, (vaultStorage[index].episode || 0) + change);
+            localStorage.setItem('kuroDeck_v9', JSON.stringify(vaultStorage));
+            renderList();
         }
+
+        // --- FETCH NEWS (RSS via API) ---
+        fetch('https://api.rss2json.com/v1/api.json?rss_url=https://myanimelist.net/rss/news.xml')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('news-feed').innerHTML = data.items.slice(0,3).map(i => `<p class="mb-2 border-b border-white/5 pb-1">${i.title}</p>`).join('');
+            });
+
+        function renderList() {
+            const list = document.getElementById('my-list');
+            list.innerHTML = vaultStorage.map((item, index) => `
+                <div class="matrix-card p-3 rounded-lg flex justify-between items-center text-xs">
+                    <span>${item.title}</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="updateProgress(${index}, -1)" class="px-2 bg-slate-800 rounded">-</button>
+                        <span>Ep: ${item.episode || 0}</span>
+                        <button onclick="updateProgress(${index}, 1)" class="px-2 bg-slate-800 rounded">+</button>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('total-watched').innerText = vaultStorage.length;
+        }
+        renderList();
+        
+        // --- BACKGROUND ANIMATION ---
+        const canvas = document.getElementById('particleCanvas'); const ctx = canvas.getContext('2d');
+        function draw() { /* Full particle logic would go here */ }
+        window.onload = () => { renderList(); };
     </script>
 </body>
-                                                                                                                                                                 </html>
-
+</html>
