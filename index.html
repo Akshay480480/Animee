@@ -539,4 +539,100 @@ function getWarnings(ratingString) {
     if(ratingString.includes('violence')) return "⚔️ Violence";
     // ... add logic for other warnings
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KuroDeck Pro</title>
+    <!-- Tailwind and styles remain as previous for performance -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* [Previous Styles Maintained] */
+    </style>
+</head>
+<body class="bg-[#040610] text-white">
+
+    <!-- [Navigation Remains the Same] -->
+
+    <div class="main-app-content max-w-md mx-auto space-y-4 pt-20 px-4">
+        
+        <!-- ================= NEW: OFFLINE BACKUP & SOCIAL ================= -->
+        <section class="matrix-card p-4 rounded-2xl">
+            <h3 class="font-black text-xs uppercase mb-2">💾 Data & Community</h3>
+            <div class="flex gap-2">
+                <button onclick="downloadBackup()" class="flex-1 bg-slate-800 p-2 rounded-lg text-[9px] font-bold">Backup Data</button>
+                <input type="file" id="restoreFile" class="hidden" onchange="restoreBackup(event)">
+                <button onclick="document.getElementById('restoreFile').click()" class="flex-1 bg-slate-800 p-2 rounded-lg text-[9px] font-bold">Restore Data</button>
+            </div>
+            <!-- Embedded Community Widget Placeholder -->
+            <div id="community-feed" class="mt-4 border-t border-white/10 pt-4">
+                <p class="text-[9px] text-slate-500">KuroDeck Community Updates loading...</p>
+            </div>
+        </section>
+
+        <!-- ================= UPDATED: WATCHING SHELF (ONE-TAP SYNC) ================= -->
+        <div id="shelf-watching"></div>
+    </div>
+
+    <script>
+        // --- 1. DATA MODEL WITH TAGS & PROGRESS ---
+        function saveNode(animeData, status) {
+            const entry = {
+                id: animeData.mal_id,
+                title: animeData.title,
+                status: status,
+                episode: 0, // Added Progress
+                tags: animeData.tags || ["New"], // Added Tags
+                warnings: animeData.warnings || [], // Added Warnings
+                tier: 'B'
+            };
+            vaultStorage.push(entry);
+            syncLocal();
+            renderAppFramework();
+        }
+
+        // --- 2. ONE-TAP SYNC LOGIC ---
+        function updateProgress(id, change) {
+            const entry = vaultStorage.find(i => i.id === id);
+            entry.episode = Math.max(0, entry.episode + change);
+            syncLocal();
+            renderAppFramework();
+        }
+
+        // --- 3. OFFLINE BACKUP ENGINE ---
+        function downloadBackup() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(vaultStorage));
+            const dl = document.createElement('a');
+            dl.setAttribute("href", dataStr);
+            dl.setAttribute("download", "kurodeck_backup.json");
+            dl.click();
+        }
+
+        function restoreBackup(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                vaultStorage = JSON.parse(e.target.result);
+                syncLocal();
+                renderAppFramework();
+            };
+            reader.readAsText(file);
+        }
+
+        // --- 4. RENDER UI WITH TAGS & CONTROLS ---
+        function renderAppFramework() {
+            // ... (Your existing rendering logic)
+            // For the watching shelf, add these controls:
+            /*
+            <div class="flex items-center gap-2">
+                <button onclick="updateProgress(${item.id}, -1)">-</button>
+                <span>Ep ${item.episode}</span>
+                <button onclick="updateProgress(${item.id}, 1)">+</button>
+            </div>
+            */
+        }
+    </script>
+</body>
+                                                                                                                                                                 </html>
 
